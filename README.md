@@ -11,3 +11,13 @@ This is a quick start blueprint
 ```
 git clone github.com/gouniverse/blueprint
 ```
+
+## Development
+
+```
+task dev:init
+```
+
+```
+task dev
+```

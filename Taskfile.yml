@@ -1,0 +1,20 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Welcome to Gouniverse Blueprint Project
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+
+  dev:init:
+    cmds:
+      - cp .env_example ./development/.env
+
+  dev:
+    cmds:
+      - air
