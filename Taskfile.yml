@@ -13,7 +13,7 @@ tasks:
 
   dev:init:
     cmds:
-      - cp .env_example ./development/.env
+      - cp .env_example .env
 
   dev:
     cmds:
