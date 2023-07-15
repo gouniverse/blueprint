@@ -4,7 +4,12 @@
 
 ![tests](https://github.com/gouniverse/blueprint/workflows/tests/badge.svg)
 
-This is a quick start blueprint
+This is a quick start blueprint for an MVC web applications
+
+- Redy to develop in the cloud (Gitpod / Github CodeSpaces)
+- Router setup
+- Controllers setup
+- Database connection setup (SQLite example)
 
 ## Installation
 
