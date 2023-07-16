@@ -9,7 +9,9 @@ import (
 )
 
 const APP_ENVIRONMENT_DEVELOPMENT = "development"
+const APP_ENVIRONMENT_LOCAL = "local"
 const APP_ENVIRONMENT_PRODUCTION = "production"
+const APP_ENVIRONMENT_STAGING = "staging"
 const APP_ENVIRONMENT_TESTING = "testing"
 
 var AppName = "Blueprint"
@@ -48,16 +50,24 @@ func init() {
 	Debug = false        // default
 }
 
-func IsEnvTesting() bool {
-	return AppEnvironment == APP_ENVIRONMENT_TESTING
-}
-
 func IsEnvDevelopment() bool {
 	return AppEnvironment == APP_ENVIRONMENT_DEVELOPMENT
 }
 
+func IsEnvLocal() bool {
+	return AppEnvironment == APP_ENVIRONMENT_LOCAL
+}
+
 func IsEnvProduction() bool {
 	return AppEnvironment == APP_ENVIRONMENT_PRODUCTION
+}
+
+func IsEnvStaging() bool {
+	return AppEnvironment == APP_ENVIRONMENT_STAGING
+}
+
+func IsEnvTesting() bool {
+	return AppEnvironment == APP_ENVIRONMENT_TESTING
 }
 
 func IsDebugEnabled() bool {
