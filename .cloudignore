@@ -1,0 +1,33 @@
+# ignore .env file. enter directly on Google Cloud Run
+.env
+.env*
+
+# ignore .git and .cache folders
+.git
+.cache
+
+# ignore all *.class files in all folders, including build root
+**/*.class
+	
+# ignore all *.class files in all folders, including build root
+**/*.class
+
+# ignore all *.db files in all folders, including build root
+**/*.db
+
+# ignore all markdown files (md)
+*.md
+
+# ignore .vscode folder
+/.vscode
+
+# ignore /documents folder files
+/documents
+/documents/*
+
+# ignore /tmp folder files
+/tmp
+/tmp/*
+
+# ignore /vendor folder
+/vendor/*
