@@ -5,6 +5,7 @@ import (
 
 	"project/internal/server"
 
+	"github.com/gouniverse/entitystore"
 	"github.com/gouniverse/sql"
 )
 
@@ -44,6 +45,8 @@ var MediaRegion string
 var MediaBucket string
 var MediaUrl string
 var WebServer *server.Server
+
+var UserStore *entitystore.Store
 
 func init() {
 	AppVersion = "0.0.1" // default

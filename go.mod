@@ -8,12 +8,13 @@ require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gouniverse/router v0.2.0
 	github.com/gouniverse/sql v0.1.0
-	github.com/gouniverse/utils v1.29.0
+	github.com/gouniverse/utils v1.31.0
 	github.com/mingrammer/cfmt v1.1.0
 	modernc.org/sqlite v1.24.0
 )
 
 require (
+	github.com/doug-martin/goqu/v9 v9.18.0 // indirect
 	github.com/gouniverse/responses v0.3.0 // indirect
 	golang.org/x/exp v0.0.0-20230807204917-050eac23e9de // indirect
 )
@@ -28,24 +29,25 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gouniverse/api v1.5.0 // indirect
 	github.com/gouniverse/dataobject v0.2.0
-	github.com/gouniverse/maputils v0.2.0 // indirect
+	github.com/gouniverse/entitystore v0.59.0
+	github.com/gouniverse/maputils v0.6.0 // indirect
 	github.com/gouniverse/uid v1.4.0
-	github.com/joho/godotenv v1.4.0 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/samber/lo v1.38.1 // indirect
-	github.com/tdewolff/minify/v2 v2.12.0 // indirect
-	github.com/tdewolff/parse/v2 v2.6.2 // indirect
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
+	github.com/samber/lo v1.38.1
+	github.com/tdewolff/minify/v2 v2.12.7 // indirect
+	github.com/tdewolff/parse/v2 v2.6.6 // indirect
+	golang.org/x/crypto v0.11.0 // indirect
 	golang.org/x/mod v0.11.0 // indirect
-	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
-	golang.org/x/tools v0.2.0 // indirect
+	golang.org/x/net v0.12.0 // indirect
+	golang.org/x/sys v0.10.0 // indirect
+	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/tools v0.6.0 // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect
 	modernc.org/cc/v3 v3.40.0 // indirect
 	modernc.org/ccgo/v3 v3.16.13 // indirect
