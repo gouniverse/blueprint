@@ -14,7 +14,7 @@ This is a quick start blueprint for an MVC web applications
 ## Installation
 
 ```
-git clone github.com/gouniverse/blueprint
+git clone https://github.com/gouniverse/blueprint
 ```
 
 ## Development
