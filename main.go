@@ -4,9 +4,9 @@ import (
 	"log"
 
 	"project/config"
+	"project/internal/routes"
 	"project/internal/server"
 	"project/models"
-	"project/routes"
 
 	"github.com/mingrammer/cfmt"
 )
