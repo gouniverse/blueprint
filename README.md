@@ -17,7 +17,7 @@ This is a quick start blueprint for an MVC web applications
 git clone https://github.com/gouniverse/blueprint
 ```
 
-## Development
+## Local Development
 
 ```
 task dev:init
@@ -25,4 +25,16 @@ task dev:init
 
 ```
 task dev
+```
+
+## Testing
+
+```
+task test
+```
+
+## Coverage Report
+
+```
+task cover
 ```
