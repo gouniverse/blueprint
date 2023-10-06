@@ -44,10 +44,12 @@ tasks:
 
 
   dev:init:
+    desc: Initialize development environment (copies the .env_example to .env)
     cmds:
       - cp .env_example .env
 
   dev:
+    desc: Start development locally
     cmds:
       - air
 
@@ -57,3 +59,14 @@ tasks:
       - go test ./...
       - echo "Done!"
     silent: true
+
+  swagger-spec:
+    desc: Generate Swagger specification
+    cmds:
+      - go get -u github.com/go-swagger/go-swagger/cmd/swagger
+      - swagger generate spec -o ./swagger.json
+      
+  swagger-ui:
+    desc: Run the Swagger UI
+    cmds:
+      - docker run --rm -it -p 8081:8080 swaggerapi/swagger-ui
