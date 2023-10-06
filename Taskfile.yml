@@ -3,13 +3,45 @@
 version: '3'
 
 vars:
-  GREETING: Welcome to Gouniverse Blueprint Project
+  APPNAME: Welcome to Gouniverse Blueprint Project
 
 tasks:
   default:
     cmds:
-      - echo "{{.GREETING}}"
+        - echo "================================================================"
+        - echo "=                                                              ="
+        - echo "= Welcome to {{.APPNAME}}                                      ="
+        - echo "=                                                              ="
+        - echo "= Select an option from the list below                         ="
+        - echo "=                                                              ="
+        - echo "= 1. To run tests type 'task test'                             ="
+        - echo "= 2. To create coverage report type 'task cover'               ="
+        - echo "= 3. To initialize dev environment 'task dev:init'             ="
+        - echo "= 4. To start development type 'task dev'                      ="
+        - echo "= 5. To deploy to live type 'task deploy'                      ="
+        - echo "=                                                              ="
+        - echo "================================================================"
     silent: true
+
+  cover:
+    desc: Builds a coverage report
+    cmds:
+      - echo "Generating cover report..."
+      - go test ./... -coverprofile=tmp/coverage.out  -covermode=count
+      - go tool cover -html=tmp/coverage.out
+      # Eventually add to workflow! - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken=$COVERALLS_TOKEN
+      - echo "Done!"
+    silent: true
+
+  deploy:
+    desc: Build and deploys the app to Google Cloud Run
+    cmds:
+      - gcloud config set account YOUREMAIL
+      - gcloud config set project YOURPROJECT
+      - gcloud config set run/region europe-west4
+      - gcloud builds submit --tag gcr.io/YOURPROJECT/YOURPACKAGENAME
+      - gcloud run deploy YOURAPPNAME --image gcr.io/YOURPROJECT/YOURPACKAGENAME --platform managed --region europe-west4 --allow-unauthenticated
+
 
   dev:init:
     cmds:
@@ -18,3 +50,10 @@ tasks:
   dev:
     cmds:
       - air
+
+  test:
+    cmds:
+      - echo "Running tests..."
+      - go test ./...
+      - echo "Done!"
+    silent: true
