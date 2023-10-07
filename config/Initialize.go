@@ -2,7 +2,9 @@ package config
 
 import (
 	"log"
+	"net/http"
 
+	"github.com/gouniverse/cms"
 	"github.com/gouniverse/sql"
 	"github.com/gouniverse/utils"
 )
@@ -88,30 +90,30 @@ func Initialize() {
 		log.Fatal(err.Error())
 	}
 
-	// var errCms error
-	// Cms, errCms = cms.NewCms(cms.Config{
-	// 	// DbInstance:          Database.DB(),
-	// 	Database:            Database,
-	// 	Prefix:              "cms_",
-	// 	TemplatesEnable:     true,
-	// 	PagesEnable:         true,
-	// 	MenusEnable:         true,
-	// 	BlocksEnable:        true,
-	// 	CacheAutomigrate:    true,
-	// 	CacheEnable:         true,
-	// 	EntitiesAutomigrate: true,
-	// 	LogsEnable:          true,
-	// 	LogsAutomigrate:     true,
-	// 	SettingsEnable:      true,
-	// 	SessionAutomigrate:  true,
-	// 	SessionEnable:       true,
-	// 	TranslationsEnable:  true,
-	// 	// TranslationLanguageDefault: TRANSLATION_LANGUAGE_DEFAULT,
-	// 	// TranslationLanguages:       TRANSLATION_LANGUAGE_LIST,
-	// 	// CustomEntityList:    entityList(),
-	// })
+	var errCms error
+	Cms, errCms = cms.NewCms(cms.Config{
+		Database:            Database,
+		Prefix:              "cms_",
+		TemplatesEnable:     true,
+		PagesEnable:         true,
+		MenusEnable:         true,
+		BlocksEnable:        true,
+		CacheAutomigrate:    true,
+		CacheEnable:         true,
+		EntitiesAutomigrate: true,
+		LogsEnable:          true,
+		LogsAutomigrate:     true,
+		SettingsEnable:      true,
+		SessionAutomigrate:  true,
+		SessionEnable:       true,
+		Shortcodes:          map[string]func(*http.Request, string, map[string]string) string{},
+		TranslationsEnable:  true,
+		// TranslationLanguageDefault: TRANSLATION_LANGUAGE_DEFAULT,
+		// TranslationLanguages:       TRANSLATION_LANGUAGE_LIST,
+		// CustomEntityList:    entityList(),
+	})
 
-	// if errCms != nil {
-	// 	panic(errCms.Error())
-	// }
+	if errCms != nil {
+		panic(errCms.Error())
+	}
 }

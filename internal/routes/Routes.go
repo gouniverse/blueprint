@@ -36,6 +36,13 @@ func globalMiddlewares() []router.Middleware {
 
 func routes() []router.Route {
 	adminRoutes := []router.Route{
+		// Enable if CMS is used
+		// {
+		// 	// Admin > Cms
+		// 	Name:    "Admin > Cms",
+		// 	Path:    "/admin/cms",
+		// 	Handler: adminControllers.NewCmsController().AnyIndex,
+		// },
 		{
 			// Admin > Home Controller > Index Page
 			Name:    "Admin > Home Controller > Index Page",
@@ -77,6 +84,13 @@ func routes() []router.Route {
 			Path:    "/",
 			Handler: guestControllers.NewHomeController().AnyIndex,
 		},
+		// Enable if CMS is used
+		// {
+		// 	// Guest > Cms
+		// 	Name:    "Guest > Cms",
+		// 	Path:    "/",
+		// 	Handler: guestControllers.NewCmsController().AnyIndex,
+		// },
 	}
 
 	sharedRoutes := []router.Route{
@@ -85,6 +99,13 @@ func routes() []router.Route {
 			Path:    "/*",
 			Handler: sharedControllers.NewPageNotFoundControllerController().AnyIndex,
 		},
+		// Enable if CMS is used
+		// {
+		// 	// Guest > Cms
+		// 	Name:    "Guest > Cms",
+		// 	Path:    "/*",
+		// 	Handler: guestControllers.NewCmsController().AnyIndex,
+		// },
 	}
 
 	routes := []router.Route{}

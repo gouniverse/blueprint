@@ -1,10 +1,13 @@
 module project
 
-go 1.20
+go 1.21
+
+toolchain go1.21.1
 
 require (
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-sql-driver/mysql v1.7.1
+	github.com/gouniverse/responses v0.3.0
 	github.com/gouniverse/router v0.6.0
 	github.com/gouniverse/sql v0.7.2
 	github.com/gouniverse/utils v1.32.0
@@ -18,7 +21,15 @@ require (
 	github.com/go-chi/httprate v0.7.4 // indirect
 	github.com/go-openapi/errors v0.20.4 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
-	github.com/gouniverse/responses v0.3.0 // indirect
+	github.com/gouniverse/bs v0.10.1 // indirect
+	github.com/gouniverse/cachestore v0.16.0 // indirect
+	github.com/gouniverse/cdn v0.9.0 // indirect
+	github.com/gouniverse/hb v1.66.0 // indirect
+	github.com/gouniverse/icons v1.3.0 // indirect
+	github.com/gouniverse/logstore v1.3.0 // indirect
+	github.com/gouniverse/sessionstore v0.19.0 // indirect
+	github.com/gouniverse/settingstore v0.11.0 // indirect
+	github.com/gouniverse/shortcode v0.1.4 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -37,6 +48,7 @@ require (
 	github.com/golang-module/carbon/v2 v2.2.8
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/gouniverse/api v1.5.0 // indirect
+	github.com/gouniverse/cms v0.49.0
 	github.com/gouniverse/dataobject v0.2.0
 	github.com/gouniverse/entitystore v0.59.0
 	github.com/gouniverse/maputils v0.6.0 // indirect
@@ -51,12 +63,12 @@ require (
 	github.com/samber/lo v1.38.1
 	github.com/tdewolff/minify/v2 v2.12.9 // indirect
 	github.com/tdewolff/parse/v2 v2.6.8 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
-	golang.org/x/mod v0.12.0 // indirect
-	golang.org/x/net v0.15.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/mod v0.13.0 // indirect
+	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
-	golang.org/x/tools v0.13.0 // indirect
+	golang.org/x/tools v0.14.0 // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
 	modernc.org/ccgo/v3 v3.16.15 // indirect

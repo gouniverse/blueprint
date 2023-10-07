@@ -1,10 +1,9 @@
 package config
 
 import (
-	// "database/sql"
-
 	"project/internal/server"
 
+	"github.com/gouniverse/cms"
 	"github.com/gouniverse/entitystore"
 	"github.com/gouniverse/sql"
 )
@@ -47,6 +46,8 @@ var MediaUrl string
 var WebServer *server.Server
 
 var UserStore *entitystore.Store
+
+var Cms *cms.Cms
 
 func init() {
 	AppVersion = "0.0.1" // default
