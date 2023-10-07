@@ -10,6 +10,7 @@ This is a quick start blueprint for an MVC web applications
 - Router setup
 - Controllers setup
 - Database connection setup (SQLite example)
+- CMS setup
 
 ## Installation
 
