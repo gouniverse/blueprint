@@ -14,28 +14,46 @@ This is a quick start blueprint for an MVC web applications
 
 ## Installation
 
-```
+```bash
 git clone https://github.com/gouniverse/blueprint
 ```
 
 ## Local Development
 
-```
+```bash
 task dev:init
 ```
 
-```
+```bash
 task dev
 ```
 
 ## Testing
 
-```
+```bash
 task test
 ```
 
 ## Coverage Report
 
-```
+```bash
 task cover
+```
+
+List Routes:
+
+```bash
+go run . routes list
+```
+
+Run task:
+
+```bash
+go run . task run ...
+```
+
+Run job:
+
+```bash
+go run . job run ...
 ```
