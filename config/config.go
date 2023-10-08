@@ -8,6 +8,8 @@ import (
 	"github.com/gouniverse/sql"
 )
 
+type AuthenticatedUserKey struct{}
+
 const APP_ENVIRONMENT_DEVELOPMENT = "development"
 const APP_ENVIRONMENT_LOCAL = "local"
 const APP_ENVIRONMENT_PRODUCTION = "production"
