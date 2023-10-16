@@ -26,6 +26,7 @@ require (
 	github.com/gouniverse/bs v0.10.1 // indirect
 	github.com/gouniverse/cachestore v0.16.0 // indirect
 	github.com/gouniverse/cdn v0.9.0 // indirect
+	github.com/gouniverse/dashboard v0.9.0 // indirect
 	github.com/gouniverse/hb v1.66.0 // indirect
 	github.com/gouniverse/icons v1.3.0 // indirect
 	github.com/gouniverse/logstore v1.3.0 // indirect

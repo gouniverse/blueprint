@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"net/http"
 	"project/config"
 	"project/internal/middlewares"
 
@@ -11,6 +12,7 @@ import (
 	websiteControllers "project/controllers/website"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/gouniverse/dashboard"
 	"github.com/gouniverse/router"
 )
 
@@ -93,9 +95,17 @@ func routes() []router.Route {
 
 	sharedRoutes := []router.Route{
 		{
-			// Not Found? Point to the not found controller
-			Path:    "/*",
-			Handler: sharedControllers.NewPageNotFoundControllerController().AnyIndex,
+			Name:    "Shared > Flash Controller > Index Page",
+			Path:    "/flash",
+			Handler: sharedControllers.NewFlashController().AnyIndex,
+		},
+		{
+			Name: "Shared > Theme",
+			Path: "/theme",
+			Handler: func(w http.ResponseWriter, r *http.Request) string {
+				dashboard.ThemeHandler(w, r)
+				return ""
+			},
 		},
 	}
 
