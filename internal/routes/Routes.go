@@ -6,9 +6,9 @@ import (
 
 	adminControllers "project/controllers/admin"
 	authControllers "project/controllers/auth"
-	guestControllers "project/controllers/guest"
 	sharedControllers "project/controllers/shared"
 	userControllers "project/controllers/user"
+	websiteControllers "project/controllers/website"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gouniverse/router"
@@ -36,15 +36,12 @@ func globalMiddlewares() []router.Middleware {
 
 func routes() []router.Route {
 	adminRoutes := []router.Route{
-		// Enable if CMS is used
-		// {
-		// 	// Admin > Cms
-		// 	Name:    "Admin > Cms",
-		// 	Path:    "/admin/cms",
-		// 	Handler: adminControllers.NewCmsController().AnyIndex,
-		// },
 		{
-			// Admin > Home Controller > Index Page
+			Name:    "Admin > Cms Manager",
+			Path:    "/admin/cms",
+			Handler: adminControllers.NewCmsController().AnyIndex,
+		},
+		{
 			Name:    "Admin > Home Controller > Index Page",
 			Path:    "/admin",
 			Handler: adminControllers.NewHomeController().AnyIndex,
@@ -81,20 +78,17 @@ func routes() []router.Route {
 		middlewares.NewAdminMiddleware(),
 	})
 
-	guestRoutes := []router.Route{
+	websiteRoutes := []router.Route{
 		{
-			// Guest > Home Controller > Index Page
-			Name:    "Guest > Home Controller > Index Page",
+			Name:    "Website > Cms > Home Page",
 			Path:    "/",
-			Handler: guestControllers.NewHomeController().AnyIndex,
+			Handler: websiteControllers.NewCmsController().AnyIndex,
 		},
-		// Enable if CMS is used
-		// {
-		// 	// Guest > Cms
-		// 	Name:    "Guest > Cms",
-		// 	Path:    "/",
-		// 	Handler: guestControllers.NewCmsController().AnyIndex,
-		// },
+		{
+			Name:    "Website > Cms > Catch All Pages",
+			Path:    "/*",
+			Handler: websiteControllers.NewCmsController().AnyIndex,
+		},
 	}
 
 	sharedRoutes := []router.Route{
@@ -103,20 +97,13 @@ func routes() []router.Route {
 			Path:    "/*",
 			Handler: sharedControllers.NewPageNotFoundControllerController().AnyIndex,
 		},
-		// Enable if CMS is used
-		// {
-		// 	// Guest > Cms
-		// 	Name:    "Guest > Cms",
-		// 	Path:    "/*",
-		// 	Handler: guestControllers.NewCmsController().AnyIndex,
-		// },
 	}
 
 	routes := []router.Route{}
 	routes = append(routes, adminRoutes...)
 	routes = append(routes, authControllers...)
-	routes = append(routes, guestRoutes...)
 	routes = append(routes, userRoutes...)
+	routes = append(routes, websiteRoutes...)
 	routes = append(routes, sharedRoutes...)
 
 	return routes

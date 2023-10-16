@@ -8,6 +8,7 @@ import (
 	"project/internal/cmds"
 	"project/internal/routes"
 	"project/internal/server"
+	"project/internal/taskhandlers"
 	"project/models"
 
 	"github.com/gouniverse/router"
@@ -19,18 +20,24 @@ func main() {
 	config.Initialize()                // 1. Initialize the environment
 	defer config.Database.DB().Close() // 2. Defer Closing the database
 
-	models.Initialize() // 3. Initialize the models
-	// jobs.Initialize()   // 4. Initialize the jobs
+	models.Initialize()    // 3. Initialize the models
+	registerTaskHandlers() // 4. Register the task handlers
+	// jobs.Initialize()   // 5. Initialize the jobs
 
 	// If there are arguments, run the command interface
 	if len(os.Args) > 1 {
-		executeCommand(os.Args[1:]) // 5. Execute the command
+		executeCommand(os.Args[1:]) // 6. Execute the command
 		return
 	}
 
 	// jobs.RunScheduler() // 7. Run the scheduler
 
 	startServer() // 8. Start the server
+}
+
+func registerTaskHandlers() {
+	cfmt.Infoln("Registering task handlers ...")
+	config.Cms.TaskStore.TaskHandlerAdd(taskhandlers.NewHelloWorldTaskHandler(), true)
 }
 
 // executeCommand executes a command
