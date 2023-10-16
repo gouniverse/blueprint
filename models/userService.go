@@ -20,6 +20,10 @@ func (service *userService) UserCreate(user *User) error {
 	return service.repository.UserCreate(user)
 }
 
+func (service *userService) UserFindByEmail(email string) (*User, error) {
+	return service.repository.UserFindByEmail(email)
+}
+
 func (service *userService) UserFindByID(id string) (*User, error) {
 	return service.repository.UserFindByID(id)
 }

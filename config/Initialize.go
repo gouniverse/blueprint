@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gouniverse/cms"
+	"github.com/gouniverse/entitystore"
 	"github.com/gouniverse/sql"
 	"github.com/gouniverse/utils"
 )
@@ -90,6 +91,18 @@ func Initialize() {
 		log.Fatal(err.Error())
 	}
 
+	err = initializeDatabase()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = migrateDatabase()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
 	var errCms error
 	Cms, errCms = cms.NewCms(cms.Config{
 		Database:            Database,
@@ -118,4 +131,50 @@ func Initialize() {
 	if errCms != nil {
 		panic(errCms.Error())
 	}
+}
+
+func initializeDatabase() error {
+	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
+
+	if err != nil {
+		return err
+	}
+
+	Database = sql.NewDatabase(db, DbDriver)
+
+	// CustomStore, err = customstore.NewStore(customstore.WithDb(db), customstore.WithTableName("customrecord"))
+
+	// if err != nil {
+	// 	return err
+	// }
+
+	UserStore, err = entitystore.NewStore(entitystore.NewStoreOptions{
+		DB:                      db,
+		EntityTableName:         "user_entity",
+		EntityTrashTableName:    "user_entity_trash",
+		AttributeTableName:      "user_attribute",
+		AttributeTrashTableName: "user_attribute_trash",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func migrateDatabase() (err error) {
+	// err = CustomStore.AutoMigrate()
+
+	// if err != nil {
+	// 	return err
+	// }
+
+	err = UserStore.AutoMigrate()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

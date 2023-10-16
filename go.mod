@@ -22,6 +22,7 @@ require (
 	github.com/go-chi/httprate v0.7.4 // indirect
 	github.com/go-openapi/errors v0.20.4 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
+	github.com/gouniverse/auth v0.16.0 // indirect
 	github.com/gouniverse/bs v0.10.1 // indirect
 	github.com/gouniverse/cachestore v0.16.0 // indirect
 	github.com/gouniverse/cdn v0.9.0 // indirect
@@ -31,6 +32,8 @@ require (
 	github.com/gouniverse/sessionstore v0.19.0 // indirect
 	github.com/gouniverse/settingstore v0.11.0 // indirect
 	github.com/gouniverse/shortcode v0.1.4 // indirect
+	github.com/gouniverse/uncdn v0.7.4 // indirect
+	github.com/gouniverse/validator v0.11.0 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

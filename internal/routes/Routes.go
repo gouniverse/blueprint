@@ -53,10 +53,14 @@ func routes() []router.Route {
 
 	authControllers := []router.Route{
 		{
-			// Auth > Home Controller > Index Page
-			Name:    "Auth > Home Controller > Index Page",
-			Path:    "/auth",
-			Handler: authControllers.NewHomeController().AnyIndex,
+			Name:    "Auth > Auth Controller > Index Page",
+			Path:    "/auth/auth",
+			Handler: authControllers.NewAuthenticationController().AnyIndex,
+		},
+		{
+			Name:    "Auth > Login Controller > Index Page",
+			Path:    "/auth/login",
+			Handler: authControllers.NewLoginController().AnyIndex,
 		},
 	}
 
