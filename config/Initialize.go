@@ -107,6 +107,8 @@ func Initialize() {
 		SessionAutomigrate:  true,
 		SessionEnable:       true,
 		Shortcodes:          map[string]func(*http.Request, string, map[string]string) string{},
+		TasksEnable:         true,
+		TasksAutomigrate:    true,
 		// TranslationsEnable:  true,
 		// TranslationLanguageDefault: TRANSLATION_LANGUAGE_DEFAULT,
 		// TranslationLanguages:       TRANSLATION_LANGUAGE_LIST,

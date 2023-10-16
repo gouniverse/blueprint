@@ -46,7 +46,6 @@ var MediaRegion string
 var MediaBucket string
 var MediaUrl string
 var WebServer *server.Server
-
 var UserStore *entitystore.Store
 
 var Cms *cms.Cms

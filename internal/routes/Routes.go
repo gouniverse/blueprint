@@ -118,7 +118,12 @@ func routes() []router.Route {
 	return routes
 }
 
+func RoutesList() (globalMiddlewareList []router.Middleware, routeList []router.Route) {
+	return globalMiddlewares(), routes()
+}
+
 // Routes returns the routes of the application
 func Routes() *chi.Mux {
-	return router.NewChiRouter(globalMiddlewares(), routes())
+	globalMiddlewares, routes := RoutesList()
+	return router.NewChiRouter(globalMiddlewares, routes)
 }

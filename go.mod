@@ -9,8 +9,9 @@ require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gouniverse/responses v0.3.0
 	github.com/gouniverse/router v0.6.0
-	github.com/gouniverse/sql v0.7.2
-	github.com/gouniverse/utils v1.32.0
+	github.com/gouniverse/sql v0.8.0
+	github.com/gouniverse/taskstore v0.2.0
+	github.com/gouniverse/utils v1.34.0
 	github.com/mingrammer/cfmt v1.1.0
 	modernc.org/sqlite v1.26.0
 )
@@ -36,7 +37,7 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	go.mongodb.org/mongo-driver v1.12.1 // indirect
-	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
+	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 )
 
 require (
@@ -45,11 +46,11 @@ require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/georgysavva/scany v1.2.1 // indirect
-	github.com/golang-module/carbon/v2 v2.2.8
+	github.com/golang-module/carbon/v2 v2.2.11
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/gouniverse/api v1.5.0 // indirect
-	github.com/gouniverse/cms v0.49.0
-	github.com/gouniverse/dataobject v0.2.0
+	github.com/gouniverse/cms v0.51.1
+	github.com/gouniverse/dataobject v0.2.1
 	github.com/gouniverse/entitystore v0.59.0
 	github.com/gouniverse/maputils v0.6.0 // indirect
 	github.com/gouniverse/uid v1.4.0
@@ -65,7 +66,7 @@ require (
 	github.com/tdewolff/parse/v2 v2.6.8 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/mod v0.13.0 // indirect
-	golang.org/x/net v0.16.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.14.0 // indirect
