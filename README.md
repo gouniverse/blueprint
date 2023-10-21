@@ -6,10 +6,12 @@
 
 This is a quick start blueprint for an MVC web applications
 
-- Redy to develop in the cloud (Gitpod / Github CodeSpaces)
-- Router setup
-- Controllers setup
+- Ready to develop in the cloud (Gitpod / Github CodeSpaces)
 - Database connection setup (SQLite example)
+- Router setup
+- Background tasks setup
+- Scheduler setup
+- Controllers setup
 - CMS setup
 
 ## Installation
@@ -39,6 +41,8 @@ task test
 ```bash
 task cover
 ```
+
+## CLI Commands
 
 List Routes:
 

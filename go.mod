@@ -6,6 +6,7 @@ toolchain go1.21.1
 
 require (
 	github.com/go-chi/chi/v5 v5.0.10
+	github.com/go-co-op/gocron v1.35.2
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gouniverse/auth v0.16.0
 	github.com/gouniverse/cdn v0.9.0
@@ -25,7 +26,6 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/doug-martin/goqu/v9 v9.18.0 // indirect
 	github.com/go-chi/httprate v0.7.4 // indirect
-	github.com/go-co-op/gocron v1.35.2 // indirect
 	github.com/go-openapi/errors v0.20.4 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
 	github.com/gouniverse/bs v0.10.1 // indirect

@@ -6,7 +6,8 @@ import (
 	"github.com/go-co-op/gocron"
 )
 
-func Initialize() {
+// Starts the scheduler without blocking the current thread
+func StartAsync() {
 	scheduler := gocron.NewScheduler(time.UTC)
 
 	// Example of task scheduled every 2 minutes
