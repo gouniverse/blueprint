@@ -7,6 +7,7 @@ import (
 	"project/config"
 	"project/internal/cmds"
 	"project/internal/routes"
+	"project/internal/scheduler"
 	"project/internal/server"
 	"project/internal/taskhandlers"
 	"project/models"
@@ -22,17 +23,21 @@ func main() {
 
 	models.Initialize()    // 3. Initialize the models
 	registerTaskHandlers() // 4. Register the task handlers
-	// jobs.Initialize()   // 5. Initialize the jobs
 
 	// If there are arguments, run the command interface
 	if len(os.Args) > 1 {
-		executeCommand(os.Args[1:]) // 6. Execute the command
+		executeCommand(os.Args[1:]) // 5. Execute the command
 		return
 	}
 
-	// jobs.RunScheduler() // 7. Run the scheduler
+	queueInitialize()      // 6. Initialize the task queue
+	scheduler.Initialize() // 7. Initialize the scheduler
 
 	startServer() // 8. Start the server
+}
+
+func queueInitialize() {
+	go config.Cms.TaskStore.QueueRunGoroutine(10, 2)
 }
 
 func registerTaskHandlers() {
@@ -50,7 +55,7 @@ func executeCommand(args []string) {
 	firstArg := args[0]
 	secondArg := args[1]
 	if firstArg == "task" {
-		cmds.ExecuteCommand(secondArg, args[2:])
+		config.Cms.TaskStore.TaskExecuteCli(secondArg, args[2:])
 		return
 	}
 
