@@ -32,14 +32,10 @@ func (repository *userEntityRepository) UserCreate(user *User) error {
 		UpdatedAt: user.UpdatedAtCarbon().ToStdTime(),
 	})
 
-	errInsert := config.UserStore.EntityInsert(*entity)
+	err := config.UserStore.EntityCreate(&entity)
 
-	if errInsert != nil {
-		return errInsert
-	}
-
-	if entity == nil {
-		return errors.New("entity is nil")
+	if err != nil {
+		return err
 	}
 
 	lo.ForEach(lo.Keys(data), func(key string, index int) {
