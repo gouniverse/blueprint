@@ -6,6 +6,14 @@ tasks:
   - name: Install Taskfile
     command: go install github.com/go-task/task/v3/cmd/task@latest
 
+  - name: Install the GCloud CLI
+    init: | 
+      sudo apt-get install -y apt-transport-https ca-certificates gnupg
+      curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-444.0.0-linux-x86_64.tar.gz
+      tar -xf google-cloud-cli-444.0.0-linux-x86_64.tar.gz
+    command: ./google-cloud-sdk/install.sh --path-update=true --quiet
+
+
   # - name: Install Fresh
     # command: go install github.com/pilu/fresh
 
