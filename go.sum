@@ -87,6 +87,8 @@ github.com/gouniverse/cms v0.51.1 h1:dwJh7u3BYZ1LmP0tGVE4wI4t3uGPj92emnjiH1NaJkc
 github.com/gouniverse/cms v0.51.1/go.mod h1:3GiWeyYTUHR/+SaSrxXsnFjhyoz/AFw7lxgMZfwZv6c=
 github.com/gouniverse/cms v0.53.0 h1:2oqOS38WvxgKogJTrG9To/0cekNBP1rmUA9jcEaFH7w=
 github.com/gouniverse/cms v0.53.0/go.mod h1:eOGhAbY9EVzv/LB3HXh5N9ndCJ0yrppY96yPRcA87VQ=
+github.com/gouniverse/crud v0.5.0 h1:Rj+SAOPpmqvn8oLMAzQY5yA58leIL2YMO9cAKHh+IdA=
+github.com/gouniverse/crud v0.5.0/go.mod h1:uPAqTqN4BMPLxanABpkzktFqU0DWjFE+NXXsbYG40IY=
 github.com/gouniverse/dashboard v0.9.0 h1:U2ksRTF7tgN+ddeeo/FoM0XTKSkNbDvQdNCGXPHrwZo=
 github.com/gouniverse/dashboard v0.9.0/go.mod h1:3Pi2Gbj/v2oQ5s+2EX1czH30WLIdjk6CGpjtiNE0hVE=
 github.com/gouniverse/dataobject v0.2.1 h1:hs9OLd7m3LvG26S69VPjPtJ7u0aCK8SZhl1xmKrXxW8=

@@ -20,6 +20,14 @@ func (service *userService) UserCreate(user *User) error {
 	return service.repository.UserCreate(user)
 }
 
+func (service *userService) UserDelete(user *User) error {
+	return service.repository.UserDelete(user)
+}
+
+func (service *userService) UserDeleteByID(userID string) error {
+	return service.repository.UserDeleteByID(userID)
+}
+
 func (service *userService) UserFindByEmail(email string) (*User, error) {
 	return service.repository.UserFindByEmail(email)
 }
@@ -30,10 +38,6 @@ func (service *userService) UserFindByID(id string) (*User, error) {
 
 func (service *userService) UserList(options UserQueryOptions) ([]User, error) {
 	return service.repository.UserList(options)
-}
-
-func (service *userService) UserDelete(user *User) error {
-	return service.repository.UserDelete(user)
 }
 
 func (service *userService) UserUpdate(user *User) error {

@@ -9,6 +9,7 @@ import (
 const USER_ROLE_SUPERUSER = "superuser"
 const USER_ROLE_ADMINISTRATOR = "administrator"
 const USER_ROLE_MANAGER = "manager"
+const USER_ROLE_USER = "user"
 
 const USER_STATUS_ACTIVE = "active"
 const USER_STATUS_INACTIVE = "inactive"
@@ -27,7 +28,7 @@ func NewUser() *User {
 		SetLastName("").
 		SetEmail("").
 		SetProfileImageUrl("").
-		SetRole("").
+		SetRole(USER_ROLE_USER).
 		SetBusinessName("").
 		SetPhone("").
 		SetTimezone("").

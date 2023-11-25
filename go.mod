@@ -28,6 +28,7 @@ require (
 	github.com/go-openapi/strfmt v0.21.7 // indirect
 	github.com/gouniverse/bs v0.10.1 // indirect
 	github.com/gouniverse/cachestore v0.16.0 // indirect
+	github.com/gouniverse/crud v0.5.0 // indirect
 	github.com/gouniverse/logstore v1.3.0 // indirect
 	github.com/gouniverse/sessionstore v0.19.0 // indirect
 	github.com/gouniverse/settingstore v0.11.0 // indirect
