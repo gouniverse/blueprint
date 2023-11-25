@@ -33,6 +33,9 @@ func globalMiddlewares() []router.Middleware {
 		globalMiddlewares = append(globalMiddlewares, router.NewRecovererMiddleware())
 	}
 
+	globalMiddlewares = append(globalMiddlewares, middlewares.NewThemeMiddleware())
+	globalMiddlewares = append(globalMiddlewares, middlewares.NewAppendAuthUserMiddleware())
+
 	return globalMiddlewares
 }
 

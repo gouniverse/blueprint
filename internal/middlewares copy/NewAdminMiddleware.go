@@ -19,8 +19,7 @@ func NewAdminMiddleware() router.Middleware {
 				authUser := helpers.GetAuthUser(r)
 
 				if authUser == nil {
-					returnURL := links.URL(r.URL.Path, map[string]string{})
-					loginURL := links.NewAuthLinks().Login(returnURL)
+					loginURL := links.NewWebsiteLinks().Home()
 					helpers.ToFlash(w, r, "error", "You must be logged in to access this page", loginURL, 15)
 					return
 				}
