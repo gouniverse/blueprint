@@ -13,7 +13,7 @@ import (
 
 func NewAppendAuthUserMiddleware() router.Middleware {
 	m := router.Middleware{
-		Name:    "Append User Middleware",
+		Name:    "Append Authenticated User Middleware",
 		Handler: appendAuthUserHandler,
 	}
 	return m
