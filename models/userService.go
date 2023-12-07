@@ -20,12 +20,12 @@ func (service *userService) UserCreate(user *User) error {
 	return service.repository.UserCreate(user)
 }
 
-func (service *userService) UserDelete(user *User) error {
-	return service.repository.UserDelete(user)
+func (service *userService) UserSoftDelete(user *User) error {
+	return service.repository.UserSoftDelete(user)
 }
 
-func (service *userService) UserDeleteByID(userID string) error {
-	return service.repository.UserDeleteByID(userID)
+func (service *userService) UserSoftDeleteByID(userID string) error {
+	return service.repository.UserSoftDeleteByID(userID)
 }
 
 func (service *userService) UserFindByEmail(email string) (*User, error) {

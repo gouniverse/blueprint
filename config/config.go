@@ -45,10 +45,12 @@ var MediaEndpoint string
 var MediaRegion string
 var MediaBucket string
 var MediaUrl string
+var StripeKeyPublic string
+var StripeKeyPrivate string
 var WebServer *server.Server
-var UserStore *entitystore.Store
 
 var Cms *cms.Cms
+var UserStore *entitystore.Store
 
 func init() {
 	AppVersion = "0.0.1" // default

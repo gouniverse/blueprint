@@ -3,11 +3,14 @@ module project
 go 1.21
 
 require (
+	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-co-op/gocron v1.36.0
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gouniverse/auth v0.16.0
+	github.com/gouniverse/bs v0.10.1
 	github.com/gouniverse/cdn v0.13.0
+	github.com/gouniverse/crud v0.5.0
 	github.com/gouniverse/dashboard v0.9.0
 	github.com/gouniverse/hb v1.67.0
 	github.com/gouniverse/icons v1.3.0
@@ -22,13 +25,10 @@ require (
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
-	github.com/doug-martin/goqu/v9 v9.19.0 // indirect
 	github.com/go-chi/httprate v0.7.4 // indirect
 	github.com/go-openapi/errors v0.20.4 // indirect
 	github.com/go-openapi/strfmt v0.21.7 // indirect
-	github.com/gouniverse/bs v0.10.1 // indirect
 	github.com/gouniverse/cachestore v0.16.0 // indirect
-	github.com/gouniverse/crud v0.5.0 // indirect
 	github.com/gouniverse/logstore v1.3.0 // indirect
 	github.com/gouniverse/sessionstore v0.19.0 // indirect
 	github.com/gouniverse/settingstore v0.11.0 // indirect

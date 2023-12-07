@@ -48,24 +48,6 @@ func (repository *userEntityRepository) UserCreate(user *User) error {
 	return nil
 }
 
-func (repository *userEntityRepository) UserDelete(user *User) error {
-	if user == nil {
-		return errors.New("user is nil")
-	}
-
-	return repository.UserDeleteByID(user.ID())
-}
-
-func (repository *userEntityRepository) UserDeleteByID(id string) error {
-	_, err := config.UserStore.EntityTrash(id)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (repository *userEntityRepository) UserFindByID(id string) (*User, error) {
 	if id == "" {
 		return nil, errors.New("user id is empty")
@@ -130,7 +112,49 @@ func (repository *userEntityRepository) UserList(options UserQueryOptions) ([]Us
 		list = append(list, *user)
 	}
 
+	if options.Email != "" {
+		list = lo.Filter(list, func(user User, _ int) bool {
+			return user.Email() == options.Email
+		})
+	}
+
+	if len(options.IDIn) > 0 {
+		list = lo.Filter(list, func(user User, _ int) bool {
+			return lo.Contains(options.IDIn, user.ID())
+		})
+	}
+
+	if options.Status != "" {
+		list = lo.Filter(list, func(user User, _ int) bool {
+			return user.Status() == options.Status
+		})
+	}
+
+	if len(options.StatusIn) > 0 {
+		list = lo.Filter(list, func(user User, _ int) bool {
+			return lo.Contains(options.StatusIn, user.Status())
+		})
+	}
+
 	return list, nil
+}
+
+func (repository *userEntityRepository) UserSoftDelete(user *User) error {
+	if user == nil {
+		return errors.New("user is nil")
+	}
+
+	return repository.UserSoftDeleteByID(user.ID())
+}
+
+func (repository *userEntityRepository) UserSoftDeleteByID(id string) error {
+	_, err := config.UserStore.EntityTrash(id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (repository *userEntityRepository) UserUpdate(user *User) error {

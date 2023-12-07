@@ -42,6 +42,9 @@ func Initialize() {
 	MediaBucket = utils.Env("MEDIA_BUCKET")
 	MediaUrl = utils.Env("MEDIA_URL")
 
+	StripeKeyPrivate = utils.Env("STRIPE_KEY_PRIVATE")
+	StripeKeyPublic = utils.Env("STRIPE_KEY_PUBLIC")
+
 	debug := utils.Env("DEBUG")
 
 	if debug == "yes" {
@@ -83,6 +86,16 @@ func Initialize() {
 	if DbDriver != "sqlite" && DbPass == "" {
 		panic("Environment variable DB_PASSWORD is required")
 	}
+
+	// Enable if you use Stripe
+	// if StripeKeyPrivate == "" {
+	// 	panic("Environment variable STRIPE_KEY_PRIVATE is required")
+	// }
+
+	// Enable if you use Stripe
+	// if StripeKeyPublic == "" {
+	// 	panic("Environment variable STRIPE_KEY_PUBLIC is required")
+	// }
 
 	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
 	Database = sql.NewDatabase(db, DbDriver)

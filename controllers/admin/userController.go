@@ -215,6 +215,6 @@ func (userController *userController) FuncCreate(data map[string]string) (userID
 }
 
 func (userController *userController) FuncTrash(userID string) error {
-	err := models.NewUserService().UserDeleteByID(userID)
+	err := models.NewUserService().UserSoftDeleteByID(userID)
 	return err
 }

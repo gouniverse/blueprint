@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/golang-module/carbon/v2"
 	"github.com/gouniverse/dataobject"
+	"github.com/gouniverse/sql"
 	"github.com/gouniverse/uid"
 )
 
@@ -32,7 +33,11 @@ func NewUser() *User {
 		SetBusinessName("").
 		SetPhone("").
 		SetTimezone("").
-		SetCountry("")
+		SetCountry("").
+		SetMemo("").
+		SetCreatedAt(carbon.Now(carbon.UTC).ToDateTimeString(carbon.UTC)).
+		SetUpdatedAt(carbon.Now(carbon.UTC).ToDateTimeString(carbon.UTC)).
+		SetDeletedAt(sql.NULL_DATETIME)
 
 	return o
 }
@@ -75,6 +80,15 @@ func (o *User) CreatedAtCarbon() carbon.Carbon {
 
 func (o *User) SetCreatedAt(createdAt string) *User {
 	o.Set("created_at", createdAt)
+	return o
+}
+
+func (o *User) DeletedAt() string {
+	return o.Get("deleted_at")
+}
+
+func (o *User) SetDeletedAt(deletedAt string) *User {
+	o.Set("deleted_at", deletedAt)
 	return o
 }
 
@@ -143,6 +157,15 @@ func (o *User) MiddleNames() string {
 
 func (o *User) SetLastName(lastName string) *User {
 	o.Set("last_name", lastName)
+	return o
+}
+
+func (o *User) Memo() string {
+	return o.Get("memo")
+}
+
+func (o *User) SetMemo(memo string) *User {
+	o.Set("memo", memo)
 	return o
 }
 
