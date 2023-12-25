@@ -98,11 +98,12 @@ func Initialize() {
 	// }
 
 	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
-	Database = sql.NewDatabase(db, DbDriver)
 
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+
+	Database = sql.NewDatabase(db, DbDriver)
 
 	err = initializeDatabase()
 
