@@ -22,10 +22,12 @@ git clone https://github.com/gouniverse/blueprint
 
 ## Local Development
 
+- Just starting
 ```bash
 task dev:init
 ```
 
+- Run in development mode
 ```bash
 task dev
 ```
