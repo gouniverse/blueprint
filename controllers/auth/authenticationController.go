@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/gouniverse/auth"
+	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 )
@@ -74,7 +75,11 @@ func (c *authenticationController) AnyIndex(w http.ResponseWriter, r *http.Reque
 	}
 
 	sessionKey := utils.StrRandomFromGamma(64, "BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz")
-	errSession := config.Cms.SessionStore.Set(sessionKey, user.ID(), 2*60*60)
+	errSession := config.Cms.SessionStore.Set(sessionKey, user.ID(), 2*60*60, sessionstore.SessionOptions{
+		UserID:    user.ID(),
+		UserAgent: r.UserAgent(),
+		IPAddress: utils.IP(r),
+	})
 
 	if errSession != nil {
 		config.Cms.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Session Store Error: ", errSession.Error())

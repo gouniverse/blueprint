@@ -9,6 +9,8 @@ import (
 
 	"github.com/gouniverse/auth"
 	"github.com/gouniverse/router"
+	"github.com/gouniverse/sessionstore"
+	"github.com/gouniverse/utils"
 )
 
 func NewAppendAuthUserMiddleware() router.Middleware {
@@ -58,7 +60,10 @@ func appendAuthUserHandler(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := config.Cms.SessionStore.Get(userSessionKey, "")
+		userID, err := config.Cms.SessionStore.Get(userSessionKey, "", sessionstore.SessionOptions{
+			IPAddress: utils.IP(r),
+			UserAgent: r.UserAgent(),
+		})
 
 		if err != nil {
 			log.Println(err.Error())

@@ -7,7 +7,6 @@ import (
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/entitystore"
 	"github.com/gouniverse/sb"
-	"github.com/gouniverse/sql"
 	"github.com/gouniverse/utils"
 )
 
@@ -120,7 +119,7 @@ func Initialize() {
 
 	var errCms error
 	Cms, errCms = cms.NewCms(cms.Config{
-		Database:            sql.NewDatabase(db, DbDriver),
+		Database:            sb.NewDatabase(db, DbDriver),
 		Prefix:              "cms_",
 		TemplatesEnable:     true,
 		PagesEnable:         true,
