@@ -59,6 +59,7 @@ require (
 	github.com/gouniverse/dataobject v0.2.1
 	github.com/gouniverse/entitystore v0.60.0
 	github.com/gouniverse/maputils v0.7.0 // indirect
+	github.com/gouniverse/sb v0.1.0
 	github.com/gouniverse/uid v1.4.0
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect

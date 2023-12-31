@@ -96,6 +96,8 @@ github.com/gouniverse/responses v0.3.0 h1:VwGP0n0P79bGPbPin/aNS0Tdg/shm+jTjdpzc8
 github.com/gouniverse/responses v0.3.0/go.mod h1:hszJpLrEiH5Hvv4DPBHFQYL0aPxMNgpjmajqCLeI/vE=
 github.com/gouniverse/router v0.8.0 h1:pew8OhbHj1eBoaVsZ3fJx0E24ngrELz8mUKQmvHDv4k=
 github.com/gouniverse/router v0.8.0/go.mod h1:6plcMPQLikGvvi6VQxNj0cNDo0NSVe0Exb3prPaC2oQ=
+github.com/gouniverse/sb v0.1.0 h1:Pijc1qLtwbey+tdb1Q+cioAxai6wAdTtMNqmYMH5ekc=
+github.com/gouniverse/sb v0.1.0/go.mod h1:XbTMrLZBpfOKFOyXPPupEC6yD7khYp2iFpeSGljQ9GE=
 github.com/gouniverse/sessionstore v0.19.0 h1:4O34mqspErrnC7MhThA7Ay0Z12xoYqlZWJ+o+eHYuG4=
 github.com/gouniverse/sessionstore v0.19.0/go.mod h1:V/XLv9Oi7VZGnkNNJjpCWFhgPEdWff0q0e2eO5bB5V8=
 github.com/gouniverse/settingstore v0.11.0 h1:cn84YxYYAPLtlgXfWiMMV+R4q5p26DFNyjLuSEbtP3E=

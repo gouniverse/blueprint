@@ -8,7 +8,7 @@ import (
 
 	"github.com/doug-martin/goqu/v9"
 	"github.com/golang-module/carbon/v2"
-	"github.com/gouniverse/sql"
+	"github.com/gouniverse/sb"
 	"github.com/mingrammer/cfmt"
 	"github.com/samber/lo"
 )
@@ -26,49 +26,85 @@ func NewUserSqlRepository() *userSqlRepository {
 }
 
 func (repository *userSqlRepository) UserTableCreate() error {
-	sql := sql.NewBuilder(sql.DatabaseDriverName(config.Database.DB())).
+	sql := sb.NewBuilder(sb.DatabaseDriverName(config.Database.DB())).
 		Table(USER_TABLE_NAME).
-		Column("id", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_PRIMARY: sql.YES,
-			sql.COLUMN_ATTRIBUTE_LENGTH:  "40",
+		Column(sb.Column{
+			Name:       "id",
+			Type:       sb.COLUMN_TYPE_STRING,
+			Length:     40,
+			PrimaryKey: true,
 		}).
-		Column("status", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "20",
+		Column(sb.Column{
+			Name:   "status",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 20,
 		}).
-		Column("email", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "100",
+		Column(sb.Column{
+			Name:   "email",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 100,
 		}).
-		Column("first_name", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "50",
+		Column(sb.Column{
+			Name:   "first_name",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 50,
 		}).
-		Column("middle_names", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "100",
+		Column(sb.Column{
+			Name:   "middle_names",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 100,
 		}).
-		Column("last_name", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "50",
+		Column(sb.Column{
+			Name:   "last_name",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 50,
 		}).
-		Column("business_name", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "100",
+		Column(sb.Column{
+			Name:   "business_name",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 100,
 		}).
-		Column("role", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "20",
+		Column(sb.Column{
+			Name:   "role",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 20,
 		}).
-		Column("country", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "2",
+		Column(sb.Column{
+			Name:   "country",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 20,
 		}).
-		Column("timezone", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "40",
+		Column(sb.Column{
+			Name:   "timezone",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 20,
 		}).
-		Column("profile_image_url", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "255",
+		Column(sb.Column{
+			Name:   "profile_image_url",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 255,
 		}).
-		Column("phone", sql.COLUMN_TYPE_STRING, map[string]string{
-			sql.COLUMN_ATTRIBUTE_LENGTH: "20",
+		Column(sb.Column{
+			Name:   "phone",
+			Type:   sb.COLUMN_TYPE_STRING,
+			Length: 20,
 		}).
-		Column("memo", sql.COLUMN_TYPE_TEXT, map[string]string{}).
-		Column("created_at", sql.COLUMN_TYPE_DATETIME, map[string]string{}).
-		Column("updated_at", sql.COLUMN_TYPE_DATETIME, map[string]string{}).
-		Column("deleted_at", sql.COLUMN_TYPE_DATETIME, map[string]string{}).
+		Column(sb.Column{
+			Name: "memo",
+			Type: sb.COLUMN_TYPE_TEXT,
+		}).
+		Column(sb.Column{
+			Name: "created_at",
+			Type: sb.COLUMN_TYPE_DATETIME,
+		}).
+		Column(sb.Column{
+			Name: "updated_at",
+			Type: sb.COLUMN_TYPE_DATETIME,
+		}).
+		Column(sb.Column{
+			Name: "deleted_at",
+			Type: sb.COLUMN_TYPE_DATETIME,
+		}).
 		CreateIfNotExists()
 
 	_, err := config.Database.Exec(sql)
@@ -83,7 +119,7 @@ func (repository *userSqlRepository) UserTableCreate() error {
 func (repository *userSqlRepository) UserCreate(user *User) error {
 	user.SetCreatedAt(carbon.Now(carbon.UTC).ToDateString(carbon.UTC))
 	user.SetUpdatedAt(carbon.Now(carbon.UTC).ToDateString(carbon.UTC))
-	user.SetDeletedAt(sql.NULL_DATETIME)
+	user.SetDeletedAt(sb.NULL_DATETIME)
 
 	data := user.Data()
 
@@ -274,7 +310,7 @@ func (repository *userSqlRepository) userQuery(options UserQueryOptions) *goqu.S
 	}
 
 	if options.OrderBy != "" {
-		if strings.EqualFold(sortOrder, sql.ASC) {
+		if strings.EqualFold(sortOrder, sb.ASC) {
 			q = q.Order(goqu.I(options.OrderBy).Asc())
 		} else {
 			q = q.Order(goqu.I(options.OrderBy).Desc())
@@ -282,7 +318,7 @@ func (repository *userSqlRepository) userQuery(options UserQueryOptions) *goqu.S
 	}
 
 	if !options.WithDeleted {
-		q = q.Where(goqu.C("deleted").Neq(sql.NULL_DATETIME))
+		q = q.Where(goqu.C("deleted").Neq(sb.NULL_DATETIME))
 	}
 
 	return q

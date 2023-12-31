@@ -5,7 +5,7 @@ import (
 
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/entitystore"
-	"github.com/gouniverse/sql"
+	"github.com/gouniverse/sb"
 )
 
 type AuthenticatedUserKey struct{}
@@ -29,7 +29,7 @@ var DbPort string
 var DbName string
 var DbUser string
 var DbPass string
-var Database *sql.Database
+var Database *sb.Database
 var Debug = false
 var MailDriver string
 var MailHost string

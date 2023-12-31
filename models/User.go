@@ -3,7 +3,7 @@ package models
 import (
 	"github.com/golang-module/carbon/v2"
 	"github.com/gouniverse/dataobject"
-	"github.com/gouniverse/sql"
+	"github.com/gouniverse/sb"
 	"github.com/gouniverse/uid"
 )
 
@@ -37,7 +37,7 @@ func NewUser() *User {
 		SetMemo("").
 		SetCreatedAt(carbon.Now(carbon.UTC).ToDateTimeString(carbon.UTC)).
 		SetUpdatedAt(carbon.Now(carbon.UTC).ToDateTimeString(carbon.UTC)).
-		SetDeletedAt(sql.NULL_DATETIME)
+		SetDeletedAt(sb.NULL_DATETIME)
 
 	return o
 }
