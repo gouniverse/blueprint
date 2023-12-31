@@ -24,8 +24,6 @@ github.com/doug-martin/goqu/v9 v9.19.0 h1:PD7t1X3tRcUiSdc5TEyOFKujZA5gs3VSA7wxSv
 github.com/doug-martin/goqu/v9 v9.19.0/go.mod h1:nf0Wc2/hV3gYK9LiyqIrzBEVGlI8qW3GuDCEobC4wBQ=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
 github.com/dustin/go-humanize v1.0.1/go.mod h1:Mu1zIs6XwVuF/gI1OepvI0qD18qycQx+mFykh5fBlto=
-github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
-github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
 github.com/fatih/color v1.6.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/georgysavva/scany v1.2.1 h1:91PAMBpwBtDjvn46TaLQmuVhxpAG6p6sjQaU4zPHPSM=
 github.com/georgysavva/scany v1.2.1/go.mod h1:vGBpL5XRLOocMFFa55pj0P04DrL3I7qKVRL49K6Eu5o=
@@ -101,10 +99,8 @@ github.com/gouniverse/settingstore v0.11.0 h1:cn84YxYYAPLtlgXfWiMMV+R4q5p26DFNyj
 github.com/gouniverse/settingstore v0.11.0/go.mod h1:qJaeCWdUGemWIE8RaUONlTRJDZBBTpyw9Kgn5YUeqzQ=
 github.com/gouniverse/shortcode v0.1.4 h1:595X57QYdi7hUl2dqvL/oih1Ha0/FhU5i9xJr1pbChc=
 github.com/gouniverse/shortcode v0.1.4/go.mod h1:3AmIfeaJKbteiVmalROhmE6mcq73l37uPpDWlCrhvas=
-github.com/gouniverse/sql v0.9.0 h1:COy0X5nBtiFp/X2Rggc8rkZ84m7koIUriAkFXLKOUuc=
-github.com/gouniverse/sql v0.9.0/go.mod h1:Kyca0F0/sfwjtFf7dYZ7Z11FpxyoVBeo2HLrpt3boHk=
-github.com/gouniverse/taskstore v0.7.0 h1:mSniZjYcaEIwOyegHAEQ4oSAvYzfPcN96/dt9nl8Tgk=
-github.com/gouniverse/taskstore v0.7.0/go.mod h1:bqfu4MJBJ7jxvL+Cubx7O3N09d2JLKGzRswt3Db6jLE=
+github.com/gouniverse/taskstore v0.8.0 h1:Gysg4UDsW9pgEQ1A3gAgB4WNH45XatiF1PRVJ1BoVu4=
+github.com/gouniverse/taskstore v0.8.0/go.mod h1:zzvbTia5ls86dodQ7N6tYGs6lhUiJsLhMO6Cvr78w78=
 github.com/gouniverse/uid v1.3.0/go.mod h1:YKsoFDjOj3GUJIL7KeMK0GzGsg7Klk3Sghn+aIotv2k=
 github.com/gouniverse/uid v1.4.0 h1:nb79pouX6+McNCuhVklhircWM8e+bG1VaOD/pTUb9ec=
 github.com/gouniverse/uid v1.4.0/go.mod h1:YKsoFDjOj3GUJIL7KeMK0GzGsg7Klk3Sghn+aIotv2k=

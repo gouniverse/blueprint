@@ -16,7 +16,8 @@ require (
 	github.com/gouniverse/icons v1.3.0
 	github.com/gouniverse/responses v0.3.0
 	github.com/gouniverse/router v0.8.0
-	github.com/gouniverse/taskstore v0.7.0
+	github.com/gouniverse/sessionstore v0.21.0
+	github.com/gouniverse/taskstore v0.8.0
 	github.com/gouniverse/utils v1.36.0
 	github.com/mingrammer/cfmt v1.1.0
 	modernc.org/sqlite v1.28.0
@@ -29,10 +30,8 @@ require (
 	github.com/go-openapi/strfmt v0.21.9 // indirect
 	github.com/gouniverse/cachestore v0.16.0 // indirect
 	github.com/gouniverse/logstore v1.3.0 // indirect
-	github.com/gouniverse/sessionstore v0.21.0 // indirect
 	github.com/gouniverse/settingstore v0.11.0 // indirect
 	github.com/gouniverse/shortcode v0.1.4 // indirect
-	github.com/gouniverse/sql v0.9.0 // indirect
 	github.com/gouniverse/uncdn v0.7.4 // indirect
 	github.com/gouniverse/validator v0.11.0 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible // indirect
@@ -50,7 +49,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/darkoatanasovski/htmltags v1.0.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/georgysavva/scany v1.2.1 // indirect
 	github.com/golang-module/carbon/v2 v2.3.1
 	github.com/google/uuid v1.5.0 // indirect
