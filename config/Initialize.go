@@ -97,6 +97,8 @@ func Initialize() {
 	// 	panic("Environment variable STRIPE_KEY_PUBLIC is required")
 	// }
 
+	os.Setenv("TZ", "UTC")
+
 	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
 
 	if err != nil {
