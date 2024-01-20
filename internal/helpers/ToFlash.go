@@ -56,3 +56,19 @@ func ToFlashSuccess(w http.ResponseWriter, r *http.Request, message string, url 
 func ToFlashWarning(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
 	return ToFlash(w, r, FlashWarning, message, url, seconds)
 }
+
+func ToFlashErrorURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+	return ToFlashURL(FlashError, message, url, seconds)
+}
+
+func ToFlashInfoURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+	return ToFlashURL(FlashInfo, message, url, seconds)
+}
+
+func ToFlashSuccessURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+	return ToFlashURL(FlashSuccess, message, url, seconds)
+}
+
+func ToFlashWarningURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+	return ToFlashURL(FlashWarning, message, url, seconds)
+}

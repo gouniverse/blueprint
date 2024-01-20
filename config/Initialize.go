@@ -133,6 +133,7 @@ func Initialize() {
 		LogsEnable:          true,
 		LogsAutomigrate:     true,
 		SettingsEnable:      true,
+		SettingsAutomigrate: true,
 		SessionAutomigrate:  true,
 		SessionEnable:       true,
 		Shortcodes:          map[string]func(*http.Request, string, map[string]string) string{},
