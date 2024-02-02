@@ -4,7 +4,10 @@ import (
 	"project/internal/server"
 
 	"github.com/gouniverse/cms"
+	"github.com/gouniverse/customstore"
 	"github.com/gouniverse/entitystore"
+	"github.com/gouniverse/geostore"
+	"github.com/gouniverse/metastore"
 	"github.com/gouniverse/sb"
 )
 
@@ -50,7 +53,10 @@ var StripeKeyPrivate string
 var WebServer *server.Server
 
 var Cms *cms.Cms
+var CustomStore *customstore.Store
+var MetaStore *metastore.Store
 var UserStore *entitystore.Store
+var GeoStore *geostore.Store
 
 func init() {
 	AppVersion = "0.0.1" // default

@@ -1,6 +1,6 @@
 module project
 
-go 1.21
+go 1.21.6
 
 require (
 	github.com/doug-martin/goqu/v9 v9.19.0
@@ -14,6 +14,7 @@ require (
 	github.com/gouniverse/dashboard v0.9.0
 	github.com/gouniverse/hb v1.71.1
 	github.com/gouniverse/icons v1.3.0
+	github.com/gouniverse/metastore v0.10.0
 	github.com/gouniverse/responses v0.3.0
 	github.com/gouniverse/router v0.8.0
 	github.com/gouniverse/sessionstore v0.21.0
@@ -50,15 +51,17 @@ require (
 	github.com/darkoatanasovski/htmltags v1.0.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/georgysavva/scany v1.2.1 // indirect
-	github.com/golang-module/carbon/v2 v2.3.1
+	github.com/golang-module/carbon/v2 v2.3.7
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/gouniverse/api v1.5.0 // indirect
 	github.com/gouniverse/cms v0.55.0
+	github.com/gouniverse/customstore v0.2.1
 	github.com/gouniverse/dataobject v0.2.1
 	github.com/gouniverse/entitystore v0.61.0
+	github.com/gouniverse/geostore v0.1.0
 	github.com/gouniverse/maputils v0.7.0 // indirect
-	github.com/gouniverse/sb v0.1.0
-	github.com/gouniverse/uid v1.4.0
+	github.com/gouniverse/sb v0.3.0
+	github.com/gouniverse/uid v1.5.0
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect

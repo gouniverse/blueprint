@@ -6,7 +6,10 @@ import (
 	"os"
 
 	"github.com/gouniverse/cms"
+	"github.com/gouniverse/customstore"
 	"github.com/gouniverse/entitystore"
+	"github.com/gouniverse/geostore"
+	"github.com/gouniverse/metastore"
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/utils"
 )
@@ -160,11 +163,33 @@ func initializeDatabase() error {
 
 	Database = sb.NewDatabase(db, DbDriver)
 
-	// CustomStore, err = customstore.NewStore(customstore.WithDb(db), customstore.WithTableName("customrecord"))
+	CustomStore, err = customstore.NewStore(customstore.NewStoreOptions{
+		DB:        db,
+		TableName: "custom_record",
+	})
 
-	// if err != nil {
-	// 	return err
-	// }
+	if err != nil {
+		return err
+	}
+
+	GeoStore, err = geostore.NewStore(geostore.NewStoreOptions{
+		DB:                db,
+		CountryTableName:  "geo_country",
+		TimezoneTableName: "geo_timezone",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	MetaStore, err = metastore.NewStore(metastore.NewStoreOptions{
+		DB:            db,
+		MetaTableName: "metas_meta",
+	})
+
+	if err != nil {
+		return err
+	}
 
 	UserStore, err = entitystore.NewStore(entitystore.NewStoreOptions{
 		DB:                      db,
@@ -182,11 +207,19 @@ func initializeDatabase() error {
 }
 
 func migrateDatabase() (err error) {
-	// err = CustomStore.AutoMigrate()
+	err = CustomStore.AutoMigrate()
 
-	// if err != nil {
-	// 	return err
-	// }
+	if err != nil {
+		return err
+	}
+
+	err = GeoStore.AutoMigrate()
+
+	if err != nil {
+		return err
+	}
+
+	MetaStore.AutoMigrate()
 
 	err = UserStore.AutoMigrate()
 
