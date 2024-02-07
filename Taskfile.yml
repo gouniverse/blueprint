@@ -53,6 +53,11 @@ tasks:
     cmds:
       - air
 
+  routes:
+    desc: List the app routes
+    cmds:
+      - go run . routes list
+
   test:
     cmds:
       - echo "Running tests..."
