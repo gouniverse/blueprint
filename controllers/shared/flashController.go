@@ -34,7 +34,7 @@ func (controller flashController) AnyIndex(w http.ResponseWriter, r *http.Reques
 
 func (c flashController) pageHTML(r *http.Request) *hb.Tag {
 	messageID := utils.Req(r, "message_id", "")
-	msgData, err := config.Cms.CacheStore.GetJSON(messageID+"_flash_message", "")
+	msgData, err := config.CacheStore.GetJSON(messageID+"_flash_message", "")
 
 	msgType := "error"
 	message := "The message is no longer available"

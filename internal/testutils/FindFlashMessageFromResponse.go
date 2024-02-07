@@ -9,7 +9,7 @@ import (
 )
 
 func FlashMessageFind(messageID string) (msg *types.FlashMessage, err error) {
-	msgData, err := config.Cms.CacheStore.GetJSON(messageID+"_flash_message", "")
+	msgData, err := config.CacheStore.GetJSON(messageID+"_flash_message", "")
 	if err != nil {
 		return msg, err
 	}

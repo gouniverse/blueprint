@@ -9,7 +9,7 @@ import (
 	"project/internal/helpers"
 	"project/internal/links"
 	"project/internal/testutils"
-	"project/models"
+	"project/pkg/userstore"
 	"strings"
 
 	"github.com/gouniverse/auth"
@@ -54,7 +54,7 @@ func (c *authenticationController) AnyIndex(w http.ResponseWriter, r *http.Reque
 	}
 
 	if status != "success" {
-		config.Cms.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Response Status: ", message.(string))
+		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Response Status: ", message.(string))
 		return helpers.ToFlashError(w, r, "System Error. Invalid authentication response status", links.NewWebsiteLinks().Home(), 5)
 	}
 
@@ -69,20 +69,20 @@ func (c *authenticationController) AnyIndex(w http.ResponseWriter, r *http.Reque
 	user, errUser := findOrCreateUser(email.(string))
 
 	if errUser != nil {
-		config.Cms.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > User Create Error: ", errUser.Error())
+		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > User Create Error: ", errUser.Error())
 		return helpers.ToFlashError(w, r, "Error finding user", links.NewWebsiteLinks().Home(), 5)
 
 	}
 
 	sessionKey := utils.StrRandomFromGamma(64, "BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz")
-	errSession := config.Cms.SessionStore.Set(sessionKey, user.ID(), 2*60*60, sessionstore.SessionOptions{
+	errSession := config.SessionStore.Set(sessionKey, user.ID(), 2*60*60, sessionstore.SessionOptions{
 		UserID:    user.ID(),
 		UserAgent: r.UserAgent(),
 		IPAddress: utils.IP(r),
 	})
 
 	if errSession != nil {
-		config.Cms.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Session Store Error: ", errSession.Error())
+		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Session Store Error: ", errSession.Error())
 		return helpers.ToFlashError(w, r, "Error creating session", links.NewWebsiteLinks().Home(), 5)
 	}
 
@@ -124,8 +124,8 @@ func (*authenticationController) callAuthKnight(once string) (map[string]interfa
 	return response, nil
 }
 
-func findOrCreateUser(email string) (*models.User, error) {
-	existingUser, errUser := models.NewUserService().UserFindByEmail(email)
+func findOrCreateUser(email string) (*userstore.User, error) {
+	existingUser, errUser := config.UserStore.UserFindByEmail(email)
 
 	if errUser != nil {
 		return nil, errUser
@@ -135,11 +135,11 @@ func findOrCreateUser(email string) (*models.User, error) {
 		return existingUser, nil
 	}
 
-	newUser := models.NewUser().
+	newUser := userstore.NewUser().
 		SetEmail(email).
-		SetStatus(models.USER_STATUS_ACTIVE)
+		SetStatus(userstore.USER_STATUS_ACTIVE)
 
-	errCreate := models.NewUserService().UserCreate(newUser)
+	errCreate := config.UserStore.UserCreate(newUser)
 
 	if errCreate != nil {
 		return nil, errCreate

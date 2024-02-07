@@ -2,8 +2,9 @@ package admin
 
 import (
 	"net/http"
+	"project/config"
 	"project/internal/links"
-	"project/models"
+	"project/pkg/userstore"
 
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/crud"
@@ -82,20 +83,20 @@ func (userController *userController) AnyIndex(w http.ResponseWriter, r *http.Re
 				Type:  crud.FORM_FIELD_TYPE_SELECT,
 				Options: []crud.FormFieldOption{
 					{
-						Key:   models.USER_ROLE_USER,
-						Value: models.USER_ROLE_USER,
+						Key:   userstore.USER_ROLE_USER,
+						Value: userstore.USER_ROLE_USER,
 					},
 					{
-						Key:   models.USER_ROLE_MANAGER,
-						Value: models.USER_ROLE_MANAGER,
+						Key:   userstore.USER_ROLE_MANAGER,
+						Value: userstore.USER_ROLE_MANAGER,
 					},
 					{
-						Key:   models.USER_ROLE_ADMINISTRATOR,
-						Value: models.USER_ROLE_ADMINISTRATOR,
+						Key:   userstore.USER_ROLE_ADMINISTRATOR,
+						Value: userstore.USER_ROLE_ADMINISTRATOR,
 					},
 					{
-						Key:   models.USER_ROLE_SUPERUSER,
-						Value: models.USER_ROLE_SUPERUSER,
+						Key:   userstore.USER_ROLE_SUPERUSER,
+						Value: userstore.USER_ROLE_SUPERUSER,
 					},
 				},
 			},
@@ -139,13 +140,13 @@ func (userController *userController) FuncLayout(w http.ResponseWriter, r *http.
 // }
 
 func (userController *userController) FuncRows() ([]crud.Row, error) {
-	users, err := models.NewUserService().UserList(models.UserQueryOptions{})
+	users, err := config.UserStore.UserList(userstore.UserQueryOptions{})
 
 	if err != nil {
 		return nil, err
 	}
 
-	rows := lo.Map(users, func(user models.User, _ int) crud.Row {
+	rows := lo.Map(users, func(user userstore.User, _ int) crud.Row {
 		return crud.Row{
 			ID: user.ID(),
 			Data: []string{
@@ -161,7 +162,7 @@ func (userController *userController) FuncRows() ([]crud.Row, error) {
 }
 
 func (userController *userController) FuncUpdate(entityID string, data map[string]string) error {
-	user, err := models.NewUserService().UserFindByID(entityID)
+	user, err := config.UserStore.UserFindByID(entityID)
 
 	if err != nil {
 		return err
@@ -173,7 +174,7 @@ func (userController *userController) FuncUpdate(entityID string, data map[strin
 	user.SetRole(data["role"])
 	user.SetStatus(data["status"])
 
-	err = models.NewUserService().UserUpdate(user)
+	err = config.UserStore.UserUpdate(user)
 
 	if err != nil {
 		return err
@@ -183,7 +184,7 @@ func (userController *userController) FuncUpdate(entityID string, data map[strin
 }
 
 func (userController *userController) FuncFetchUpdateData(userID string) (map[string]string, error) {
-	user, err := models.NewUserService().UserFindByID(userID)
+	user, err := config.UserStore.UserFindByID(userID)
 
 	if err != nil {
 		return nil, err
@@ -201,11 +202,11 @@ func (userController *userController) FuncFetchUpdateData(userID string) (map[st
 }
 
 func (userController *userController) FuncCreate(data map[string]string) (userID string, err error) {
-	user := models.NewUser()
+	user := userstore.NewUser()
 	user.SetFirstName(data["first_name"])
 	user.SetLastName(data["last_name"])
 	user.SetEmail(data["email"])
-	err = models.NewUserService().UserCreate(user)
+	err = config.UserStore.UserCreate(user)
 
 	if err != nil {
 		return "", err
@@ -215,6 +216,6 @@ func (userController *userController) FuncCreate(data map[string]string) (userID
 }
 
 func (userController *userController) FuncTrash(userID string) error {
-	err := models.NewUserService().UserSoftDeleteByID(userID)
+	err := config.UserStore.UserSoftDeleteByID(userID)
 	return err
 }

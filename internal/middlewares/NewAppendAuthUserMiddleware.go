@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"project/config"
-	"project/models"
 
 	"github.com/gouniverse/auth"
 	"github.com/gouniverse/router"
@@ -60,7 +59,7 @@ func appendAuthUserHandler(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := config.Cms.SessionStore.Get(userSessionKey, "", sessionstore.SessionOptions{
+		userID, err := config.SessionStore.Get(userSessionKey, "", sessionstore.SessionOptions{
 			IPAddress: utils.IP(r),
 			UserAgent: r.UserAgent(),
 		})
@@ -76,7 +75,7 @@ func appendAuthUserHandler(next http.Handler) http.Handler {
 			return
 		}
 
-		user, err := models.NewUserService().UserFindByID(userID)
+		user, err := config.UserStore.UserFindByID(userID)
 
 		if err != nil {
 			log.Println(err.Error())

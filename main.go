@@ -32,17 +32,20 @@ func main() {
 
 	queueInitialize()      // 6. Initialize the task queue
 	scheduler.StartAsync() // 7. Initialize the scheduler
-
+	
+	go config.CacheStore.ExpireCacheGoroutine()
+	go config.SessionStore.ExpireSessionGoroutine()
+	
 	startServer() // 8. Start the server
 }
 
 func queueInitialize() {
-	go config.Cms.TaskStore.QueueRunGoroutine(10, 2)
+	go config.TaskStore.QueueRunGoroutine(10, 2)
 }
 
 func registerTaskHandlers() {
 	cfmt.Infoln("Registering task handlers ...")
-	config.Cms.TaskStore.TaskHandlerAdd(taskhandlers.NewHelloWorldTaskHandler(), true)
+	config.TaskStore.TaskHandlerAdd(taskhandlers.NewHelloWorldTaskHandler(), true)
 }
 
 // executeCommand executes a command
@@ -55,7 +58,7 @@ func executeCliCommand(args []string) {
 	firstArg := args[0]
 	secondArg := args[1]
 	if firstArg == "task" {
-		config.Cms.TaskStore.TaskExecuteCli(secondArg, args[2:])
+		config.TaskStore.TaskExecuteCli(secondArg, args[2:])
 		return
 	}
 

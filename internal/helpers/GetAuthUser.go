@@ -3,11 +3,11 @@ package helpers
 import (
 	"net/http"
 	"project/config"
-	"project/models"
+	"project/pkg/userstore"
 )
 
 // GetAuthUser returns the authenticated user
-func GetAuthUser(r *http.Request) *models.User {
+func GetAuthUser(r *http.Request) *userstore.User {
 	if r == nil {
 		return nil
 	}
@@ -16,6 +16,6 @@ func GetAuthUser(r *http.Request) *models.User {
 	if value == nil {
 		return nil
 	}
-	user := value.(*models.User)
+	user := value.(*userstore.User)
 	return user
 }

@@ -29,7 +29,7 @@ func (handler *helloWorldTaskHandler) Description() string {
 }
 
 func (handler *helloWorldTaskHandler) Enqueue() (task *taskstore.Queue, err error) {
-	return config.Cms.TaskStore.TaskEnqueueByAlias(handler.Alias(), map[string]any{})
+	return config.TaskStore.TaskEnqueueByAlias(handler.Alias(), map[string]any{})
 }
 
 func (handler *helloWorldTaskHandler) Handle() bool {

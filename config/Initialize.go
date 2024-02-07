@@ -4,13 +4,17 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"project/pkg/userstore"
 
+	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/customstore"
-	"github.com/gouniverse/entitystore"
 	"github.com/gouniverse/geostore"
+	"github.com/gouniverse/logstore"
 	"github.com/gouniverse/metastore"
 	"github.com/gouniverse/sb"
+	"github.com/gouniverse/sessionstore"
+	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/utils"
 )
 
@@ -125,24 +129,24 @@ func Initialize() {
 
 	var errCms error
 	Cms, errCms = cms.NewCms(cms.Config{
-		Database:            sb.NewDatabase(db, DbDriver),
-		Prefix:              "cms_",
-		TemplatesEnable:     true,
-		PagesEnable:         true,
-		MenusEnable:         true,
-		BlocksEnable:        true,
-		CacheAutomigrate:    true,
-		CacheEnable:         true,
+		Database:        sb.NewDatabase(db, DbDriver),
+		Prefix:          "cms_",
+		TemplatesEnable: true,
+		PagesEnable:     true,
+		MenusEnable:     true,
+		BlocksEnable:    true,
+		//CacheAutomigrate:    true,
+		//CacheEnable:         true,
 		EntitiesAutomigrate: true,
-		LogsEnable:          true,
-		LogsAutomigrate:     true,
-		SettingsEnable:      true,
-		SettingsAutomigrate: true,
-		SessionAutomigrate:  true,
-		SessionEnable:       true,
-		Shortcodes:          map[string]func(*http.Request, string, map[string]string) string{},
-		TasksEnable:         true,
-		TasksAutomigrate:    true,
+		//LogsEnable:          true,
+		//LogsAutomigrate:     true,
+		SettingsEnable: true,
+		//SettingsAutomigrate: true,
+		//SessionAutomigrate:  true,
+		//SessionEnable:       true,
+		Shortcodes: map[string]func(*http.Request, string, map[string]string) string{},
+		//TasksEnable:         true,
+		//TasksAutomigrate:    true,
 		// TranslationsEnable:  true,
 		// TranslationLanguageDefault: TRANSLATION_LANGUAGE_DEFAULT,
 		// TranslationLanguages:       TRANSLATION_LANGUAGE_LIST,
@@ -163,9 +167,14 @@ func initializeDatabase() error {
 
 	Database = sb.NewDatabase(db, DbDriver)
 
+	CacheStore, err = cachestore.NewStore(cachestore.NewStoreOptions{
+		DB:             db,
+		CacheTableName: "snv_caches_cache",
+	})
+
 	CustomStore, err = customstore.NewStore(customstore.NewStoreOptions{
 		DB:        db,
-		TableName: "custom_record",
+		TableName: "snv_custom_record",
 	})
 
 	if err != nil {
@@ -174,8 +183,17 @@ func initializeDatabase() error {
 
 	GeoStore, err = geostore.NewStore(geostore.NewStoreOptions{
 		DB:                db,
-		CountryTableName:  "geo_country",
-		TimezoneTableName: "geo_timezone",
+		CountryTableName:  "snv_geo_country",
+		TimezoneTableName: "snv_geo_timezone",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	LogStore, err = logstore.NewStore(logstore.NewStoreOptions{
+		DB:           db,
+		LogTableName: "snv_logs_log",
 	})
 
 	if err != nil {
@@ -184,19 +202,38 @@ func initializeDatabase() error {
 
 	MetaStore, err = metastore.NewStore(metastore.NewStoreOptions{
 		DB:            db,
-		MetaTableName: "metas_meta",
+		MetaTableName: "snv_metas_meta",
 	})
 
 	if err != nil {
 		return err
 	}
 
-	UserStore, err = entitystore.NewStore(entitystore.NewStoreOptions{
-		DB:                      db,
-		EntityTableName:         "user_entity",
-		EntityTrashTableName:    "user_entity_trash",
-		AttributeTableName:      "user_attribute",
-		AttributeTrashTableName: "user_attribute_trash",
+	SessionStore, err = sessionstore.NewStore(sessionstore.NewStoreOptions{
+		DB:               db,
+		SessionTableName: "snv_sessions_session",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	TaskStore, err = taskstore.NewStore(taskstore.NewStoreOptions{
+		DB:             db,
+		TaskTableName:  "snv_tasks_task",
+		QueueTableName: "snv_tasks_queue",
+	})
+
+	// UserStore, err = entitystore.NewStore(entitystore.NewStoreOptions{
+	//	DB:                      db,
+	//	EntityTableName:         "user_entity",
+	//	EntityTrashTableName:    "user_entity_trash",
+	//	AttributeTableName:      "user_attribute",
+	//	AttributeTrashTableName: "user_attribute_trash",
+	// })
+	UserStore, err = userstore.NewStore(userstore.NewStoreOptions{
+		DB:            db,
+		UserTableName: "snv_users_user",
 	})
 
 	if err != nil {
@@ -207,6 +244,12 @@ func initializeDatabase() error {
 }
 
 func migrateDatabase() (err error) {
+	err = CacheStore.AutoMigrate()
+
+	if err != nil {
+		return err
+	}
+
 	err = CustomStore.AutoMigrate()
 
 	if err != nil {
@@ -219,7 +262,25 @@ func migrateDatabase() (err error) {
 		return err
 	}
 
+	err = LogStore.AutoMigrate()
+
+	if err != nil {
+		return err
+	}
+
 	MetaStore.AutoMigrate()
+
+	err = SessionStore.AutoMigrate()
+
+	if err != nil {
+		return err
+	}
+
+	err = TaskStore.AutoMigrate()
+
+	if err != nil {
+		return err
+	}
 
 	err = UserStore.AutoMigrate()
 

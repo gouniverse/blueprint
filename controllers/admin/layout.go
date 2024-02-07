@@ -5,7 +5,7 @@ import (
 	"project/config"
 	"project/internal/helpers"
 	"project/internal/links"
-	"project/models"
+	"project/pkg/userstore"
 
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/dashboard"
@@ -78,7 +78,7 @@ func layout(r *http.Request, opts layoutOptions) *dashboard.Dashboard {
 	return dashboard
 }
 
-func userDashboardUserMenu(authUser *models.User) []dashboard.MenuItem {
+func userDashboardUserMenu(authUser *userstore.User) []dashboard.MenuItem {
 	items := []dashboard.MenuItem{
 		// {
 		// 	Title: "Profile",

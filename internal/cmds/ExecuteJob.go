@@ -34,7 +34,7 @@ func ExecuteJob(args []string) {
 		return
 	}
 
-	queuedTask, err := config.Cms.TaskStore.QueueFindByID(queuedTaskID)
+	queuedTask, err := config.TaskStore.QueueFindByID(queuedTaskID)
 
 	if err != nil {
 		cfmt.Errorln("Task not found: ", queuedTaskID)
@@ -56,7 +56,7 @@ func ExecuteJob(args []string) {
 		return
 	}
 
-	isOK := config.Cms.TaskStore.QueuedTaskProcess(*queuedTask)
+	isOK := config.TaskStore.QueuedTaskProcess(*queuedTask)
 
 	if isOK {
 		cfmt.Infoln("Job: ", queuedTaskID, " run OK")

@@ -2,10 +2,17 @@ package config
 
 import (
 	"project/internal/server"
+	"project/pkg/userstore"
 
+	// "github.com/gouniverse/cms"
+	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/customstore"
-	"github.com/gouniverse/entitystore"
+	"github.com/gouniverse/logstore"
+	"github.com/gouniverse/sessionstore"
+	"github.com/gouniverse/taskstore"
+
+	// "github.com/gouniverse/entitystore"
 	"github.com/gouniverse/geostore"
 	"github.com/gouniverse/metastore"
 	"github.com/gouniverse/sb"
@@ -53,10 +60,14 @@ var StripeKeyPrivate string
 var WebServer *server.Server
 
 var Cms *cms.Cms
+var CacheStore *cachestore.Store
 var CustomStore *customstore.Store
-var MetaStore *metastore.Store
-var UserStore *entitystore.Store
 var GeoStore *geostore.Store
+var LogStore *logstore.Store
+var MetaStore *metastore.Store
+var SessionStore *sessionstore.Store
+var TaskStore *taskstore.Store
+var UserStore *userstore.Store
 
 func init() {
 	AppVersion = "0.0.1" // default
