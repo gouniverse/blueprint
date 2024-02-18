@@ -20,7 +20,10 @@ vendor/
 # Go workspace file
 go.work
 
+# Env files
 .env
+.env.vault
+
 tmp/
 database.db
 google-cloud-cli-*
