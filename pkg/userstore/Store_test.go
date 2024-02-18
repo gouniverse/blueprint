@@ -62,6 +62,10 @@ func TestStoreUserFindByID(t *testing.T) {
 		AutomigrateEnabled: true,
 	})
 
+	if err != nil {
+		t.Fatal("unexpected error:", err)
+	}
+
 	user := NewUser().
 		SetStatus(USER_STATUS_UNVERIFIED).
 		SetFirstName("John").

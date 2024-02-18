@@ -19,6 +19,7 @@ type User struct {
 
 func NewUser() *User {
 	o := &User{}
+
 	o.SetID(uid.HumanUid()).
 		SetStatus(USER_STATUS_UNVERIFIED).
 		SetFirstName("").
@@ -30,10 +31,14 @@ func NewUser() *User {
 		SetBusinessName("").
 		SetPhone("").
 		SetPassword("").
-		SetCreatedAt(carbon.Now().ToDateTimeString()).
-		SetUpdatedAt(carbon.Now().ToDateTimeString()).
+		SetTimezone("").
+		SetCountry("").
+		SetMemo("").
+		SetCreatedAt(carbon.Now(carbon.UTC).ToDateTimeString(carbon.UTC)).
+		SetUpdatedAt(carbon.Now(carbon.UTC).ToDateTimeString(carbon.UTC)).
 		SetDeletedAt(sb.NULL_DATETIME).
 		SetMetas(map[string]string{})
+
 	return o
 }
 
@@ -67,8 +72,7 @@ func (o *User) IsUnverified() bool {
 }
 
 func (o *User) IsAdministrator() bool {
-	return o.Email() == "info@sinevia.com"
-	// return o.Role() == USER_ROLE_ADMINISTRATOR
+	return o.Role() == USER_ROLE_ADMINISTRATOR
 }
 
 func (o *User) IsManager() bool {
@@ -87,6 +91,15 @@ func (o *User) BusinessName() string {
 
 func (o *User) SetBusinessName(lastName string) *User {
 	o.Set("business_name", lastName)
+	return o
+}
+
+func (o *User) Country() string {
+	return o.Get("country")
+}
+
+func (o *User) SetCountry(country string) *User {
+	o.Set("country", country)
 	return o
 }
 
@@ -116,20 +129,54 @@ func (o *User) Email() string {
 	return o.Get("email")
 }
 
+func (o *User) SetEmail(email string) *User {
+	o.Set("email", email)
+	return o
+}
+
 func (o *User) FirstName() string {
 	return o.Get("first_name")
+}
+
+func (o *User) SetFirstName(firstName string) *User {
+	o.Set("first_name", firstName)
+	return o
 }
 
 func (o *User) ID() string {
 	return o.Get("id")
 }
 
+func (o *User) SetID(id string) *User {
+	o.Set("id", id)
+	return o
+}
+
 func (o *User) LastName() string {
 	return o.Get("last_name")
 }
 
+func (o *User) SetLastName(lastName string) *User {
+	o.Set("last_name", lastName)
+	return o
+}
+
+func (o *User) Memo() string {
+	return o.Get("memo")
+}
+
+func (o *User) SetMemo(memo string) *User {
+	o.Set("memo", memo)
+	return o
+}
+
 func (o *User) MiddleNames() string {
 	return o.Get("middle_names")
+}
+
+func (o *User) SetMiddleNames(middleNames string) *User {
+	o.Set("middle_names", middleNames)
+	return o
 }
 
 func (o *User) Metas() (map[string]string, error) {
@@ -161,6 +208,36 @@ func (o *User) Meta(name string) string {
 	return ""
 }
 
+func (o *User) SetMeta(name string, value string) error {
+	return o.UpsertMetas(map[string]string{name: value})
+	// return config.MetaStore.Set("user", o.ID(), name, value)
+}
+
+// SetMetas stores metas as json string
+// Warning: it overwrites any existing metas
+func (o *User) SetMetas(metas map[string]string) error {
+	mapString, err := utils.ToJSON(metas)
+	if err != nil {
+		return err
+	}
+	o.Set("metas", mapString)
+	return nil
+}
+
+func (o *User) UpsertMetas(metas map[string]string) error {
+	currentMetas, err := o.Metas()
+
+	if err != nil {
+		return err
+	}
+
+	for k, v := range metas {
+		currentMetas[k] = v
+	}
+
+	return o.SetMetas(currentMetas)
+}
+
 func (o *User) Password() string {
 	return o.Get("password")
 }
@@ -171,12 +248,16 @@ func (o *User) PasswordCompare(password string) bool {
 }
 
 // SetPasswordAndHash hashes the password before saving
-func (o *User) SetPasswordAndHash(password string) *User {
+func (o *User) SetPasswordAndHash(password string) error {
 	hash, err := utils.StrToBcryptHash(password)
+
 	if err != nil {
-		// config.Cms.LogStore.ErrorWithContext("At user SetPasswordAndHash", err.Error())
+		return err
 	}
-	return o.SetPassword(hash)
+
+	o.SetPassword(hash)
+
+	return nil
 }
 
 // SetPassword sets the password as provided, if you want it hashed use SetPasswordAndHash() method
@@ -189,6 +270,11 @@ func (o *User) Phone() string {
 	return o.Get("phone")
 }
 
+func (o *User) SetPhone(phone string) *User {
+	o.Set("phone", phone)
+	return o
+}
+
 func (o *User) ProfileImageUrl() string {
 	return o.Get("profile_image_url")
 }
@@ -199,8 +285,13 @@ func (o *User) ProfileImageOrDefaultUrl() string {
 	if o.ProfileImageUrl() != "" {
 		return o.ProfileImageUrl()
 	}
-	//return links.NewWebsiteLinks().Media("/images/users/person-fill.svg", map[string]string{})
+
 	return defaultURL
+}
+
+func (o *User) SetProfileImageUrl(imageUrl string) *User {
+	o.Set("profile_image_url", imageUrl)
+	return o
 }
 
 func (o *User) Role() string {
@@ -221,69 +312,24 @@ func (o *User) SetStatus(status string) *User {
 	return o
 }
 
+func (o *User) Timezone() string {
+	return o.Get("timezone")
+}
+
+func (o *User) SetTimezone(timezone string) *User {
+	o.Set("timezone", timezone)
+	return o
+}
+
 func (o *User) UpdatedAt() string {
 	return o.Get("updated_at")
 }
 
-func (o *User) SetEmail(email string) *User {
-	o.Set("email", email)
-	return o
-}
-
-func (o *User) SetFirstName(firstName string) *User {
-	o.Set("first_name", firstName)
-	return o
-}
-
-func (o *User) SetID(id string) *User {
-	o.Set("id", id)
-	return o
-}
-
-func (o *User) SetLastName(lastName string) *User {
-	o.Set("last_name", lastName)
-	return o
-}
-
-func (o *User) SetMiddleNames(middleNames string) *User {
-	o.Set("middle_names", middleNames)
-	return o
-}
-
-func (o *User) SetMetas(metas map[string]string) error {
-	mapString, err := utils.ToJSON(metas)
-	if err != nil {
-		return err
-	}
-	o.Set("metas", mapString)
-	return nil
-}
-
-func (o *User) SetPhone(phone string) *User {
-	o.Set("phone", phone)
-	return o
-}
-
-func (o *User) SetProfileImageUrl(imageUrl string) *User {
-	o.Set("profile_image_url", imageUrl)
-	return o
+func (o *User) UpdatedAtCarbon() carbon.Carbon {
+	return carbon.NewCarbon().Parse(o.Get("updated_at"), carbon.UTC)
 }
 
 func (o *User) SetUpdatedAt(updatedAt string) *User {
 	o.Set("updated_at", updatedAt)
 	return o
-}
-
-func (o *User) UpsertMetas(metas map[string]string) error {
-	currentMetas, err := o.Metas()
-
-	if err != nil {
-		return err
-	}
-
-	for k, v := range metas {
-		currentMetas[k] = v
-	}
-
-	return o.SetMetas(currentMetas)
 }
