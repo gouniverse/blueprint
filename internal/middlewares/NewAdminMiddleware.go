@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"project/internal/helpers"
 	"project/internal/links"
-	"project/pkg/userstore"
 
 	"github.com/gouniverse/router"
 )
@@ -31,7 +30,7 @@ func NewAdminMiddleware() router.Middleware {
 					return
 				}
 
-				if authUser.Role() != userstore.USER_ROLE_ADMINISTRATOR {
+				if !authUser.IsAdministrator() && !authUser.IsSuperuser() {
 					homeURL := links.NewWebsiteLinks().Home()
 					helpers.ToFlash(w, r, "error", "You must be an administrator to access this page", homeURL, 15)
 					return

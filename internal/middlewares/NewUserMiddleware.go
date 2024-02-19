@@ -20,7 +20,7 @@ func NewUserMiddleware() router.Middleware {
 				if authUser == nil {
 					returnURL := links.URL(r.URL.Path, map[string]string{})
 					loginURL := links.NewAuthLinks().Login(returnURL)
-					helpers.ToFlash(w, r, "error", "Only users can access this page", loginURL, 15)
+					helpers.ToFlash(w, r, "error", "Only authenticated users can access this page", loginURL, 15)
 					return
 				}
 

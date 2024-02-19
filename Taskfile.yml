@@ -33,15 +33,19 @@ tasks:
       - echo "Done!"
     silent: true
 
-  deploy:
-    desc: Build and deploys the app to Google Cloud Run
-    cmds:
-      - gcloud config set account YOUREMAIL
-      - gcloud config set project YOURPROJECT
-      - gcloud config set run/region europe-west4
-      - gcloud builds submit --tag gcr.io/YOURPROJECT/YOURPACKAGENAME
-      - gcloud run deploy YOURAPPNAME --image gcr.io/YOURPROJECT/YOURPACKAGENAME --platform managed --region europe-west4 --allow-unauthenticated
+  # deploy-cloudrun:
+  #   desc: Build and deploys the app to Google Cloud Run
+  #   cmds:
+  #     - gcloud config set account YOUREMAIL
+  #     - gcloud config set project YOURPROJECT
+  #     - gcloud config set run/region europe-west4
+  #     - gcloud builds submit --tag gcr.io/YOURPROJECT/YOURPACKAGENAME
+  #     - gcloud run deploy YOURAPPNAME --image gcr.io/YOURPROJECT/YOURPACKAGENAME --platform managed --region europe-west4 --allow-unauthenticated
 
+  deploy-ssh:
+    desc: Builds and deploys the app to VM (i.e. Digital Ocean) via SSH
+    cmds:
+      - go run cmd/deploy/main.go
 
   dev:init:
     desc: Initialize development environment (copies the .env_example to .env)
@@ -53,10 +57,27 @@ tasks:
     cmds:
       - air
 
-  routes:
-    desc: List the app routes
+  nilaway:install:
+    desc: Install nilaway or update to latest
     cmds:
-      - go run . routes list
+      - echo "installing/updating nilaway..."
+      - go install go.uber.org/nilaway/cmd/nilaway@latest
+
+  nilaway:
+    desc: Tests for nils
+    cmds:
+      - echo "testing for nils..."
+      - nilaway ./...
+      - echo "Done!"
+    silent: true
+
+  routes:
+    desc: List app routes
+    cmds:
+      - echo "Listing routes..."
+      - go run  . routes list
+      - echo "Done!"
+    silent: true
 
   test:
     cmds:

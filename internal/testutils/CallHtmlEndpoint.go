@@ -7,11 +7,11 @@ import (
 	"github.com/gouniverse/responses"
 )
 
-func CallHtmlEndpoint(method string, f func(w http.ResponseWriter, r *http.Request) string, options NewRequestOptions) (response string, err error) {
+func CallHtmlEndpoint(method string, f func(w http.ResponseWriter, r *http.Request) string, options NewRequestOptions) (response string, res *http.Response, err error) {
 	req, err := NewRequest(method, "/", options)
 
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 
 	recorder := httptest.NewRecorder()
@@ -19,5 +19,5 @@ func CallHtmlEndpoint(method string, f func(w http.ResponseWriter, r *http.Reque
 	handler.ServeHTTP(recorder, req)
 	response = recorder.Body.String()
 
-	return response, nil
+	return response, recorder.Result(), nil
 }

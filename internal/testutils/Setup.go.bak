@@ -3,7 +3,6 @@ package testutils
 import (
 	"project/config"
 	"project/models"
-	//smtpmock "github.com/mocktools/go-smtp-mock"
 )
 
 func Setup() {

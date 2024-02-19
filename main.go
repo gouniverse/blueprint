@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	"project/config"
@@ -32,10 +33,10 @@ func main() {
 
 	queueInitialize()      // 6. Initialize the task queue
 	scheduler.StartAsync() // 7. Initialize the scheduler
-	
+
 	go config.CacheStore.ExpireCacheGoroutine()
 	go config.SessionStore.ExpireSessionGoroutine()
-	
+
 	startServer() // 8. Start the server
 }
 
@@ -87,4 +88,14 @@ func startServer() {
 			log.Fatal(err)
 		}
 	}
+}
+
+func cmsAddShortcodes() {
+	shortcodes := map[string]func(*http.Request, string, map[string]string) string{
+		//"x-authenticated":   widgets.NewAuthenticatedWidget().Render,
+		//"x-unauthenticated": widgets.NewUnauthenticatedWidget().Render,
+		//"x-print":                    widgets.NewPrintWidget().Render,
+	}
+
+	config.Cms.ShortcodesAdd(shortcodes)
 }

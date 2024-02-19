@@ -86,7 +86,6 @@ func AppendUserHandler(next http.Handler) http.Handler {
 		}
 
 		ctx := context.WithValue(r.Context(), config.AuthenticatedUserKey{}, user)
-		ctx = context.WithValue(ctx, config.AuthenticatedSessionKey{}, userSessionKey)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
