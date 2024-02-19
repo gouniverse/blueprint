@@ -16,6 +16,7 @@ func GetAuthUser(r *http.Request) *userstore.User {
 	if value == nil {
 		return nil
 	}
+
 	user := value.(*userstore.User)
 	return user
 }

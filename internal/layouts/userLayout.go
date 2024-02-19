@@ -51,7 +51,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	dashboard := dashboard.NewDashboard(dashboard.Config{
 		HTTPRequest:     r,
 		Content:         options.Content.ToHTML(),
-		Title:           options.Title + " | " + config.AppName,
+		Title:           options.Title + " | User | " + config.AppName,
 		LoginURL:        links.NewAuthLinks().Login(homeLink),
 		Menu:            userMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",

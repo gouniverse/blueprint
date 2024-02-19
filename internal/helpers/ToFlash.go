@@ -9,10 +9,10 @@ import (
 	"github.com/gouniverse/uid"
 )
 
-const FlashError = "error"
-const FlashSuccess = "success"
-const FlashInfo = "info"
-const FlashWarning = "warning"
+const FLASH_ERROR = "error"
+const FLASH_SUCCESS = "success"
+const FLASH_INFO = "info"
+const FLASH_WARNING = "warning"
 
 func IsFlashRoute(r *http.Request) bool {
 	return strings.Contains(r.URL.Path, "/flash")
@@ -42,33 +42,33 @@ func ToFlash(w http.ResponseWriter, r *http.Request, messageType string, message
 }
 
 func ToFlashError(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlash(w, r, FlashError, message, url, seconds)
+	return ToFlash(w, r, FLASH_ERROR, message, url, seconds)
 }
 
 func ToFlashInfo(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlash(w, r, FlashInfo, message, url, seconds)
+	return ToFlash(w, r, FLASH_INFO, message, url, seconds)
 }
 
 func ToFlashSuccess(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlash(w, r, FlashSuccess, message, url, seconds)
+	return ToFlash(w, r, FLASH_SUCCESS, message, url, seconds)
 }
 
 func ToFlashWarning(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlash(w, r, FlashWarning, message, url, seconds)
+	return ToFlash(w, r, FLASH_WARNING, message, url, seconds)
 }
 
 func ToFlashErrorURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlashURL(FlashError, message, url, seconds)
+	return ToFlashURL(FLASH_ERROR, message, url, seconds)
 }
 
 func ToFlashInfoURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlashURL(FlashInfo, message, url, seconds)
+	return ToFlashURL(FLASH_INFO, message, url, seconds)
 }
 
 func ToFlashSuccessURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlashURL(FlashSuccess, message, url, seconds)
+	return ToFlashURL(FLASH_SUCCESS, message, url, seconds)
 }
 
 func ToFlashWarningURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
-	return ToFlashURL(FlashWarning, message, url, seconds)
+	return ToFlashURL(FLASH_WARNING, message, url, seconds)
 }

@@ -1,5 +1,7 @@
 package links
 
+const CATCHALL = "/*"
+
 // == AUTH LINKS =============================================================
 
 const AUTH_AUTH = "/auth/auth"
@@ -20,8 +22,13 @@ const USER_HOME = "/user"
 
 // == WEBSITE LINKS ==========================================================
 
+const HOME = "/"
+const BLOG = "/blog"
+const BLOG_POST = "/blog/post"
+const BLOG_POST_WITH_REGEX = BLOG_POST + "/{id:[0-9]+}"
+const BLOG_POST_WITH_REGEX2 = BLOG_POST + "/{id:[0-9]+}/{title}"
 const CONTACT = "/contact"
 const FLASH = "/flash"
 const THEME = "/theme"
-const CATCHALL = "/*"
-const HOME = "/"
+const THUMB = "/th/{extension:[a-z]+}/{size:[0-9x]+}/{quality:[0-9]+}/*"
+const WIDGET = "/widget"
