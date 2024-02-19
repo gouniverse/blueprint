@@ -1,11 +1,11 @@
 package config
 
 import (
-	"log"
 	"net/http"
 	"os"
 	"project/pkg/userstore"
 
+	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/customstore"
@@ -16,11 +16,13 @@ import (
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/utils"
+	"github.com/jellydator/ttlcache/v3"
 )
 
 func Initialize() {
 	// log.Println("1. Initializing environment variables...")
 	utils.EnvInitialize()
+	utils.EnvEncInitialize(ENV1 + ENV2 + ENV3)
 
 	ServerHost = utils.Env("SERVER_HOST")
 	ServerPort = utils.Env("SERVER_PORT")
@@ -50,8 +52,12 @@ func Initialize() {
 	MediaBucket = utils.Env("MEDIA_BUCKET")
 	MediaUrl = utils.Env("MEDIA_URL")
 
+	OpenAiApiKey = utils.Env("OPENAI_API_KEY")
+
 	StripeKeyPrivate = utils.Env("STRIPE_KEY_PRIVATE")
 	StripeKeyPublic = utils.Env("STRIPE_KEY_PUBLIC")
+
+	CmsUserTemplateID = utils.Env("CMS_TEMPLATE_ID")
 
 	debug := utils.Env("DEBUG")
 
@@ -107,15 +113,7 @@ func Initialize() {
 
 	os.Setenv("TZ", "UTC")
 
-	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	Database = sb.NewDatabase(db, DbDriver)
-
-	err = initializeDatabase()
+	err := initializeDatabase()
 
 	if err != nil {
 		panic(err.Error())
@@ -127,9 +125,29 @@ func Initialize() {
 		panic(err.Error())
 	}
 
-	var errCms error
-	Cms, errCms = cms.NewCms(cms.Config{
-		Database:        sb.NewDatabase(db, DbDriver),
+	initializeInMemoryCache()
+}
+
+func initializeDatabase() error {
+	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
+
+	if err != nil {
+		return err
+	}
+
+	Database = sb.NewDatabase(db, DbDriver)
+
+	CacheStore, err = cachestore.NewStore(cachestore.NewStoreOptions{
+		DB:             db,
+		CacheTableName: "snv_caches_cache",
+	})
+
+	if err != nil {
+		return err
+	}
+
+	Cms, err = cms.NewCms(cms.Config{
+		Database:        Database,
 		Prefix:          "cms_",
 		TemplatesEnable: true,
 		PagesEnable:     true,
@@ -153,24 +171,19 @@ func Initialize() {
 		// CustomEntityList:    entityList(),
 	})
 
-	if errCms != nil {
-		panic(errCms.Error())
-	}
-}
-
-func initializeDatabase() error {
-	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
-
 	if err != nil {
 		return err
 	}
 
-	Database = sb.NewDatabase(db, DbDriver)
-
-	CacheStore, err = cachestore.NewStore(cachestore.NewStoreOptions{
-		DB:             db,
-		CacheTableName: "snv_caches_cache",
+	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
+		DB:                 Database.DB(),
+		PostTableName:      "snv_blogs_post",
+		AutomigrateEnabled: true,
 	})
+
+	if err != nil {
+		return err
+	}
 
 	CustomStore, err = customstore.NewStore(customstore.NewStoreOptions{
 		DB:        db,
@@ -191,6 +204,10 @@ func initializeDatabase() error {
 		return err
 	}
 
+	if GeoStore == nil {
+		panic("GeoStore is nil")
+	}
+
 	LogStore, err = logstore.NewStore(logstore.NewStoreOptions{
 		DB:           db,
 		LogTableName: "snv_logs_log",
@@ -209,6 +226,10 @@ func initializeDatabase() error {
 		return err
 	}
 
+	if MetaStore == nil {
+		panic("MetaStore is nil")
+	}
+
 	SessionStore, err = sessionstore.NewStore(sessionstore.NewStoreOptions{
 		DB:               db,
 		SessionTableName: "snv_sessions_session",
@@ -224,13 +245,10 @@ func initializeDatabase() error {
 		QueueTableName: "snv_tasks_queue",
 	})
 
-	// UserStore, err = entitystore.NewStore(entitystore.NewStoreOptions{
-	//	DB:                      db,
-	//	EntityTableName:         "user_entity",
-	//	EntityTrashTableName:    "user_entity_trash",
-	//	AttributeTableName:      "user_attribute",
-	//	AttributeTrashTableName: "user_attribute_trash",
-	// })
+	if err != nil {
+		return err
+	}
+
 	UserStore, err = userstore.NewStore(userstore.NewStoreOptions{
 		DB:            db,
 		UserTableName: "snv_users_user",
@@ -240,7 +258,15 @@ func initializeDatabase() error {
 		return err
 	}
 
+	if UserStore == nil {
+		panic("UserStore is nil")
+	}
+
 	return nil
+}
+
+func initializeInMemoryCache() {
+	InMem = ttlcache.New[string, any]()
 }
 
 func migrateDatabase() (err error) {
