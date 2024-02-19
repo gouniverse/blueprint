@@ -28,6 +28,7 @@ require (
 	github.com/gouniverse/utils v1.39.0
 	github.com/jellydator/ttlcache/v3 v3.1.1
 	github.com/mingrammer/cfmt v1.1.0
+	github.com/robertkrimen/otto v0.3.0
 	github.com/sfreiberg/simplessh v0.0.0-20220719182921-185eafd40485
 	modernc.org/sqlite v1.29.1
 )
@@ -59,12 +60,13 @@ require (
 	golang.org/x/exp v0.0.0-20240205201215-2c58cdc269a3 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/term v0.17.0 // indirect
+	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6 // indirect
 )
 
 require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/darkoatanasovski/htmltags v1.0.0 // indirect
+	github.com/darkoatanasovski/htmltags v1.0.0
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/georgysavva/scany v1.2.1 // indirect
 	github.com/golang-module/carbon/v2 v2.3.8
@@ -79,7 +81,7 @@ require (
 	github.com/gouniverse/sb v0.3.0
 	github.com/gouniverse/uid v1.5.0
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
+	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
