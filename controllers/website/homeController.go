@@ -1,4 +1,4 @@
-package guest
+package website
 
 import "net/http"
 
