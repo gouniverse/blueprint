@@ -24,6 +24,9 @@ tasks:
     # command: curl -sSfL https://raw.githubusercontent.com/cosmtrek/air/master/install.sh | sh -s
     command: go install github.com/cosmtrek/air@latest
 
+  - name: Prepare .env file
+    command: cp .env_example .env
+
   - name: Install Dependencies and Run
     init: go get && go build ./... && go test ./...
     command: go run
