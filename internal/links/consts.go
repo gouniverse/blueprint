@@ -29,6 +29,7 @@ const BLOG_POST_WITH_REGEX = BLOG_POST + "/{id:[0-9]+}"
 const BLOG_POST_WITH_REGEX2 = BLOG_POST + "/{id:[0-9]+}/{title}"
 const CONTACT = "/contact"
 const FLASH = "/flash"
+const MEDIA = "/media" + CATCHALL
 const THEME = "/theme"
 const THUMB = "/th/{extension:[a-z]+}/{size:[0-9x]+}/{quality:[0-9]+}/*"
 const WIDGET = "/widget"

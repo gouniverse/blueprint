@@ -9,7 +9,7 @@ import (
 func TestsConfigureAndInitialize() {
 	os.Setenv("APP_NAME", "Blueprint")
 	os.Setenv("APP_URL", "http://localhost:8080")
-	os.Setenv("APP_ENV", "testing")
+	os.Setenv("APP_ENV", APP_ENVIRONMENT_TESTING)
 	os.Setenv("DB_DRIVER", "sqlite")
 	os.Setenv("DB_HOST", "")
 	os.Setenv("DB_PORT", "")

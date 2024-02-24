@@ -10,7 +10,7 @@ import (
 	"project/internal/routes"
 	"project/internal/scheduler"
 	"project/internal/server"
-	"project/internal/taskhandlers"
+	"project/internal/tasks"
 	"project/models"
 
 	"github.com/gouniverse/router"
@@ -46,7 +46,8 @@ func queueInitialize() {
 
 func registerTaskHandlers() {
 	cfmt.Infoln("Registering task handlers ...")
-	config.TaskStore.TaskHandlerAdd(taskhandlers.NewHelloWorldTaskHandler(), true)
+	config.TaskStore.TaskHandlerAdd(tasks.NewHelloWorldTask(), true)
+	config.TaskStore.TaskHandlerAdd(tasks.NewEnvencTask(), true)
 }
 
 // executeCommand executes a command
