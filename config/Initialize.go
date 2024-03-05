@@ -233,6 +233,7 @@ func initializeDatabase() error {
 	SessionStore, err = sessionstore.NewStore(sessionstore.NewStoreOptions{
 		DB:               db,
 		SessionTableName: "snv_sessions_session",
+		TimeoutSeconds:   7200,
 	})
 
 	if err != nil {

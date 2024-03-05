@@ -1,4 +1,10 @@
-# https://taskfile.dev
+#
+# This task file allows you to:
+#  1. Serve the application for development
+#  2. Deploy to cloud run
+#
+# Task file usage: https://taskfile.dev
+#
 
 version: '3'
 
@@ -6,6 +12,9 @@ vars:
   APPNAME: Welcome to Gouniverse Blueprint Project
 
 tasks:
+  # ========================== #
+  # START: Help screem (Default)
+  # ========================== #
   default:
     cmds:
         - echo "================================================================"
@@ -22,6 +31,9 @@ tasks:
         - echo "=                                                              ="
         - echo "================================================================"
     silent: true
+  # ========================== #
+  # END: Help screem (Default) #
+  # ========================== #
 
   cover:
     desc: Builds a coverage report

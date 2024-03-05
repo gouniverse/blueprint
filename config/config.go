@@ -60,8 +60,8 @@ var MediaRegion string
 var MediaBucket string
 var MediaUrl string
 var OpenAiApiKey string
-var StripeKeyPublic string
 var StripeKeyPrivate string
+var StripeKeyPublic string
 var WebServer *server.Server
 
 var InMem *ttlcache.Cache[string, any]
