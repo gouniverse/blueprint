@@ -21,7 +21,7 @@ func openDb(driverName string, dbHost string, dbPort string, dbName string, dbUs
 	}
 
 	if driverName == "mysql" {
-		dsn := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
+		dsn := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=UTC"
 		db, err = sql.Open("mysql", dsn)
 		// Maximum Idle Connections
 		db.SetMaxIdleConns(5)
@@ -34,7 +34,7 @@ func openDb(driverName string, dbHost string, dbPort string, dbName string, dbUs
 	}
 
 	if driverName == "postgres" {
-		dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPass + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable TimeZone=Europe/London"
+		dsn := "host=" + dbHost + " user=" + dbUser + " password=" + dbPass + " dbname=" + dbName + " port=" + dbPort + " sslmode=disable TimeZone=UTC"
 		db, err = sql.Open("postgres", dsn)
 	}
 

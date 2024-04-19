@@ -1,7 +1,7 @@
 package config
 
 import (
-	"net/http"
+	"errors"
 	"os"
 	"project/pkg/userstore"
 
@@ -143,7 +143,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("cachestore.NewStore"), err)
 	}
 
 	Cms, err = cms.NewCms(cms.Config{
@@ -162,7 +162,7 @@ func initializeDatabase() error {
 		//SettingsAutomigrate: true,
 		//SessionAutomigrate:  true,
 		//SessionEnable:       true,
-		Shortcodes: map[string]func(*http.Request, string, map[string]string) string{},
+		Shortcodes: []cms.ShortcodeInterface{},
 		//TasksEnable:         true,
 		//TasksAutomigrate:    true,
 		// TranslationsEnable:  true,
@@ -172,7 +172,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("cms.NewCms"), err)
 	}
 
 	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
@@ -182,7 +182,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("blogstore.NewStore"), err)
 	}
 
 	CustomStore, err = customstore.NewStore(customstore.NewStoreOptions{
@@ -191,7 +191,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("customstore.NewStore"), err)
 	}
 
 	GeoStore, err = geostore.NewStore(geostore.NewStoreOptions{
@@ -201,7 +201,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("geostore.NewStore"), err)
 	}
 
 	if GeoStore == nil {
@@ -214,7 +214,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("logstore.NewStore"), err)
 	}
 
 	MetaStore, err = metastore.NewStore(metastore.NewStoreOptions{
@@ -223,7 +223,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("metastore.NewStore"), err)
 	}
 
 	if MetaStore == nil {
@@ -237,7 +237,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("sessionstore.NewStore"), err)
 	}
 
 	TaskStore, err = taskstore.NewStore(taskstore.NewStoreOptions{
@@ -247,7 +247,11 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("taskstore.NewStore"), err)
+	}
+
+	if TaskStore == nil {
+		panic("TaskStore is nil")
 	}
 
 	UserStore, err = userstore.NewStore(userstore.NewStoreOptions{
@@ -256,7 +260,7 @@ func initializeDatabase() error {
 	})
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("userstore.NewStore"), err)
 	}
 
 	if UserStore == nil {
@@ -274,45 +278,49 @@ func migrateDatabase() (err error) {
 	err = CacheStore.AutoMigrate()
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("cachestore.AutoMigrate"), err)
 	}
 
 	err = CustomStore.AutoMigrate()
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("customstore.AutoMigrate"), err)
 	}
 
 	err = GeoStore.AutoMigrate()
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("geostore.AutoMigrate"), err)
 	}
 
 	err = LogStore.AutoMigrate()
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("logstore.AutoMigrate"), err)
 	}
 
-	MetaStore.AutoMigrate()
+	err = MetaStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("metastore.AutoMigrate"), err)
+	}
 
 	err = SessionStore.AutoMigrate()
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("sessionstore.AutoMigrate"), err)
 	}
 
 	err = TaskStore.AutoMigrate()
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("taskstore.AutoMigrate"), err)
 	}
 
 	err = UserStore.AutoMigrate()
 
 	if err != nil {
-		return err
+		return errors.Join(errors.New("userstore.AutoMigrate"), err)
 	}
 
 	return nil

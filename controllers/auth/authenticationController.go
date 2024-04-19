@@ -73,6 +73,14 @@ func (c *authenticationController) AnyIndex(w http.ResponseWriter, r *http.Reque
 		return helpers.ToFlashError(w, r, "Error finding user", links.NewWebsiteLinks().Home(), 5)
 
 	}
+	
+	if user == nil {
+		return helpers.ToFlashError(w, r, "User account not found", links.NewWebsiteLinks().Home(), 5)
+	}
+
+	if !user.IsActive() {
+		return helpers.ToFlashError(w, r, "User account not active. Please contact support", links.NewWebsiteLinks().Home(), 5)
+	}
 
 	sessionKey := utils.StrRandomFromGamma(64, "BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz")
 	errSession := config.SessionStore.Set(sessionKey, user.ID(), 2*60*60, sessionstore.SessionOptions{
@@ -88,10 +96,8 @@ func (c *authenticationController) AnyIndex(w http.ResponseWriter, r *http.Reque
 
 	auth.AuthCookieSet(w, r, sessionKey)
 
-	redirectUrl := links.NewWebsiteLinks().Home()
-	if user.IsManager() || user.IsAdministrator() || user.IsSuperuser() {
-		redirectUrl = links.NewAdminLinks().Home()
-	}
+	redirectUrl := c.calculateRedirectURL(*user)
+	
 	return helpers.ToFlashSuccess(w, r, "Login was successful", redirectUrl, 5)
 }
 
@@ -122,6 +128,29 @@ func (*authenticationController) callAuthKnight(once string) (map[string]interfa
 	json.NewDecoder(req.Body).Decode(&response)
 
 	return response, nil
+}
+
+// calculateRedirectURL calculates the redirect URL based on the user's role and profile completeness.
+//
+// 1. By default all users redirect to home
+// 2. If user is manager or admin, redirect to admin panel
+// 3. If user does not have any names, redirect to profile
+//
+// Parameters:
+// - user (models.User): The user object.
+//
+// Returns:
+// - string: The redirect URL.
+func (c *authenticationController) calculateRedirectURL(user userstore.User) string {
+	// 1. By default all users redirect to home
+	redirectUrl := links.NewUserLinks().Home()
+
+	// 2. If user is manager or admin, redirect to admin panel
+	if user.IsManager() || user.IsAdministrator() || user.IsSuperuser() {
+		redirectUrl = links.NewAdminLinks().Home()
+	}
+	
+	return redirectUrl
 }
 
 func findOrCreateUser(email string) (*userstore.User, error) {

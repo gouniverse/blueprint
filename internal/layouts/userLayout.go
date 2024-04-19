@@ -55,6 +55,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		LoginURL:        links.NewAuthLinks().Login(homeLink),
 		Menu:            userMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",
+		LogoRawHtml:     logoHtml(),
 		LogoRedirectURL: links.NewUserLinks().Home(),
 		User:            dashboardUser,
 		UserMenu:        userDashboardUserMenu(authUser),
@@ -70,6 +71,15 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	return dashboard
 }
 
+func logoHtml() string {
+	return `
+<div style="display: inline-block; justify-content: space-between; align-items: center; width: fit-content; padding: 0px; border: 3px solid orange; background:orange; color: white; font-family: sans-serif; font-size: 20px; letter-spacing: 2px;">
+	<span style="color: white; font-family: sans-serif; font-size: 20px; letter-spacing: 2px;">BLUE</span>
+	<span style="background-color: white; color: orange; padding: 5px;">PRINT</span>
+  </div>
+	`
+}
+
 func userMenu(user *userstore.User) []dashboard.MenuItem {
 	websiteHomeLink := links.NewWebsiteLinks().Home()
 	dashboardLink := links.NewUserLinks().Home()
@@ -82,6 +92,12 @@ func userMenu(user *userstore.User) []dashboard.MenuItem {
 		URL:   websiteHomeLink,
 	}
 
+	profileMenuItem := dashboard.MenuItem{
+		Icon:  hb.NewI().Class("bi bi-person").Style("margin-right:10px;").ToHTML(),
+		Title: "Profile",
+		// URL:   links.NewUserLinks().Profile(),
+	}
+
 	loginMenuItem := dashboard.MenuItem{
 		Icon:  hb.NewI().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
 		Title: "Login",
@@ -92,24 +108,6 @@ func userMenu(user *userstore.User) []dashboard.MenuItem {
 	// 	Icon:  hb.NewI().Class("bi bi-shop").Style("margin-right:10px;").ToHTML(),
 	// 	Title: "Your Shop",
 	// 	URL:   links.NewUserLinks().Shop(map[string]string{}),
-	// }
-
-	// pendingAssessmentsMenuItem := dashboard.MenuItem{
-	// 	Icon:  hb.NewI().Class("bi bi-clock").Style("margin-right:10px;").ToHTML(),
-	// 	Title: "Ordered Exams",
-	// 	URL:   links.NewUserLinks().ExamsOrdered(),
-	// }
-
-	// failedAssessmentsMenuItem := dashboard.MenuItem{
-	// 	Icon:  hb.NewI().Class("bi bi-patch-exclamation").Style("margin-right:10px;").ToHTML(),
-	// 	Title: "Failed Exams",
-	// 	URL:   links.NewUserLinks().ExamsFailed(),
-	// }
-
-	// passedAssessmentsMenuItem := dashboard.MenuItem{
-	// 	Icon:  hb.NewI().Class("bi bi-patch-check").Style("margin-right:10px;").ToHTML(),
-	// 	Title: "Passed Exams",
-	// 	URL:   links.NewUserLinks().ExamsPassed(),
 	// }
 
 	// inviteFriendMenuItem := dashboard.MenuItem{
@@ -145,9 +143,7 @@ func userMenu(user *userstore.User) []dashboard.MenuItem {
 
 	if user != nil {
 		// menuItems = append(menuItems, shopMenuItem)
-		// menuItems = append(menuItems, pendingAssessmentsMenuItem)
-		// menuItems = append(menuItems, passedAssessmentsMenuItem)
-		// menuItems = append(menuItems, failedAssessmentsMenuItem)
+		menuItems = append(menuItems, profileMenuItem)
 		// menuItems = append(menuItems, inviteFriendMenuItem)
 		menuItems = append(menuItems, websiteMenuItem)
 	}

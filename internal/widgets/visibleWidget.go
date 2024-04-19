@@ -7,6 +7,8 @@ import (
 	"github.com/samber/lo"
 )
 
+var _ Widget = (*visibleWidget)(nil) // verify it extends the interface
+
 // == CONSTUCTOR ==============================================================
 
 // NewVisibleWidget creates a new instance of the show widget
@@ -30,6 +32,18 @@ func NewVisibleWidget() *visibleWidget {
 // Example:
 // <x-visible environment="production">content</x-visible>
 type visibleWidget struct{}
+
+// == PUBLIC METHODS =========================================================
+
+// Alias the shortcode alias to be used in the template.
+func (w *visibleWidget) Alias() string {
+	return "x-visible"
+}
+
+// Description a user-friendly description of the shortcode.
+func (w *visibleWidget) Description() string {
+	return "Renders the content if the condition is met"
+}
 
 // Render implements the shortcode interface.
 func (w *visibleWidget) Render(r *http.Request, content string, params map[string]string) string {

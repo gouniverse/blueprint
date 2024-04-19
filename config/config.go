@@ -53,6 +53,7 @@ var MailPassword string
 var MailFromEmailAddress string
 var MailFromName string
 var MediaDriver string
+var MediaRoot string = "/"
 var MediaKey string
 var MediaSecret string
 var MediaEndpoint string

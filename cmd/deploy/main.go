@@ -13,17 +13,17 @@ import (
 	"github.com/sfreiberg/simplessh"
 )
 
-func main() {
-	timestamp := carbon.Now(carbon.UTC).Format("Ymd_His")
-	buildExecutablePath := "tmp/application_deploy_" + timestamp
-	sshKey := "{{ SSHKEY }}.prv"
-	sshUser := "{{ SSHUSER }}"
-	sshHost := "{{ SSHHOST }}"
-	sshLogin := sshUser + "@" + sshHost
-	remDeployDir := "/home/{{ USER }}/{{ APP_DIR }}"
-	remTempDeployName := "temp_deploy_" + timestamp
-	pm2ProcessName := "{{ PROCESSNAME }}"
+var timestamp = carbon.Now(carbon.UTC).Format("Ymd_His")
+var buildExecutablePath = "tmp/application_deploy_" + timestamp
+var sshKey = "{{ SSHKEY }}.prv"
+var sshUser = "{{ SSHUSER }}"
+var sshHost = "{{ SSHHOST }}"
+var sshLogin = sshUser + "@" + sshHost
+var remDeployDir = "/home/{{ USER }}/{{ APP_DIR }}"
+var remTempDeployName = "temp_deploy_" + timestamp
+var pm2ProcessName = "{{ PROCESSNAME }}"
 
+func main() {
 	cfmt.Infoln("1. Building executable...")
 
 	err := buildExecutable(buildExecutablePath)
@@ -91,6 +91,13 @@ func main() {
 
 }
 
+// buildExecutable builds an executable at the specified path.
+//
+// Parameters:
+// - pathExec: string - the path where the executable will be built.
+//
+// Returns:
+// - error - error if the build process encounters any issues.
 func buildExecutable(pathExec string) error {
 	newEnv := os.Environ()
 	newEnv = append(newEnv, "GOOS=linux")
@@ -110,6 +117,13 @@ func buildExecutable(pathExec string) error {
 	return err
 }
 
+// privateKeyPath returns the full path of the private key for the given SSH key.
+//
+// Parameters:
+// - sshKey: a string representing the name of the SSH key
+//
+// Returns:
+// - string: the full path to the private key
 func privateKeyPath(sshKey string) string {
 	user, err := user.Current()
 	if err != nil {
@@ -120,6 +134,17 @@ func privateKeyPath(sshKey string) string {
 	return privateKeyPath
 }
 
+// ssh connects to an SSH server, executes a command, and returns the output.
+//
+// Parameters:
+// - sshHost: the hostname of the SSH server.
+// - sshUser: the username to authenticate with.
+// - sshKey: the path to the SSH private key file.
+// - cmd: the command to execute on the SSH server.
+//
+// Return:
+// - output: the output of the executed command.
+// - err: an error, if any, nil otherwise.
 func ssh(sshHost, sshUser, sshKey, cmd string) (output string, err error) {
 	client, err := simplessh.ConnectWithKeyFile(sshHost+":22", sshUser, privateKeyPath(sshKey))
 	if err != nil {

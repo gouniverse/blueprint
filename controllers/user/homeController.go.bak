@@ -17,7 +17,7 @@ func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Reques
 	return layouts.NewUserLayout(r, layouts.Options{
 		Request:    r,
 		Title:      "Home " + " | User",
-		Content:    controller.view(),
+		Content:    hb.NewWrap().HTML("You are in user dashboard"),
 		StyleURLs:  []string{},
 		ScriptURLs: []string{},
 		Scripts:    []string{},
@@ -29,5 +29,4 @@ func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Reques
 }
 
 func (controller *homeController) view() *hb.Tag {
-	return hb.NewWrap().HTML("You are in user dashboard")
 }

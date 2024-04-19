@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"os"
 
 	"project/config"
@@ -11,9 +10,11 @@ import (
 	"project/internal/scheduler"
 	"project/internal/server"
 	"project/internal/tasks"
+	"project/internal/widgets"
 	"project/models"
 
 	"github.com/gouniverse/router"
+	"github.com/gouniverse/taskstore"
 	"github.com/mingrammer/cfmt"
 )
 
@@ -37,6 +38,8 @@ func main() {
 	go config.CacheStore.ExpireCacheGoroutine()
 	go config.SessionStore.ExpireSessionGoroutine()
 
+	widgets.CmsAddShortcodes()
+
 	startServer() // 8. Start the server
 }
 
@@ -46,8 +49,18 @@ func queueInitialize() {
 
 func registerTaskHandlers() {
 	cfmt.Infoln("Registering task handlers ...")
-	config.TaskStore.TaskHandlerAdd(tasks.NewHelloWorldTask(), true)
-	config.TaskStore.TaskHandlerAdd(tasks.NewEnvencTask(), true)
+	tasks := []taskstore.TaskHandlerInterface{
+		tasks.NewEnvencTask(),
+		tasks.NewHelloWorldTask(),
+	}
+
+	for _, task := range tasks {
+		err := config.TaskStore.TaskHandlerAdd(task, true)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("At registerTaskHandlers", "Error registering task: "+task.Alias()+" - "+err.Error())
+		}
+	}
 }
 
 // executeCommand executes a command
@@ -59,16 +72,20 @@ func executeCliCommand(args []string) {
 
 	firstArg := args[0]
 	secondArg := args[1]
+
+	// Is it a task?
 	if firstArg == "task" {
 		config.TaskStore.TaskExecuteCli(secondArg, args[2:])
 		return
 	}
 
+	// Is it a job?
 	if firstArg == "job" {
 		cmds.ExecuteJob(args[2:])
 		return
 	}
 
+	// Is it a route list?
 	if firstArg == "routes" && secondArg == "list" {
 		cfmt.Warning("Unrecognized command: ", firstArg)
 		m, r := routes.RoutesList()
@@ -89,14 +106,4 @@ func startServer() {
 			log.Fatal(err)
 		}
 	}
-}
-
-func cmsAddShortcodes() {
-	shortcodes := map[string]func(*http.Request, string, map[string]string) string{
-		//"x-authenticated":   widgets.NewAuthenticatedWidget().Render,
-		//"x-unauthenticated": widgets.NewUnauthenticatedWidget().Render,
-		//"x-print":                    widgets.NewPrintWidget().Render,
-	}
-
-	config.Cms.ShortcodesAdd(shortcodes)
 }

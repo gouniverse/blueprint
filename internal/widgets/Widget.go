@@ -1,8 +1,7 @@
 package widgets
 
-import "net/http"
+import "github.com/gouniverse/cms"
 
 type Widget interface {
-	Alias() string
-	Render(req *http.Request, content string, data map[string]string) string
+	cms.ShortcodeInterface
 }

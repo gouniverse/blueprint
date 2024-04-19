@@ -17,7 +17,7 @@ type helloWorldTask struct {
 var _ taskstore.TaskHandlerInterface = (*helloWorldTask)(nil) // verify it extends the task interface
 
 func (handler *helloWorldTask) Alias() string {
-	return "helloWorldTask"
+	return "HelloWorldTask"
 }
 
 func (handler *helloWorldTask) Title() string {
