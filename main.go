@@ -8,13 +8,13 @@ import (
 	"project/internal/cmds"
 	"project/internal/routes"
 	"project/internal/scheduler"
-	"project/internal/server"
 	"project/internal/tasks"
 	"project/internal/widgets"
 	"project/models"
 
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/taskstore"
+	"github.com/gouniverse/webserver"
 	"github.com/mingrammer/cfmt"
 )
 
@@ -95,10 +95,10 @@ func executeCliCommand(args []string) {
 }
 
 func startServer() {
-	addr := config.ServerHost + ":" + config.ServerPort
-	cfmt.Infoln("Starting server on " + config.ServerHost + ":" + config.ServerPort + " ...")
+	addr := config.WebServerHost + ":" + config.WebServerPort
+	cfmt.Infoln("Starting server on " + config.WebServerHost + ":" + config.WebServerPort + " ...")
 	cfmt.Infoln("APP URL: " + config.AppUrl + " ...")
-	config.WebServer = server.NewServer(addr, routes.Routes().ServeHTTP)
+	config.WebServer = webserver.New(addr, routes.Routes().ServeHTTP)
 	if err := config.WebServer.ListenAndServe(); err != nil {
 		if config.AppEnvironment == config.APP_ENVIRONMENT_TESTING {
 			cfmt.Errorln(err)

@@ -33,6 +33,9 @@ func TestsConfigureAndInitialize() {
 
 	// os.Setenv("EMAIL_FROM_ADDRESS", "")
 	// os.Setenv("EMAIL_FROM_NAME", "")
-
+	
+	os.Setenv("STRIPE_KEY_PRIVATE", "123")
+	os.Setenv("STRIPE_KEY_PUBLIC", "345")
+	
 	Initialize()
 }

@@ -24,10 +24,7 @@ func Initialize() {
 	utils.EnvInitialize()
 	utils.EnvEncInitialize(ENV1 + ENV2 + ENV3)
 
-	ServerHost = utils.Env("SERVER_HOST")
-	ServerPort = utils.Env("SERVER_PORT")
 	AppName = utils.Env("APP_NAME")
-	Debug = utils.Env("DEBUG") == "yes"
 	AppUrl = utils.Env("APP_URL")
 	AppEnvironment = utils.Env("APP_ENV")
 	DbDriver = utils.Env("DB_DRIVER")
@@ -36,26 +33,26 @@ func Initialize() {
 	DbName = utils.Env("DB_DATABASE")
 	DbUser = utils.Env("DB_USERNAME")
 	DbPass = utils.Env("DB_PASSWORD")
+	Debug = utils.Env("DEBUG") == "yes"
 	MailDriver = utils.Env("MAIL_DRIVER")
-	MailHost = utils.Env("MAIL_HOST")
-	MailPort = utils.Env("MAIL_PORT")
-	MailUsername = utils.Env("MAIL_USERNAME")
-	MailPassword = utils.Env("MAIL_PASSWORD")
 	MailFromEmailAddress = utils.Env("EMAIL_FROM_ADDRESS")
 	MailFromName = utils.Env("EMAIL_FROM_NAME")
-
+	MailHost = utils.Env("MAIL_HOST")
+	MailPassword = utils.Env("MAIL_PASSWORD")
+	MailPort = utils.Env("MAIL_PORT")
+	MailUsername = utils.Env("MAIL_USERNAME")
+	MediaBucket = utils.Env("MEDIA_BUCKET")
 	MediaDriver = utils.Env("MEDIA_DRIVER")
+	MediaEndpoint = utils.Env("MEDIA_ENDPOINT")
 	MediaKey = utils.Env("MEDIA_KEY")
 	MediaSecret = utils.Env("MEDIA_SECRET")
-	MediaEndpoint = utils.Env("MEDIA_ENDPOINT")
 	MediaRegion = utils.Env("MEDIA_REGION")
-	MediaBucket = utils.Env("MEDIA_BUCKET")
 	MediaUrl = utils.Env("MEDIA_URL")
-
 	OpenAiApiKey = utils.Env("OPENAI_API_KEY")
-
 	StripeKeyPrivate = utils.Env("STRIPE_KEY_PRIVATE")
 	StripeKeyPublic = utils.Env("STRIPE_KEY_PUBLIC")
+	WebServerHost = utils.Env("SERVER_HOST")
+	WebServerPort = utils.Env("SERVER_PORT")
 
 	CmsUserTemplateID = utils.Env("CMS_TEMPLATE_ID")
 
@@ -65,11 +62,11 @@ func Initialize() {
 		Debug = true
 	}
 
-	if ServerHost == "" {
+	if WebServerHost == "" {
 		panic("Environment variable SERVER_HOST is required")
 	}
 
-	if ServerPort == "" {
+	if WebServerPort == "" {
 		panic("Environment variable SERVER_PORT is required")
 	}
 
@@ -176,9 +173,8 @@ func initializeDatabase() error {
 	}
 
 	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
-		DB:                 Database.DB(),
-		PostTableName:      "snv_blogs_post",
-		AutomigrateEnabled: true,
+		DB:            Database.DB(),
+		PostTableName: "snv_blogs_post",
 	})
 
 	if err != nil {
@@ -275,6 +271,12 @@ func initializeInMemoryCache() {
 }
 
 func migrateDatabase() (err error) {
+	err = BlogStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blogstore.AutoMigrate"), err)
+	}
+
 	err = CacheStore.AutoMigrate()
 
 	if err != nil {

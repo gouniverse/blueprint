@@ -1,7 +1,6 @@
 package config
 
 import (
-	"project/internal/server"
 	"project/pkg/userstore"
 
 	"github.com/gouniverse/blogstore"
@@ -14,6 +13,7 @@ import (
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/taskstore"
+	"github.com/gouniverse/webserver"
 	"github.com/jellydator/ttlcache/v3"
 )
 
@@ -29,54 +29,62 @@ const ENV1 = "c54f"         // CHANGE
 const ENV2 = "c54f"         // CHANGE
 const ENV3 = "4663a0642dc6" // CHANGE
 
-var AppName = "Blueprint"
 var AppEnvironment string
+var AppName = "Blueprint"
 var AppUrl string
 var AppVersion string
 var AuthEndpoint = "/auth"
-var ServerHost string
-var ServerPort string
-
+var Database *sb.Database
 var DbDriver string
 var DbHost string
-var DbPort string
 var DbName string
-var DbUser string
 var DbPass string
-var Database *sb.Database
-var Debug = false
+var DbPort string
+var DbUser string
+var Debug bool
 var MailDriver string
-var MailHost string
-var MailPort string
-var MailUsername string
-var MailPassword string
 var MailFromEmailAddress string
 var MailFromName string
+var MailHost string
+var MailPort string
+var MailPassword string
+var MailUsername string
+var MediaBucket string
 var MediaDriver string
-var MediaRoot string = "/"
 var MediaKey string
-var MediaSecret string
 var MediaEndpoint string
 var MediaRegion string
-var MediaBucket string
-var MediaUrl string
+var MediaRoot string = "/"
+var MediaSecret string
+var MediaUrl string = "/files"
 var OpenAiApiKey string
 var StripeKeyPrivate string
 var StripeKeyPublic string
-var WebServer *server.Server
+var WebServer *webserver.Server
+var WebServerHost string
+var WebServerPort string
 
+// InMem is an in-memory cache.
 var InMem *ttlcache.Cache[string, any]
 
+// Cms is the CMS instance.
 var Cms *cms.Cms
+
+// CmsUserTemplateID is the CMS user template ID.
 var CmsUserTemplateID string = ""
 
+// ===================================== //
 var BlogStore *blogstore.Store
 var CacheStore *cachestore.Store
+
+// var CommentStore *commentstore.Store
 var CustomStore *customstore.Store
 var GeoStore *geostore.Store
 var LogStore *logstore.Store
 var MetaStore *metastore.Store
 var SessionStore *sessionstore.Store
+
+// var SubscriptionStore *subscriptionstore.Store
 var TaskStore *taskstore.Store
 var UserStore *userstore.Store
 
