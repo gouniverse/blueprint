@@ -83,8 +83,8 @@ github.com/gouniverse/crypto v0.1.0 h1:d6RfL/yNkA/jllf5DkNrd8tZGmF1TkGsx/wCxs6JV
 github.com/gouniverse/crypto v0.1.0/go.mod h1:uWfzSf1dsYyij6yrVTdxuLFfLZIvSJu24+x3sj+DLXU=
 github.com/gouniverse/customstore v0.2.1 h1:Ny6vsxRa9a/C0l57ySOMGtc29Vd/Rrzibja8saYTIAw=
 github.com/gouniverse/customstore v0.2.1/go.mod h1:c65SahXKe5P+isZPmdoArfa6yGpWP+nefLg0N1ivAOo=
-github.com/gouniverse/dashboard v1.1.0 h1:cjty1HC2tZnCTapfhYfu7FK0ar9IAxFWmlUxz+fD1EQ=
-github.com/gouniverse/dashboard v1.1.0/go.mod h1:2WR0a65S7Jo6JSorfGVndsojaePq5tkHKi8BdPLiwcs=
+github.com/gouniverse/dashboard v1.1.1 h1:8/NTiMTGiZGCthb8xEBjw8bDySidKXeTyz2ZRAQuSwE=
+github.com/gouniverse/dashboard v1.1.1/go.mod h1:2WR0a65S7Jo6JSorfGVndsojaePq5tkHKi8BdPLiwcs=
 github.com/gouniverse/dataobject v0.2.1 h1:hs9OLd7m3LvG26S69VPjPtJ7u0aCK8SZhl1xmKrXxW8=
 github.com/gouniverse/dataobject v0.2.1/go.mod h1:RsQLUmpBFXQFCQxN9JAC+bJF8H8ZpZ2ip26Xo8Harfc=
 github.com/gouniverse/entitystore v0.61.0 h1:ap7J2e34lR5HtZqUxsPqtzZgzi7OPW9FHxnCYU/peZI=

@@ -13,7 +13,7 @@ require (
 	github.com/gouniverse/cachestore v0.17.0
 	github.com/gouniverse/cdn v1.4.0
 	github.com/gouniverse/crud v1.0.0
-	github.com/gouniverse/dashboard v1.1.0
+	github.com/gouniverse/dashboard v1.1.1
 	github.com/gouniverse/envenc v0.1.0
 	github.com/gouniverse/hb v1.72.1
 	github.com/gouniverse/icons v1.3.0
