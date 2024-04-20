@@ -24,6 +24,7 @@ require (
 	github.com/gouniverse/sessionstore v0.23.0
 	github.com/gouniverse/taskstore v1.0.1
 	github.com/gouniverse/utils v1.39.0
+	github.com/gouniverse/webserver v0.1.0
 	github.com/jellydator/ttlcache/v3 v3.2.0
 	github.com/mingrammer/cfmt v1.1.0
 	github.com/robertkrimen/otto v0.4.0
@@ -45,7 +46,6 @@ require (
 	github.com/gouniverse/shortcode v0.1.4 // indirect
 	github.com/gouniverse/uncdn v0.7.4 // indirect
 	github.com/gouniverse/validator v0.11.0 // indirect
-	github.com/gouniverse/webserver v0.1.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/jedib0t/go-pretty v4.3.0+incompatible // indirect
 	github.com/kr/fs v0.1.0 // indirect
