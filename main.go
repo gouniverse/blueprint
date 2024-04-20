@@ -18,6 +18,26 @@ import (
 	"github.com/mingrammer/cfmt"
 )
 
+// main starts the application
+//
+// Business Logic:
+// 1. Initialize the environment
+// 2. Defer Closing the database
+// 3. Initialize the models
+// 4. Register the task handlers
+// 5. Executes the command if provided
+// 6. Initialize the task queue
+// 7. Initialize the scheduler
+// 8. Starts the cache expiration goroutine
+// 9. Starts the session expiration goroutine
+// 10. Adds CMS shortcodes
+// 11. Starts the web server
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func main() {
 	cfmt.Infoln("Initializing configuration ...")
 	config.Initialize()                // 1. Initialize the environment
@@ -35,18 +55,36 @@ func main() {
 	queueInitialize()      // 6. Initialize the task queue
 	scheduler.StartAsync() // 7. Initialize the scheduler
 
-	go config.CacheStore.ExpireCacheGoroutine()
-	go config.SessionStore.ExpireSessionGoroutine()
+	go config.CacheStore.ExpireCacheGoroutine()     // 8. Initialize the cache expiration goroutine
+	go config.SessionStore.ExpireSessionGoroutine() // 9. Initialize the session expiration goroutine
 
-	widgets.CmsAddShortcodes()
+	widgets.CmsAddShortcodes() // 10. Add CMS shortcodes
 
-	startServer() // 8. Start the server
+	startWebServer() // 11. Start the web server
 }
 
+// queueInitialize initializes the task queue
+//
+// Settings for the task queue:
+// - Polls the task store every 10 seconds for new task and processes if found.
+// - After 2 minutes, if a task is not completed, it is marked as failed.
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func queueInitialize() {
 	go config.TaskStore.QueueRunGoroutine(10, 2)
 }
 
+// registerTaskHandlers registers the task handlers in the config.TaskStore.
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func registerTaskHandlers() {
 	cfmt.Infoln("Registering task handlers ...")
 	tasks := []taskstore.TaskHandlerInterface{
@@ -63,7 +101,28 @@ func registerTaskHandlers() {
 	}
 }
 
-// executeCommand executes a command
+// executeCommand executes a CLI command
+//
+// The command can be one of the following:
+// - task <alias> <arguments>
+// - job <arguments>
+// - routes list
+//
+// Business logic:
+//
+// 1. First, it logs the command being executed, so it's obvious what's going on.
+// 2. It checks if there are at least two arguments, and appends "list" to the arguments if not.
+// 3. It gets the first and second arguments.
+// 4. If the first argument is "task", it executes the task with the second argument any additional arguments.
+// 5. If the first argument is "job", it executes the job with any additional arguments.
+// 6. If the first argument is "routes" and the second argument is "list" it lists all the routes.
+// 7. Otherwise, it prints a warning that the command is unrecognized.
+//
+// Parameters:
+// - args []string : The command line arguments.
+//
+// Returns:
+// - none
 func executeCliCommand(args []string) {
 	cfmt.Infoln("Executing command: ", args)
 	if len(args) < 2 {
@@ -87,14 +146,23 @@ func executeCliCommand(args []string) {
 
 	// Is it a route list?
 	if firstArg == "routes" && secondArg == "list" {
-		cfmt.Warning("Unrecognized command: ", firstArg)
 		m, r := routes.RoutesList()
 		router.List(m, r)
 		return
 	}
+
+	cfmt.Warning("Unrecognized command: ", firstArg)
 }
 
-func startServer() {
+// startServer starts the web server at the specified host and port and listens
+// for incoming requests.
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
+func startWebServer() {
 	addr := config.WebServerHost + ":" + config.WebServerPort
 	cfmt.Infoln("Starting server on " + config.WebServerHost + ":" + config.WebServerPort + " ...")
 	cfmt.Infoln("APP URL: " + config.AppUrl + " ...")
