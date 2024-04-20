@@ -13,7 +13,6 @@ import (
 	"project/models"
 
 	"github.com/gouniverse/router"
-	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/webserver"
 	"github.com/mingrammer/cfmt"
 )
@@ -39,66 +38,23 @@ import (
 // Returns:
 // - none
 func main() {
-	cfmt.Infoln("Initializing configuration ...")
 	config.Initialize()                // 1. Initialize the environment
 	defer config.Database.DB().Close() // 2. Defer Closing the database
+	models.Initialize()                // 3. Initialize the models
+	tasks.RegisterTasks()              // 4. Register the task handlers
 
-	models.Initialize()    // 3. Initialize the models
-	registerTaskHandlers() // 4. Register the task handlers
-
-	// If there are arguments, run the command interface
+	// Is it a command?
 	if len(os.Args) > 1 {
 		executeCliCommand(os.Args[1:]) // 5. Execute the command
 		return
 	}
 
-	queueInitialize()      // 6. Initialize the task queue
-	scheduler.StartAsync() // 7. Initialize the scheduler
-
+	go config.TaskStore.QueueRunGoroutine(10, 2)    // 6. Initialize the task queue
+	scheduler.StartAsync()                          // 7. Initialize the scheduler
 	go config.CacheStore.ExpireCacheGoroutine()     // 8. Initialize the cache expiration goroutine
 	go config.SessionStore.ExpireSessionGoroutine() // 9. Initialize the session expiration goroutine
-
-	widgets.CmsAddShortcodes() // 10. Add CMS shortcodes
-
-	startWebServer() // 11. Start the web server
-}
-
-// queueInitialize initializes the task queue
-//
-// Settings for the task queue:
-// - Polls the task store every 10 seconds for new task and processes if found.
-// - After 2 minutes, if a task is not completed, it is marked as failed.
-//
-// Parameters:
-// - none
-//
-// Returns:
-// - none
-func queueInitialize() {
-	go config.TaskStore.QueueRunGoroutine(10, 2)
-}
-
-// registerTaskHandlers registers the task handlers in the config.TaskStore.
-//
-// Parameters:
-// - none
-//
-// Returns:
-// - none
-func registerTaskHandlers() {
-	cfmt.Infoln("Registering task handlers ...")
-	tasks := []taskstore.TaskHandlerInterface{
-		tasks.NewEnvencTask(),
-		tasks.NewHelloWorldTask(),
-	}
-
-	for _, task := range tasks {
-		err := config.TaskStore.TaskHandlerAdd(task, true)
-
-		if err != nil {
-			config.LogStore.ErrorWithContext("At registerTaskHandlers", "Error registering task: "+task.Alias()+" - "+err.Error())
-		}
-	}
+	widgets.CmsAddShortcodes()                      // 10. Add CMS shortcodes
+	startWebServer()                                // 11. Start the web server
 }
 
 // executeCommand executes a CLI command
@@ -166,7 +122,9 @@ func startWebServer() {
 	addr := config.WebServerHost + ":" + config.WebServerPort
 	cfmt.Infoln("Starting server on " + config.WebServerHost + ":" + config.WebServerPort + " ...")
 	cfmt.Infoln("APP URL: " + config.AppUrl + " ...")
+
 	config.WebServer = webserver.New(addr, routes.Routes().ServeHTTP)
+
 	if err := config.WebServer.ListenAndServe(); err != nil {
 		if config.AppEnvironment == config.APP_ENVIRONMENT_TESTING {
 			cfmt.Errorln(err)

@@ -20,7 +20,7 @@ import (
 )
 
 func Initialize() {
-	// log.Println("1. Initializing environment variables...")
+	// cfmt.Infoln("Initializing configuration ...")
 	utils.EnvInitialize()
 	utils.EnvEncInitialize(ENV1 + ENV2 + ENV3)
 
