@@ -24,10 +24,10 @@ type SendOptions struct {
 // Send sends an email
 func Send(options SendOptions) error {
 	// drvr := os.Getenv("MAIL_DRIVER")
-	host := os.Getenv("MAIL_HOST")
-	port := os.Getenv("MAIL_PORT")
-	user := os.Getenv("MAIL_USERNAME")
-	pass := os.Getenv("MAIL_PASSWORD")
+	host := config.MailHost
+	port := config.MailPort
+	user := config.MailUsername
+	pass := config.MailPassword
 	addr := host + ":" + port
 
 	if options.From == "" {

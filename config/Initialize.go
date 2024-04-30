@@ -20,7 +20,6 @@ import (
 )
 
 func Initialize() {
-	// cfmt.Infoln("Initializing configuration ...")
 	utils.EnvInitialize()
 	utils.EnvEncInitialize(ENV1 + ENV2 + ENV3)
 
@@ -133,6 +132,15 @@ func initializeDatabase() error {
 	}
 
 	Database = sb.NewDatabase(db, DbDriver)
+	
+	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
+		DB:            Database.DB(),
+		PostTableName: "snv_blogs_post",
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("blogstore.NewStore"), err)
+	}
 
 	CacheStore, err = cachestore.NewStore(cachestore.NewStoreOptions{
 		DB:             db,
@@ -170,15 +178,6 @@ func initializeDatabase() error {
 
 	if err != nil {
 		return errors.Join(errors.New("cms.NewCms"), err)
-	}
-
-	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
-		DB:            Database.DB(),
-		PostTableName: "snv_blogs_post",
-	})
-
-	if err != nil {
-		return errors.Join(errors.New("blogstore.NewStore"), err)
 	}
 
 	CustomStore, err = customstore.NewStore(customstore.NewStoreOptions{

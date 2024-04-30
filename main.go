@@ -39,22 +39,35 @@ import (
 // - none
 func main() {
 	config.Initialize()                // 1. Initialize the environment
-	defer config.Database.DB().Close() // 2. Defer Closing the database
+	defer closeResources()             // 2. Defer Closing the database
 	models.Initialize()                // 3. Initialize the models
 	tasks.RegisterTasks()              // 4. Register the task handlers
 
-	// Is it a command?
-	if len(os.Args) > 1 {
+	if isCliMode() {
 		executeCliCommand(os.Args[1:]) // 5. Execute the command
 		return
 	}
+	
+	startBackgroundProcesses()
+	startWebServer() // 11. Start the web server
+}
 
+func closeResources() {
+	if err := config.Database.DB().Close(); err != nil {
+		cfmt.Errorf("Failed to close database connection: %v", err)
+	}
+}
+
+func isCliMode() bool {
+	return len(os.Args) > 1
+}
+
+func startBackgroundProcesses() {
 	go config.TaskStore.QueueRunGoroutine(10, 2)    // 6. Initialize the task queue
 	scheduler.StartAsync()                          // 7. Initialize the scheduler
 	go config.CacheStore.ExpireCacheGoroutine()     // 8. Initialize the cache expiration goroutine
 	go config.SessionStore.ExpireSessionGoroutine() // 9. Initialize the session expiration goroutine
 	widgets.CmsAddShortcodes()                      // 10. Add CMS shortcodes
-	startWebServer()                                // 11. Start the web server
 }
 
 // executeCommand executes a CLI command
