@@ -23,7 +23,7 @@ require (
 	github.com/gouniverse/router v1.0.0
 	github.com/gouniverse/sessionstore v0.24.0
 	github.com/gouniverse/taskstore v1.0.1
-	github.com/gouniverse/utils v1.39.0
+	github.com/gouniverse/utils v1.39.1
 	github.com/gouniverse/webserver v0.1.0
 	github.com/jellydator/ttlcache/v3 v3.2.0
 	github.com/mingrammer/cfmt v1.1.0
