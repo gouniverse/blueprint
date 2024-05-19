@@ -15,6 +15,7 @@ require (
 	github.com/gouniverse/crud v1.1.0
 	github.com/gouniverse/dashboard v1.3.0
 	github.com/gouniverse/envenc v0.3.0
+	github.com/gouniverse/filesystem v0.2.0
 	github.com/gouniverse/hb v1.73.1
 	github.com/gouniverse/icons v1.3.0
 	github.com/gouniverse/logstore v1.3.0
@@ -25,6 +26,7 @@ require (
 	github.com/gouniverse/taskstore v1.0.1
 	github.com/gouniverse/utils v1.39.1
 	github.com/gouniverse/webserver v0.1.0
+	github.com/hyperjiang/php v1.0.2
 	github.com/jellydator/ttlcache/v3 v3.2.0
 	github.com/mingrammer/cfmt v1.1.0
 	github.com/robertkrimen/otto v0.4.0
@@ -35,14 +37,30 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.23.1 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.5.1 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.16.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.2.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.5.4 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.2.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.10.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.2.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.10.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.16.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.45.0 // indirect
+	github.com/aws/smithy-go v1.17.0 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
+	github.com/emirpasic/gods v1.18.1 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/go-chi/httprate v0.9.0 // indirect
 	github.com/go-openapi/errors v0.22.0 // indirect
 	github.com/go-openapi/strfmt v0.23.0 // indirect
+	github.com/goravel/framework v1.13.4 // indirect
 	github.com/gouniverse/crypto v0.2.0 // indirect
 	github.com/gouniverse/settingstore v0.12.0 // indirect
 	github.com/gouniverse/shortcode v0.1.4 // indirect
+	github.com/gouniverse/sqlfilestore v0.1.0 // indirect
 	github.com/gouniverse/uncdn v0.7.4 // indirect
 	github.com/gouniverse/validator v0.11.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
@@ -71,7 +89,7 @@ require (
 	github.com/georgysavva/scany v1.2.2 // indirect
 	github.com/golang-module/carbon/v2 v2.3.12
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/gouniverse/api v1.5.0 // indirect
+	github.com/gouniverse/api v1.5.0
 	github.com/gouniverse/cms v1.3.0
 	github.com/gouniverse/customstore v0.2.1
 	github.com/gouniverse/dataobject v0.3.0

@@ -22,11 +22,6 @@ func adminRoutes() []router.Route {
 			Handler: admin.NewCmsController().AnyIndex,
 		},
 		{
-			Name:    "Admin > File Manager",
-			Path:    "/admin/filemanager",
-			Handler: admin.NewFileMangerController().AnyIndex,
-		},
-		{
 			Name:    "Admin > Home Controller > Index Page",
 			Path:    links.ADMIN_HOME,
 			Handler: admin.NewHomeController().AnyIndex,
