@@ -3,7 +3,6 @@ package emails
 import (
 	"errors"
 	"net/smtp"
-	"os"
 	"project/config"
 
 	"github.com/darkoatanasovski/htmltags"

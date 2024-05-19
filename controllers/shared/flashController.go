@@ -101,7 +101,7 @@ func (c flashController) pageHTML(r *http.Request) *hb.Tag {
 	}
 
 	return hb.NewSection().
-		Children([]*hb.Tag{
+		Children([]hb.TagInterface{
 			container,
 		}).
 		Style("padding: 80px 0px 40px 0px;")

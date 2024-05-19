@@ -28,7 +28,7 @@ func (c *homeController) view(w http.ResponseWriter, r *http.Request) string {
 		HTML("Admin Home").
 		Style("margin-bottom:30px;margin-top:30px;")
 
-	sectionTiles := hb.NewSection().Children([]*hb.Tag{
+	sectionTiles := hb.NewSection().Children([]hb.TagInterface{
 		bs.Row().Class("g-4").Children(c.tiles()),
 	})
 
@@ -45,7 +45,7 @@ func (c *homeController) quickSearch(r *http.Request) []*hb.Tag {
 	}
 }
 
-func (*homeController) tiles() []*hb.Tag {
+func (*homeController) tiles() []hb.TagInterface {
 	tiles := []map[string]string{
 		{
 			"title": "Website Manager",
@@ -59,7 +59,7 @@ func (*homeController) tiles() []*hb.Tag {
 		},
 	}
 
-	cards := lo.Map(tiles, func(tile map[string]string, index int) *hb.Tag {
+	cards := lo.Map(tiles, func(tile map[string]string, index int) hb.TagInterface {
 		target := lo.ValueOr(tile, "target", "")
 		card := bs.Card().
 			Class("bg-transparent border round-10 shadow-lg h-100 pt-4").
@@ -74,10 +74,10 @@ func (*homeController) tiles() []*hb.Tag {
 			this.style.setProperty('border', '0px solid moccasin', 'important');
 			`).
 			Style("margin:0px 0px 20px 0px;").
-			Children([]*hb.Tag{
+			Children([]hb.TagInterface{
 				bs.CardBody().
 					Class("d-flex flex-column justify-content-evenly").
-					Children([]*hb.Tag{
+					Children([]hb.TagInterface{
 						hb.NewDiv().
 							Child(icons.Icon(tile["icon"], 36, 36, "red")).
 							Style("text-align:center;padding:10px;"),
