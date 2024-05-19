@@ -19,6 +19,8 @@ const ADMIN_USERS = "/admin/users"
 // == USER LINKS =============================================================
 
 const USER_HOME = "/user"
+const USER_PROFILE = "/user/profile"
+const USER_PROFILE_UPDATE = "/user/profile/update"
 
 // == WEBSITE LINKS ==========================================================
 
@@ -30,6 +32,7 @@ const BLOG_POST_WITH_REGEX2 = BLOG_POST + "/{id:[0-9]+}/{title}"
 const CONTACT = "/contact"
 const FLASH = "/flash"
 const MEDIA = "/media" + CATCHALL
+
 const THEME = "/theme"
 const THUMB = "/th/{extension:[a-z]+}/{size:[0-9x]+}/{quality:[0-9]+}/*"
 const WIDGET = "/widget"

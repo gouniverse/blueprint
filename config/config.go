@@ -30,7 +30,7 @@ const ENV2 = "c54f"         // CHANGE
 const ENV3 = "4663a0642dc6" // CHANGE
 
 var AppEnvironment string
-var AppName = "Blueprint"
+var AppName string
 var AppUrl string
 var AppVersion string
 var AuthEndpoint = "/auth"

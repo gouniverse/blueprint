@@ -38,16 +38,16 @@ import (
 // Returns:
 // - none
 func main() {
-	config.Initialize()                // 1. Initialize the environment
-	defer closeResources()             // 2. Defer Closing the database
-	models.Initialize()                // 3. Initialize the models
-	tasks.RegisterTasks()              // 4. Register the task handlers
+	config.Initialize()    // 1. Initialize the environment
+	defer closeResources() // 2. Defer Closing the database
+	models.Initialize()    // 3. Initialize the models
+	tasks.RegisterTasks()  // 4. Register the task handlers
 
 	if isCliMode() {
 		executeCliCommand(os.Args[1:]) // 5. Execute the command
 		return
 	}
-	
+
 	startBackgroundProcesses()
 	startWebServer() // 11. Start the web server
 }

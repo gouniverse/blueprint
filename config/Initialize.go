@@ -44,6 +44,7 @@ func Initialize() {
 	MediaDriver = utils.Env("MEDIA_DRIVER")
 	MediaEndpoint = utils.Env("MEDIA_ENDPOINT")
 	MediaKey = utils.Env("MEDIA_KEY")
+	MediaRoot = utils.Env("MEDIA_ROOT")
 	MediaSecret = utils.Env("MEDIA_SECRET")
 	MediaRegion = utils.Env("MEDIA_REGION")
 	MediaUrl = utils.Env("MEDIA_URL")
