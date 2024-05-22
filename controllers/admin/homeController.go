@@ -18,8 +18,12 @@ func NewHomeController() *homeController {
 
 func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
 	return layout(r, layoutOptions{
-		Title:   "Admin Home",
+		Title:   "Home | Admin",
 		Content: controller.view(w, r),
+		ScriptURLs: []string{},
+		Styles: []string{
+			`nav#Toolbar {border-bottom: 4px solid red;}`,
+		},
 	}).ToHTML()
 }
 

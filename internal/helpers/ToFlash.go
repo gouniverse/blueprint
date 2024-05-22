@@ -57,18 +57,18 @@ func ToFlashWarning(w http.ResponseWriter, r *http.Request, message string, url 
 	return ToFlash(w, r, FLASH_WARNING, message, url, seconds)
 }
 
-func ToFlashErrorURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+func ToFlashErrorURL(message string, url string, seconds int) string {
 	return ToFlashURL(FLASH_ERROR, message, url, seconds)
 }
 
-func ToFlashInfoURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+func ToFlashInfoURL(message string, url string, seconds int) string {
 	return ToFlashURL(FLASH_INFO, message, url, seconds)
 }
 
-func ToFlashSuccessURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+func ToFlashSuccessURL(message string, url string, seconds int) string {
 	return ToFlashURL(FLASH_SUCCESS, message, url, seconds)
 }
 
-func ToFlashWarningURL(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {
+func ToFlashWarningURL(message string, url string, seconds int) string {
 	return ToFlashURL(FLASH_WARNING, message, url, seconds)
 }

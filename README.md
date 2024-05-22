@@ -4,6 +4,10 @@
 
 ![tests](https://github.com/gouniverse/blueprint/workflows/tests/badge.svg)
 
+## URLS
+
+- https://YOURAPPURL
+- https://YOURAPPURL.a.run.app (Dev)
 This is a quick start blueprint for an MVC web applications
 
 - Ready to develop in the cloud (Gitpod / Github CodeSpaces)
