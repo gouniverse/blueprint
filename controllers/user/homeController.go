@@ -13,10 +13,10 @@ func NewHomeController() *homeController {
 	return &homeController{}
 }
 
-func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+func (controller *homeController) Handle(w http.ResponseWriter, r *http.Request) string {
 	return layouts.NewUserLayout(r, layouts.Options{
 		Request:    r,
-		Title:      "Home " + " | User",
+		Title:      "Home",
 		Content:    controller.view(),
 		StyleURLs:  []string{},
 		ScriptURLs: []string{},

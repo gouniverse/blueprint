@@ -95,7 +95,7 @@ func userMenu(user *userstore.User) []dashboard.MenuItem {
 	profileMenuItem := dashboard.MenuItem{
 		Icon:  hb.NewI().Class("bi bi-person").Style("margin-right:10px;").ToHTML(),
 		Title: "Profile",
-		// URL:   links.NewUserLinks().Profile(),
+		URL:   links.NewUserLinks().Profile(),
 	}
 
 	loginMenuItem := dashboard.MenuItem{
@@ -164,7 +164,7 @@ func userDashboardUserMenu(authUser *userstore.User) []dashboard.MenuItem {
 	items := []dashboard.MenuItem{
 		{
 			Title: "Profile",
-			// URL:   links.NewUserLinks().Profile(),
+			URL:   links.NewUserLinks().Profile(),
 		},
 	}
 

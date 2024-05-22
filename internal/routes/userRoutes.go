@@ -11,10 +11,16 @@ import (
 func userRoutes() []router.Route {
 	userRoutes := []router.Route{
 		{
-			// User > Home Controller > Index Page
-			Name:    "User > Home Controller > Index Page",
+			// User > Home Page
+			Name:    "User > Home Controller > Handle",
 			Path:    links.USER_HOME,
-			Handler: user.NewHomeController().AnyIndex,
+			Handler: user.NewHomeController().Handle,
+		},
+		{
+			// User > Profile Page
+			Name:    "User > Profile Controller > Handle",
+			Path:    links.USER_PROFILE,
+			Handler: user.NewProfileController().Handle,
 		},
 	}
 
