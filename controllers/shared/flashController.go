@@ -3,7 +3,8 @@ package shared
 import (
 	"net/http"
 	"project/config"
-	"project/controllers/layouts"
+	"project/internal/helpers"
+	"project/internal/layouts"
 	"project/internal/links"
 
 	// "project/controllers/partials"
@@ -23,7 +24,19 @@ func NewFlashController() *flashController {
 }
 
 func (controller flashController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
-	return layouts.NewGuestLayout(layouts.GuestLayoutOptions{
+	authUser := helpers.GetAuthUser(r)
+
+	if authUser != nil {
+		return layouts.NewUserLayout(r, layouts.Options{
+			Title: "System Message",
+			// CanonicalURL: links.NewWebsiteLinks().Flash(map[string]string{}),
+			Content:    controller.pageHTML(r),
+			ScriptURLs: []string{cdn.BootstrapJs_5_3_0()},
+			Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
+		}).ToHTML()
+	}
+
+	return layouts.NewGuestLayout(layouts.Options{
 		Title: "System Message",
 		// CanonicalURL: links.NewWebsiteLinks().Flash(map[string]string{}),
 		Content:    controller.pageHTML(r),

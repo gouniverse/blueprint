@@ -7,15 +7,6 @@ import (
 	"github.com/gouniverse/hb"
 )
 
-type GuestLayoutOptions struct {
-	Title      string
-	Content    *hb.Tag
-	ScriptURLs []string
-	Scripts    []string
-	StyleURLs  []string
-	Styles     []string
-}
-
 type guestLayout struct {
 	title      string
 	content    *hb.Tag
@@ -25,7 +16,7 @@ type guestLayout struct {
 	styles     []string
 }
 
-func NewGuestLayout(options GuestLayoutOptions) *guestLayout {
+func NewGuestLayout(options Options) *guestLayout {
 	layout := &guestLayout{}
 	layout.title = options.Title + " | " + config.AppName
 	layout.content = options.Content
