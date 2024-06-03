@@ -3,11 +3,13 @@ package admin
 import (
 	"net/http"
 	"project/config"
+	"project/internal/layouts"
 	"project/internal/links"
 	"project/pkg/userstore"
 
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/crud"
+	"github.com/gouniverse/hb"
 	"github.com/samber/lo"
 )
 
@@ -122,9 +124,9 @@ func (userController *userController) FuncLayout(w http.ResponseWriter, r *http.
 		cdn.Jquery_3_6_4()}, scriptURLs...,
 	)
 
-	return layout(r, layoutOptions{
+	return layouts.NewAdminLayout(r, layouts.Options{
 		Title:      title + " | Admin",
-		Content:    content,
+		Content:    hb.NewHTML(content),
 		StyleURLs:  styleURLs,
 		ScriptURLs: scriptURLs,
 		Scripts:    []string{script},

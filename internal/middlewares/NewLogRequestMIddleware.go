@@ -9,6 +9,8 @@ import (
 	"github.com/gouniverse/utils"
 )
 
+// LogRequestMiddleware logs every request to the database using the LogStore logger
+// it is useful to detect spamming bots
 func NewLogRequestMiddleware() router.Middleware {
 	m := router.Middleware{
 		Name: "Admin Middleware",
@@ -20,7 +22,7 @@ func NewLogRequestMiddleware() router.Middleware {
 
 				method := r.Method
 
-				config.Cms.LogStore.InfoWithContext(method+": "+uri, map[string]string{
+				config.LogStore.InfoWithContext(method+": "+uri, map[string]string{
 					"host":           r.Host,
 					"path":           strings.TrimLeft(r.URL.Path, "/"),
 					"ip":             ip,
@@ -34,5 +36,6 @@ func NewLogRequestMiddleware() router.Middleware {
 			})
 		},
 	}
+
 	return m
 }

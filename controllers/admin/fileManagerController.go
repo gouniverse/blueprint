@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"project/config"
+	"project/internal/layouts"
 	"project/internal/links"
 	"strings"
 	"time"
@@ -109,9 +110,9 @@ func (controller *FileManagerController) init(w http.ResponseWriter, r *http.Req
 	}
 
 	controller.funcLayout = func(content string) string {
-		return layout(r, layoutOptions{
+		return layouts.NewAdminLayout(r, layouts.Options{
 			Title:   "File Manager",
-			Content: content,
+			Content: hb.NewHTML(content),
 		}).ToHTML()
 	}
 

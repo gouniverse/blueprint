@@ -2,6 +2,7 @@ package admin
 
 import (
 	"net/http"
+	"project/internal/layouts"
 	"project/internal/links"
 
 	"github.com/gouniverse/bs"
@@ -17,9 +18,9 @@ func NewHomeController() *homeController {
 }
 
 func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
-	return layout(r, layoutOptions{
-		Title:   "Home | Admin",
-		Content: controller.view(w, r),
+	return layouts.NewAdminLayout(r, layouts.Options{
+		Title:      "Home",
+		Content:    controller.view(),
 		ScriptURLs: []string{},
 		Styles: []string{
 			`nav#Toolbar {border-bottom: 4px solid red;}`,
@@ -27,7 +28,7 @@ func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Reques
 	}).ToHTML()
 }
 
-func (c *homeController) view(w http.ResponseWriter, r *http.Request) string {
+func (c *homeController) view() *hb.Tag {
 	header := hb.NewHeading1().
 		HTML("Admin Home").
 		Style("margin-bottom:30px;margin-top:30px;")
@@ -36,8 +37,7 @@ func (c *homeController) view(w http.ResponseWriter, r *http.Request) string {
 		bs.Row().Class("g-4").Children(c.tiles()),
 	})
 
-	return header.ToHTML() +
-		sectionTiles.ToHTML()
+	return hb.NewWrap().Child(header).Child(sectionTiles)
 }
 
 func (c *homeController) quickSearch(r *http.Request) []*hb.Tag {
@@ -60,6 +60,11 @@ func (*homeController) tiles() []hb.TagInterface {
 			"title": "User Manager",
 			"icon":  "bi-people",
 			"link":  links.NewAdminLinks().Users(),
+		},
+		{
+			"title": "Media Manager",
+			"icon":  "bi-box",
+			"link":  links.NewAdminLinks().FileManager(),
 		},
 	}
 

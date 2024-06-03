@@ -2,7 +2,10 @@ package admin
 
 import (
 	"net/http"
+	"project/internal/layouts"
 	"project/internal/links"
+
+	"github.com/gouniverse/hb"
 )
 
 func adminCrudLayout(w http.ResponseWriter, r *http.Request, title string, content string, styleURLs []string, style string, jsURLs []string, js string) string {
@@ -16,9 +19,9 @@ func adminCrudLayout(w http.ResponseWriter, r *http.Request, title string, conte
 		"//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css",
 	}, styleURLs...)
 	// cfmt.Infoln(styleURLs)
-	dashboard := layout(r, layoutOptions{
+	dashboard := layouts.NewAdminLayout(r, layouts.Options{
 		Title:      title,
-		Content:    content,
+		Content:    hb.NewHTML(content),
 		Scripts:    []string{js},
 		ScriptURLs: jsURLs,
 		StyleURLs:  styleURLs,

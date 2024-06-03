@@ -19,5 +19,10 @@ func authRoutes() []router.Route {
 			Path:    links.AUTH_LOGIN,
 			Handler: auth.NewLoginController().AnyIndex,
 		},
+		{
+			Name:    "Auth > Logout Controller > Index Page",
+			Path:    links.AUTH_LOGOUT,
+			Handler: auth.NewLogoutController().AnyIndex,
+		},
 	}
 }

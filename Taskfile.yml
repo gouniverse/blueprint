@@ -82,6 +82,17 @@ tasks:
       - nilaway ./...
       - echo "Done!"
     silent: true
+    
+  profile:
+    cmds:
+      - echo "Running tests..."
+      - go test -cpuprofile=cpu.out ./...
+      - go tool pprof cpu.out
+      - go tool pprof -aloc_objects -top -cup mem.profile
+      - go tool pprof -aloc_space -top -cup mem.out
+      - go test -gcflags 'm = m'
+      - echo "Done!"
+    silent: true
 
   routes:
     desc: List app routes

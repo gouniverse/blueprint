@@ -8,6 +8,8 @@ import (
 	"github.com/gouniverse/router"
 )
 
+// NewAdminMiddleware checks if the user is an admin before allowing access
+// to the protected route.
 func NewAdminMiddleware() router.Middleware {
 	m := router.Middleware{
 		Name: "Admin Middleware",
@@ -17,6 +19,7 @@ func NewAdminMiddleware() router.Middleware {
 
 				authUser := helpers.GetAuthUser(r)
 
+				// Check if user is authenticated? No => redirect to login
 				if authUser == nil {
 					returnURL := links.URL(r.URL.Path, map[string]string{})
 					loginURL := links.NewAuthLinks().Login(returnURL)
@@ -24,12 +27,14 @@ func NewAdminMiddleware() router.Middleware {
 					return
 				}
 
+				// Check if user is active? No => redirect to website home
 				if !authUser.IsActive() {
 					homeURL := links.NewWebsiteLinks().Home()
 					helpers.ToFlash(w, r, "error", "You must activate your account before you can access this page", homeURL, 15)
 					return
 				}
 
+				// Check if user is an admin? No => redirect to website home
 				if !authUser.IsAdministrator() && !authUser.IsSuperuser() {
 					homeURL := links.NewWebsiteLinks().Home()
 					helpers.ToFlash(w, r, "error", "You must be an administrator to access this page", homeURL, 15)

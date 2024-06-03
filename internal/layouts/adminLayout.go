@@ -11,8 +11,8 @@ import (
 	"github.com/samber/lo"
 )
 
-func NewUserLayout(r *http.Request, options Options) *dashboard.Dashboard {
-	return userLayout(r, options)
+func NewAdminLayout(r *http.Request, options Options) *dashboard.Dashboard {
+	return adminLayout(r, options)
 }
 
 // layout generates a dashboard based on the provided request and layout options.
@@ -23,7 +23,7 @@ func NewUserLayout(r *http.Request, options Options) *dashboard.Dashboard {
 //
 // Returns:
 // - a pointer to a dashboard.Dashboard object representing the generated dashboard.
-func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
+func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	authUser := helpers.GetAuthUser(r)
 
 	dashboardUser := dashboard.User{}
@@ -36,12 +36,12 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	}
 
 	// Prepare script URLs
-	scriptURLs := []string{}
+	scriptURLs := []string{} // prepend any if required
 	scriptURLs = append(scriptURLs, options.ScriptURLs...)
 	scriptURLs = append(scriptURLs, cdn.Htmx_1_9_9())
 
 	// Prepare scripts
-	scripts := []string{}
+	scripts := []string{} // prepend any if required
 	scripts = append(scripts, options.Scripts...)
 
 	homeLink := links.NewUserLinks().Home()
@@ -51,12 +51,12 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		Content:         options.Content.ToHTML(),
 		Title:           options.Title + " | User | " + config.AppName,
 		LoginURL:        links.NewAuthLinks().Login(homeLink),
-		Menu:            userLayoutMainMenu(authUser),
+		Menu:            adminLayoutMainMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",
-		LogoRawHtml:     userLogoHtml(),
+		LogoRawHtml:     adminLogoHtml(),
 		LogoRedirectURL: links.NewUserLinks().Home(),
 		User:            dashboardUser,
-		UserMenu:        userLayoutUserMenu(authUser),
+		UserMenu:        adminLayoutUserMenu(authUser),
 		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
 		Scripts:         scripts,
 		ScriptURLs:      scriptURLs,
