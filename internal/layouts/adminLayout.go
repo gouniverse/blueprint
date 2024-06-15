@@ -44,6 +44,12 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	scripts := []string{} // prepend any if required
 	scripts = append(scripts, options.Scripts...)
 
+	// Prepare styles
+	styles := []string{ // prepend any if required
+		`nav#Toolbar {border-bottom: 4px solid red;}`,
+	}
+	styles = append(styles, options.Styles...)
+
 	homeLink := links.NewUserLinks().Home()
 
 	dashboard := dashboard.NewDashboard(dashboard.Config{
@@ -60,7 +66,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
 		Scripts:         scripts,
 		ScriptURLs:      scriptURLs,
-		Styles:          options.Styles,
+		Styles:          styles,
 		StyleURLs:       options.StyleURLs,
 		FaviconURL:      links.URL("favicon.svg", map[string]string{}),
 		// Theme: dashboard.THEME_MINTY,

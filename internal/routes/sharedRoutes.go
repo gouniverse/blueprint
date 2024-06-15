@@ -12,6 +12,12 @@ import (
 func sharedRoutes() []router.Route {
 	sharedRoutes := []router.Route{
 		{
+			Name:    "Shared > Media Controller > Handler",
+			Path:    links.MEDIA,
+			Methods: []string{http.MethodGet},
+			Handler: shared.NewMediaController().Handler,
+		},
+		{
 			Name:    "Shared > Flash Controller > Index Page",
 			Path:    links.FLASH,
 			Handler: shared.NewFlashController().AnyIndex,

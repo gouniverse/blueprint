@@ -25,6 +25,9 @@ go.work
 .env.vault
 
 tmp/
+
 database.db
+database.db-journal
+
 google-cloud-cli-*
 google-cloud-sdk/

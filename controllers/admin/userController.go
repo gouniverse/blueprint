@@ -130,10 +130,7 @@ func (userController *userController) FuncLayout(w http.ResponseWriter, r *http.
 		StyleURLs:  styleURLs,
 		ScriptURLs: scriptURLs,
 		Scripts:    []string{script},
-		Styles: []string{
-			`nav#Toolbar {border-bottom: 4px solid red;}`,
-			style,
-		},
+		Styles:     []string{style},
 	}).ToHTML()
 }
 

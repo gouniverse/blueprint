@@ -7,6 +7,7 @@ import (
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/customstore"
+	"github.com/gouniverse/filesystem"
 	"github.com/gouniverse/geostore"
 	"github.com/gouniverse/logstore"
 	"github.com/gouniverse/metastore"
@@ -87,6 +88,8 @@ var SessionStore *sessionstore.Store
 // var SubscriptionStore *subscriptionstore.Store
 var TaskStore *taskstore.Store
 var UserStore *userstore.Store
+
+var SqlFileStorage filesystem.StorageInterface
 
 func init() {
 	AppVersion = "0.0.1" // default

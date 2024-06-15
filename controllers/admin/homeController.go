@@ -22,9 +22,7 @@ func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Reques
 		Title:      "Home",
 		Content:    controller.view(),
 		ScriptURLs: []string{},
-		Styles: []string{
-			`nav#Toolbar {border-bottom: 4px solid red;}`,
-		},
+		Styles:     []string{},
 	}).ToHTML()
 }
 
@@ -55,6 +53,11 @@ func (*homeController) tiles() []hb.TagInterface {
 			"title": "Website Manager",
 			"icon":  "bi-globe",
 			"link":  links.NewAdminLinks().Cms(),
+		},
+		{
+			"title": "Blog Manager",
+			"icon":  "bi-newspaper",
+			"link":  links.NewAdminLinks().Blog(),
 		},
 		{
 			"title": "User Manager",

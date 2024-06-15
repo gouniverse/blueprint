@@ -2,9 +2,7 @@ package admin
 
 import (
 	"fmt"
-	"io/ioutil"
 
-	// "io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +13,7 @@ import (
 	"time"
 
 	"github.com/gouniverse/filesystem"
+	"github.com/mingrammer/cfmt"
 
 	"github.com/golang-module/carbon/v2"
 	"github.com/gouniverse/api"
@@ -22,9 +21,9 @@ import (
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/responses"
 	"github.com/gouniverse/utils"
+
 	"github.com/hyperjiang/php"
 
-	// "github.com/hyperjiang/php"
 	"github.com/samber/lo"
 )
 
@@ -35,7 +34,7 @@ const JSON_ACTION_DIRECTORY_CREATE = "directory_create"
 const JSON_ACTION_DIRECTORY_DELETE = "directory_delete"
 const MAX_UPLOAD_SIZE = 50 * 1024 * 1024 // 50MB
 
-func NewFileMangerController() *FileManagerController {
+func NewMediaManagerController() *mediaManagerController {
 	// //        $this->user = \App\Helpers\AppHelper::getUser('admin');
 	// //        if ($this->user == null) {
 	// //            die('User authentication needed to use this service');
@@ -66,9 +65,9 @@ func NewFileMangerController() *FileManagerController {
 	rootDirPath := strings.TrimSpace(config.MediaRoot)
 	rootDirPath = strings.Trim(rootDirPath, "/")
 	rootDirPath = strings.Trim(rootDirPath, ".")
-	rootDirPath = rootDirPath + "/"
+	rootDirPath = "/" + rootDirPath
 
-	return &FileManagerController{
+	return &mediaManagerController{
 		rootDirPath: rootDirPath,
 	}
 }
@@ -84,28 +83,35 @@ type FileEntry struct {
 	LastModifiedHuman string
 }
 
-type FileManagerController struct {
+type mediaManagerController struct {
 	// rootDir if not empty will be used as the root/top directory
 	rootDirPath string
 	funcLayout  func(content string) string
 	storage     filesystem.StorageInterface
 }
 
-func (controller *FileManagerController) init(w http.ResponseWriter, r *http.Request) string {
+func (controller *mediaManagerController) init(r *http.Request) string {
 	var err error
 
-	controller.storage, err = filesystem.NewStorage(filesystem.Disk{
-		DiskName:             "S3",
-		Driver:               filesystem.DRIVER_S3,
-		Url:                  config.MediaUrl,
-		Region:               config.MediaRegion,
-		Key:                  config.MediaKey,
-		Secret:               config.MediaSecret,
-		Bucket:               config.MediaBucket,
-		UsePathStyleEndpoint: true,
-	})
+	// cfmt.Infoln(config.MediaEndpoint)
+
+	// controller.storage, err = filesystem.NewStorage(filesystem.Disk{
+	// 	DiskName:             "S3",
+	// 	Driver:               filesystem.DRIVER_S3,
+	// 	Url:                  config.MediaUrl,
+	// 	Region:               config.MediaRegion,
+	// 	Key:                  config.MediaKey,
+	// 	Secret:               config.MediaSecret,
+	// 	Bucket:               config.MediaBucket,
+	// 	UsePathStyleEndpoint: true,
+	// })
+
+	controller.storage = config.SqlFileStorage
+
+	cfmt.Infoln(controller.storage)
 
 	if err != nil {
+		cfmt.Errorln(err.Error())
 		return err.Error()
 	}
 
@@ -119,8 +125,8 @@ func (controller *FileManagerController) init(w http.ResponseWriter, r *http.Req
 	return ""
 }
 
-func (c *FileManagerController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
-	c.init(w, r)
+func (c *mediaManagerController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+	c.init(r)
 
 	if lo.Contains([]string{
 		JSON_ACTION_DIRECTORY_CREATE,
@@ -137,32 +143,32 @@ func (c *FileManagerController) AnyIndex(w http.ResponseWriter, r *http.Request)
 	return ""
 }
 
-func (c *FileManagerController) anyIndex(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) anyIndex(w http.ResponseWriter, r *http.Request) string {
 	action := strings.TrimSpace(utils.Req(r, "action", ""))
 	if action == JSON_ACTION_FILE_RENAME {
-		return c.fileRenameAjax(w, r)
+		return c.fileRenameAjax(r)
 	}
 
 	if action == JSON_ACTION_FILE_DELETE {
-		return c.fileDeleteAjax(w, r)
+		return c.fileDeleteAjax(r)
 	}
 
 	if action == JSON_ACTION_DIRECTORY_CREATE {
-		return c.directoryCreateAjax(w, r)
+		return c.directoryCreateAjax(r)
 	}
 
 	if action == JSON_ACTION_DIRECTORY_DELETE {
-		return c.directoryDeleteAjax(w, r)
+		return c.directoryDeleteAjax(r)
 	}
 
 	if action == JSON_ACTION_FILE_UPLOAD {
-		return c.fileUploadAjax(w, r)
+		return c.fileUploadAjax(r)
 	}
 
-	return c.getMediaManager(w, r)
+	return c.getMediaManager(r)
 }
 
-func (c *FileManagerController) fileUploadAjax(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) fileUploadAjax(r *http.Request) string {
 	if r.ContentLength > MAX_UPLOAD_SIZE {
 		return api.Error("The uploaded image is too big. Please use an file less than 50MB in size").ToString()
 	}
@@ -189,9 +195,13 @@ func (c *FileManagerController) fileUploadAjax(w http.ResponseWriter, r *http.Re
 
 	remoteFilePath := currentDir + "/" + fileHeader.Filename
 
-	data, err := ioutil.ReadFile(filePath)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return api.Error(err.Error()).ToString()
+	}
+
+	if c.storage == nil {
+		return api.Error("Storage not initialized").ToString()
 	}
 
 	err = c.storage.Put(remoteFilePath, data)
@@ -203,7 +213,7 @@ func (c *FileManagerController) fileUploadAjax(w http.ResponseWriter, r *http.Re
 	return api.Success("File uploaded successfully").ToString()
 }
 
-func (c *FileManagerController) directoryCreateAjax(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) directoryCreateAjax(r *http.Request) string {
 	newDirName := strings.TrimSpace(utils.Req(r, "create_dir", ""))
 
 	if newDirName == "" {
@@ -216,14 +226,22 @@ func (c *FileManagerController) directoryCreateAjax(w http.ResponseWriter, r *ht
 		return api.Error("current_dir is required").ToString()
 	}
 
+	if currentDir == "/" {
+		currentDir = "" // to prevent double slashes
+	}
+
 	dirPath := currentDir + "/" + newDirName
 	dirPath = strings.ReplaceAll(dirPath, "//", "/") // remove double slashes
-	dirPath = strings.Trim(dirPath, "/")             // remove trailing slashes
+	dirPath = strings.TrimRight(dirPath, "/")        // remove trailing slashes
 
 	// cfmt.Infoln("New directory:", dirPath)
 
-	if dirPath == "" {
+	if dirPath == "" || dirPath == "/" {
 		return api.Error("root directory can not be created").ToString()
+	}
+
+	if c.storage == nil {
+		return api.Error("Storage not initialized").ToString()
 	}
 
 	errDeleted := c.storage.MakeDirectory(dirPath)
@@ -232,10 +250,10 @@ func (c *FileManagerController) directoryCreateAjax(w http.ResponseWriter, r *ht
 		return api.Success("directory created successfully").ToString()
 	}
 
-	return api.Error("directory not created").ToString()
+	return api.Error(errDeleted.Error()).ToString()
 }
 
-func (c *FileManagerController) directoryDeleteAjax(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) directoryDeleteAjax(r *http.Request) string {
 	selectedDirName := strings.TrimSpace(utils.Req(r, "delete_dir", ""))
 
 	if selectedDirName == "" {
@@ -244,21 +262,28 @@ func (c *FileManagerController) directoryDeleteAjax(w http.ResponseWriter, r *ht
 
 	currentDir := strings.TrimSpace(utils.Req(r, "current_dir", ""))
 
-	// cfmt.Infoln("Current directory:", currentDir)
-
 	if currentDir == "." || currentDir == ".." {
 		return api.Error("current_dir is required").ToString()
 	}
 
-	dirPath := currentDir + "/" + selectedDirName
-	dirPath = strings.ReplaceAll(dirPath, "//", "/") // remove double slashes
-	dirPath = strings.Trim(dirPath, "/")             // remove trailing slashes
+	if currentDir == "/" {
+		currentDir = "" // eliminate double slashes
+	}
 
-	if dirPath == "" {
+	dirPath := currentDir + "/" + selectedDirName
+	cfmt.Infoln("Deleting directory:", dirPath)
+	dirPath = strings.ReplaceAll(dirPath, "//", "/") // remove double slashes
+	dirPath = strings.TrimRight(dirPath, "/")        // remove trailing slashes
+
+	if dirPath == "" || dirPath == "/" {
 		return api.Error("root directory can not be deleted").ToString()
 	}
 
-	// cfmt.Infoln("Deleting directory:", dirPath)
+	cfmt.Infoln("Deleting directory:", dirPath)
+
+	if c.storage == nil {
+		return api.Error("Storage not initialized").ToString()
+	}
 
 	errDeleted := c.storage.DeleteDirectory(dirPath)
 
@@ -266,10 +291,10 @@ func (c *FileManagerController) directoryDeleteAjax(w http.ResponseWriter, r *ht
 		return api.Success("directory deleted successfully").ToString()
 	}
 
-	return api.Error("directory not deleted").ToString()
+	return api.Error(errDeleted.Error()).ToString()
 }
 
-func (c *FileManagerController) fileDeleteAjax(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) fileDeleteAjax(r *http.Request) string {
 	selectedFileName := utils.Req(r, "delete_file", "")
 	if selectedFileName == "" {
 		return api.Error("delete_file is required").ToString()
@@ -278,22 +303,33 @@ func (c *FileManagerController) fileDeleteAjax(w http.ResponseWriter, r *http.Re
 	if currentDir == "" {
 		return api.Error("current_dir is required").ToString()
 	}
+
+	if currentDir == "/" {
+		currentDir = "" // eliminate double slashes
+	}
+
 	filePath := currentDir + "/" + selectedFileName
-	// cfmt.Infoln("Deleting file:", filePath)
+
+	if c.storage == nil {
+		return api.Error("Storage not initialized").ToString()
+	}
 	errDeleted := c.storage.DeleteFile([]string{filePath})
 
 	if errDeleted == nil {
 		return api.Success("file deleted successfully").ToString()
 	}
-	return api.Error("file not found").ToString()
+
+	return api.Error(errDeleted.Error()).ToString()
 }
 
-func (c *FileManagerController) fileRenameAjax(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) fileRenameAjax(r *http.Request) string {
 	currentFileName := utils.Req(r, "rename_file", "")
 	if currentFileName == "" {
 		return api.Error("rename_file is required").ToString()
 	}
+
 	newFileName := utils.Req(r, "new_file", "")
+
 	if newFileName == "" {
 		return api.Error("new_file is required").ToString()
 	}
@@ -303,30 +339,46 @@ func (c *FileManagerController) fileRenameAjax(w http.ResponseWriter, r *http.Re
 		return api.Error("current_dir is required").ToString()
 	}
 
+	if currentDir == "/" {
+		currentDir = "" // eliminate double slashes
+	}
+
 	oldFilePath := currentDir + "/" + currentFileName
 	newFilePath := currentDir + "/" + newFileName
+
+	if c.storage == nil {
+		return api.Error("Storage not initialized").ToString()
+	}
+
 	err := c.storage.Move(oldFilePath, newFilePath)
+
 	if err == nil {
 		return api.Success("file renamed successfully").ToString()
 	}
-	return api.Error("file not found").ToString()
+
+	return api.Error(err.Error()).ToString()
 }
 
-func (controller *FileManagerController) getMediaManager(w http.ResponseWriter, r *http.Request) string {
+func (controller *mediaManagerController) getMediaManager(r *http.Request) string {
 	if controller.storage == nil {
 		return api.Error("storage is required").ToString()
 	}
+
 	currentDirectory := utils.Req(r, "current_dir", "")
 	currentDirectory = strings.Trim(currentDirectory, "/")
 	currentDirectory = strings.Trim(currentDirectory, ".")
+
 	parentDirectory := ""
 	if currentDirectory != "" {
 		parentDirectory = php.Dirname(currentDirectory)
 	}
+
 	parentDirectory = strings.Trim(parentDirectory, "/")
 	parentDirectory = strings.Trim(parentDirectory, ".")
 
-	// cfmt.Infoln("CURRENT DIR:" + currentDirectory)
+	if currentDirectory == "" {
+		currentDirectory = controller.rootDirPath
+	}
 
 	directories, err := controller.storage.Directories(currentDirectory)
 
@@ -342,19 +394,9 @@ func (controller *FileManagerController) getMediaManager(w http.ResponseWriter, 
 
 	directoryList := []FileEntry{}
 	for _, dir := range directories {
-		size, err := controller.storage.Size(dir)
-
-		if err != nil {
-			return api.Error(err.Error()).ToString()
-		}
-
+		size, _ := controller.storage.Size(dir)
 		hSize := lo.If(size > 0, controller.HumanFilesize(size)).Else("-")
-		modified, err := controller.storage.LastModified(dir)
-
-		if err != nil {
-			return api.Error(err.Error()).ToString()
-		}
-
+		modified, _ := controller.storage.LastModified(dir)
 		hModified := lo.If(lo.IsEmpty(modified), "-").Else(carbon.CreateFromStdTime(modified).ToDateTimeString())
 		directoryList = append(directoryList, FileEntry{
 			Path:              dir,
@@ -368,26 +410,11 @@ func (controller *FileManagerController) getMediaManager(w http.ResponseWriter, 
 
 	fileList := []FileEntry{}
 	for _, file := range files {
-		size, err := controller.storage.Size(file)
-
-		if err != nil {
-			return api.Error(err.Error()).ToString()
-		}
-
+		size, _ := controller.storage.Size(file)
 		hSize := controller.HumanFilesize(size)
-		modified, err := controller.storage.LastModified(file)
-
-		if err != nil {
-			return api.Error(err.Error()).ToString()
-		}
-
+		modified, _ := controller.storage.LastModified(file)
 		hModified := carbon.CreateFromStdTime(modified).ToDateTimeString()
-
-		url, err := controller.storage.Url(file)
-
-		if err != nil {
-			return api.Error(err.Error()).ToString()
-		}
+		url, _ := controller.storage.Url(file)
 
 		fileList = append(fileList, FileEntry{
 			Path:              file,
@@ -414,7 +441,7 @@ func (controller *FileManagerController) getMediaManager(w http.ResponseWriter, 
 	return layout
 }
 
-func (c *FileManagerController) modalFileUpload(currentDirectory string) string {
+func (c *mediaManagerController) modalFileUpload(currentDirectory string) string {
 	url := links.NewAdminLinks().FileManager()
 	return `
 <!-- START: Modal Upload File -->
@@ -492,7 +519,7 @@ function fileUpload() {
 	`
 }
 
-func (c *FileManagerController) modalDirectoryCreate(currentDirectory string) string {
+func (c *mediaManagerController) modalDirectoryCreate(currentDirectory string) string {
 	url := links.NewAdminLinks().FileManager()
 	if currentDirectory == "" {
 		currentDirectory = "/"
@@ -549,7 +576,7 @@ func (c *FileManagerController) modalDirectoryCreate(currentDirectory string) st
 	`
 }
 
-func (c *FileManagerController) modalDirectoryDelete(currentDirectory string) string {
+func (c *mediaManagerController) modalDirectoryDelete(currentDirectory string) string {
 	url := links.NewAdminLinks().FileManager()
 	return `
 	<!-- START: Modal Directory Delete -->
@@ -614,7 +641,7 @@ func (c *FileManagerController) modalDirectoryDelete(currentDirectory string) st
 	`
 }
 
-func (c *FileManagerController) modalFileDelete(currentDirectory string) string {
+func (c *mediaManagerController) modalFileDelete(currentDirectory string) string {
 	url := links.NewAdminLinks().FileManager()
 	return `
 	<!-- START: Modal File Delete -->
@@ -678,7 +705,7 @@ func (c *FileManagerController) modalFileDelete(currentDirectory string) string 
 	`
 }
 
-func (c *FileManagerController) modalFileRename(currentDirectory string) string {
+func (c *mediaManagerController) modalFileRename(currentDirectory string) string {
 	url := links.NewAdminLinks().FileManager()
 	return `
 <!-- START: Modal File Rename -->
@@ -732,7 +759,7 @@ func (c *FileManagerController) modalFileRename(currentDirectory string) string 
 			modal.hide();
 
 			setTimeout(()=>{
-				window.location.href = window.location.href;
+				//window.location.href = window.location.href;
 			}, 1000)
 		}).fail(()=>{
 			$.notify("IO Error", "error");
@@ -743,7 +770,7 @@ func (c *FileManagerController) modalFileRename(currentDirectory string) string 
 	`
 }
 
-func (c *FileManagerController) modalFileView() string {
+func (c *mediaManagerController) modalFileView() string {
 	return `
 <div class="modal fade" id="ModalFileView" role="dialog">
 	<div class="modal-dialog" role="document">
@@ -774,15 +801,15 @@ func (c *FileManagerController) modalFileView() string {
 	`
 }
 
-func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
+func (c *mediaManagerController) tableFileList(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
 	table := hb.NewTable().Class("table table-bordered table-striped").Children([]hb.TagInterface{
 		hb.NewThead().Children([]hb.TagInterface{
 			hb.NewTR().Children([]hb.TagInterface{
-				hb.NewTH().Style("width:1px;").HTML(""),
-				hb.NewTH().HTML("Directory/File Name"),
-				hb.NewTH().Style("width:100px;").HTML("Size"),
-				hb.NewTH().Style("width:100px;").HTML("Modified"),
-				hb.NewTH().Style("width:220px;").HTML("Actions"),
+				hb.NewTH().Style("width:1px;").Text(""),
+				hb.NewTH().Text("Directory/File Name"),
+				hb.NewTH().Style("width:100px;").Text("Size"),
+				hb.NewTH().Style("width:100px;").Text("Modified"),
+				hb.NewTH().Style("width:220px;").Text("Actions"),
 			}),
 		}),
 		hb.NewTbody().
@@ -792,12 +819,12 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 
 				return hb.NewTR().Children([]hb.TagInterface{
 					hb.NewTD().Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-folder").HTML(""),
+						hb.NewI().Class("bi bi-folder").Text(""),
 					}),
 					hb.NewTD().Children([]hb.TagInterface{
 						hb.NewHyperlink().Href(parentDirectoryURL).Children([]hb.TagInterface{
-							hb.NewI().Class("bi bi-arrow-90deg-up").HTML("").Style("margin-right: 5px;"),
-							hb.NewSpan().HTML("parent"),
+							hb.NewI().Class("bi bi-arrow-90deg-up").Text("").Style("margin-right: 5px;"),
+							hb.NewSpan().Text("parent"),
 						}),
 					}),
 					hb.NewTD().Children([]hb.TagInterface{}),
@@ -816,26 +843,34 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 					pathURL := links.NewAdminLinks().FileManagerWithParams(map[string]string{"current_dir": path})
 					size := dir.SizeHuman
 
+					buttonDelete := hb.NewButton().Class("btn btn-danger btn-sm").OnClick(`modalDirectoryDeleteShow('` + name + `')`).Children([]hb.TagInterface{
+						hb.NewI().Class("bi bi-trash").Text("").Style("margin-right: 5px;"),
+						hb.NewSpan().Text("Delete"),
+					})
+
+					buttonRename := hb.NewButton().Class("btn btn-primary btn-sm").OnClick(`modalFileRenameShow('` + name + `')`).Children([]hb.TagInterface{
+						hb.NewI().Class("bi bi-pencil").Text("").Style("margin-right: 5px;"),
+						hb.NewSpan().Text("Rename"),
+					})
+
 					return hb.NewTR().Children([]hb.TagInterface{
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewI().Class("bi bi-folder").HTML(""),
+							hb.NewI().Class("bi bi-folder").Text(""),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
 							hb.NewHyperlink().Href(pathURL).Children([]hb.TagInterface{
-								hb.NewSpan().HTML(name).Style("font-weight: bold;"),
+								hb.NewSpan().Text(name).Style("font-weight: bold;"),
 							}),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().HTML(size).Style("font-size: 12px;"),
+							hb.NewSpan().Text(size).Style("font-size: 12px;"),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().HTML("").Style("font-size: 11px;"),
+							hb.NewSpan().Text("").Style("font-size: 11px;"),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewButton().Class("btn btn-danger btn-xs").OnClick(`modalDirectoryDeleteShow('` + name + `')`).Children([]hb.TagInterface{
-								hb.NewI().Class("bi bi-trash").HTML("").Style("margin-right: 5px;"),
-								hb.NewSpan().HTML("Delete"),
-							}),
+							buttonRename,
+							buttonDelete,
 						}),
 					})
 				}))
@@ -843,23 +878,46 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 			// File List
 			ChildIfF(len(fileList) > 0, func() hb.TagInterface {
 				return hb.NewWrap().Children(lo.Map(fileList, func(file FileEntry, _ int) hb.TagInterface {
+					buttonDelete := hb.NewButton().Class("btn btn-danger btn-sm").OnClick(`modalFileDeleteShow('` + file.Name + `')`).Children([]hb.TagInterface{
+						hb.NewI().Class("bi bi-trash").Text("").Style("margin-right: 5px;"),
+						hb.NewSpan().Text("Delete"),
+					})
+
+					buttonRename := hb.NewButton().Class("btn btn-primary btn-sm").OnClick(`modalFileRenameShow('` + file.Name + `')`).Children([]hb.TagInterface{
+						hb.NewI().Class("bi bi-pencil").Text("").Style("margin-right: 5px;"),
+						hb.NewSpan().Text("Rename"),
+					})
+
+					buttonView := hb.NewButton().Class("btn btn-info btn-sm").OnClick(`modalFileViewShow('` + file.Name + `')`).Children([]hb.TagInterface{
+						hb.NewI().Class("bi bi-eye").Text("").Style("margin-right: 5px;"),
+						hb.NewSpan().Text("View"),
+					})
+
+					buttonSelect := hb.NewButton().Class("btn btn-success btn-sm .btn-select").OnClick(`fileSelectedUrl('` + file.URL + `')`).Children([]hb.TagInterface{
+						hb.NewI().Class("bi bi-chevron-right").Text("").Style("margin-right: 5px;"),
+						hb.NewSpan().Text("Select"),
+					})
+
 					return hb.NewTR().Children([]hb.TagInterface{
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewI().Class("bi bi-file").HTML(""),
+							hb.NewI().Class("bi bi-file").Text(""),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().HTML(file.Name).Style("font-weight: bold;"),
+							hb.NewSpan().Text(file.Name).Style("font-weight: bold;"),
 							hb.NewDiv().
 								Children([]hb.TagInterface{
-									hb.NewSpan().HTML("URL: "),
-									hb.NewHyperlink().Href(file.URL).Children([]hb.TagInterface{
-										hb.NewSpan().HTML(file.URL),
-									}),
+									hb.NewSpan().Text("URL: "),
+									hb.NewHyperlink().
+										Href(file.URL).
+										Target("_blank").
+										Children([]hb.TagInterface{
+											hb.NewSpan().Text(file.URL),
+										}),
 								}).
 								Style("font-size: 12px;"),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().HTML(file.SizeHuman).Style("font-size: 12px;"),
+							hb.NewSpan().Text(file.SizeHuman).Style("font-size: 12px;"),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
 							hb.NewSpan().
@@ -868,22 +926,10 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 								Style("font-size: 11px;"),
 						}),
 						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewButton().Class("btn btn-success btn-xs").OnClick(`modalFileViewShow('` + file.URL + `')`).Children([]hb.TagInterface{
-								hb.NewI().Class("bi bi-eye").HTML("").Style("margin-right: 5px;"),
-								hb.NewSpan().HTML("View"),
-							}),
-							hb.NewButton().Class("btn btn-warning btn-xs").OnClick(`modalFileRenameShow('` + file.Name + `')`).Children([]hb.TagInterface{
-								hb.NewI().Class("bi bi-pencil").HTML("").Style("margin-right: 5px;"),
-								hb.NewSpan().HTML("Rename"),
-							}),
-							hb.NewButton().Class("btn btn-danger btn-xs").OnClick(`modalFileDeleteShow('` + file.Name + `')`).Children([]hb.TagInterface{
-								hb.NewI().Class("bi bi-trash").HTML("").Style("margin-right: 5px;"),
-								hb.NewSpan().HTML("Delete"),
-							}),
-							// hb.NewButton().Class("btn btn-primary btn-xs").OnClick(`fileSelectedUrl('` + file.URL + `')`).Children([]hb.TagInterface{
-							// 	hb.NewI().Class("bi bi-chevron-right").HTML("").Style("margin-right: 5px;"),
-							// 	hb.NewSpan().HTML("Select"),
-							// }),
+							buttonView,
+							buttonRename,
+							buttonDelete,
+							buttonSelect,
 						}),
 					})
 				}))
@@ -929,7 +975,7 @@ func uiLayout(title string, content string) string {
 	return html
 }
 
-func (c *FileManagerController) uiManager(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
+func (c *mediaManagerController) uiManager(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
 	buttonUpload := hb.NewButton().
 		Class("btn btn-secondary float-end").
 		Data("bs-toggle", "modal").
@@ -991,7 +1037,7 @@ if (window.opener !== null) {
 	return html
 }
 
-func (c *FileManagerController) HumanFilesize(size int64) string {
+func (c *mediaManagerController) HumanFilesize(size int64) string {
 	const unit = 1000
 	if size < unit {
 		return fmt.Sprintf("%d B", size)

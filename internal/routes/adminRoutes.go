@@ -2,6 +2,7 @@ package routes
 
 import (
 	"project/controllers/admin"
+	adminFiles "project/controllers/admin/files"
 	"project/internal/links"
 	"project/internal/middlewares"
 
@@ -13,7 +14,7 @@ func adminRoutes() []router.Route {
 	adminRoutes := []router.Route{
 		{
 			Name:    "Admin > Blog",
-			Path:    "/admin/blog",
+			Path:    links.ADMIN_BLOG,
 			Handler: admin.NewBlogController().AnyIndex,
 		},
 		{
@@ -23,8 +24,8 @@ func adminRoutes() []router.Route {
 		},
 		{
 			Name:    "Admin > File Manager",
-			Path:    "/admin/filemanager",
-			Handler: admin.NewFileMangerController().AnyIndex,
+			Path:    links.ADMIN_MEDIA,
+			Handler: adminFiles.NewFileManagerController().AnyIndex,
 		},
 		{
 			Name:    "Admin > Home Controller > Index Page",

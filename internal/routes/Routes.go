@@ -10,8 +10,8 @@ func routes() []router.Route {
 	routes = append(routes, adminRoutes()...)
 	routes = append(routes, authRoutes()...)
 	routes = append(routes, userRoutes()...)
-	routes = append(routes, websiteRoutes()...)
 	routes = append(routes, sharedRoutes()...)
+	routes = append(routes, websiteRoutes()...)
 
 	return routes
 }

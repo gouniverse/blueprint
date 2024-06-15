@@ -21,9 +21,7 @@ func (controller *homeController) Handle(w http.ResponseWriter, r *http.Request)
 		StyleURLs:  []string{},
 		ScriptURLs: []string{},
 		Scripts:    []string{},
-		Styles: []string{
-			`nav#Toolbar {border-bottom: 4px solid red;}`,
-		},
+		Styles:     []string{},
 	}).
 		ToHTML()
 }

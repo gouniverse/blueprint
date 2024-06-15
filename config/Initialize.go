@@ -9,6 +9,7 @@ import (
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/customstore"
+	"github.com/gouniverse/filesystem"
 	"github.com/gouniverse/geostore"
 	"github.com/gouniverse/logstore"
 	"github.com/gouniverse/metastore"
@@ -234,6 +235,18 @@ func initializeDatabase() error {
 
 	if err != nil {
 		return errors.Join(errors.New("sessionstore.NewStore"), err)
+	}
+
+	SqlFileStorage, err = filesystem.NewStorage(filesystem.Disk{
+		DiskName:  filesystem.DRIVER_SQL,
+		Driver:    filesystem.DRIVER_SQL,
+		Url:       "/file",
+		DB:        db,
+		TableName: "snv_media_file",
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("filesystem.NewStorage"), err)
 	}
 
 	TaskStore, err = taskstore.NewStore(taskstore.NewStoreOptions{

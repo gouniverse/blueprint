@@ -36,13 +36,19 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	}
 
 	// Prepare script URLs
-	scriptURLs := []string{}
+	scriptURLs := []string{} // prepend any if required
 	scriptURLs = append(scriptURLs, options.ScriptURLs...)
 	scriptURLs = append(scriptURLs, cdn.Htmx_1_9_9())
 
 	// Prepare scripts
-	scripts := []string{}
+	scripts := []string{} // prepend any if required
 	scripts = append(scripts, options.Scripts...)
+
+	// Prepare styles
+	styles := []string{ // prepend any if required
+		`nav#Toolbar {border-bottom: 4px solid blue;}`,
+	}
+	styles = append(styles, options.Styles...)
 
 	homeLink := links.NewUserLinks().Home()
 
@@ -60,7 +66,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
 		Scripts:         scripts,
 		ScriptURLs:      scriptURLs,
-		Styles:          options.Styles,
+		Styles:          styles,
 		StyleURLs:       options.StyleURLs,
 		FaviconURL:      links.URL("favicon.svg", map[string]string{}),
 		// Theme: dashboard.THEME_MINTY,
