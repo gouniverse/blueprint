@@ -17,11 +17,17 @@ import (
 	"github.com/samber/lo"
 )
 
+// == CONTROLLER ===============================================================
+
+type blogController struct{}
+
+// == CONSTRUCTOR ==============================================================
+
 func NewBlogController() *blogController {
 	return &blogController{}
 }
 
-type blogController struct{}
+// == PUBLIC METHODS ===========================================================
 
 // Index is the handler function for the blogController
 //
@@ -241,6 +247,8 @@ func (c blogController) Index(w http.ResponseWriter, r *http.Request) string {
 	crudInstance.Handler(w, r)
 	return ""
 }
+
+// == PRIVATE METHODS ==========================================================
 
 func (c blogController) postCreate(data map[string]string) (serviceID string, err error) {
 	title := data["title"]

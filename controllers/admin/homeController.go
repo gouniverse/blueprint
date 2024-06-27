@@ -11,11 +11,17 @@ import (
 	"github.com/samber/lo"
 )
 
+// == CONTROLLER ===============================================================
+
 type homeController struct{}
+
+// == CONSTRUCTOR ==============================================================
 
 func NewHomeController() *homeController {
 	return &homeController{}
 }
+
+// == PUBLIC METHODS ===========================================================
 
 func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
 	return layouts.NewAdminLayout(r, layouts.Options{
@@ -25,6 +31,8 @@ func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Reques
 		Styles:     []string{},
 	}).ToHTML()
 }
+
+// == PRIVATE METHODS ==========================================================
 
 func (c *homeController) view() *hb.Tag {
 	header := hb.NewHeading1().

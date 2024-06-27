@@ -13,12 +13,18 @@ import (
 	"github.com/samber/lo"
 )
 
+// == CONTROLLER ===============================================================
+
 type userController struct {
 }
+
+// == CONSTRUCTOR ==============================================================
 
 func NewUserController() *userController {
 	return &userController{}
 }
+
+// == PUBLIC METHODS ===========================================================
 
 func (userController *userController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
 	usersCrud, err := crud.NewCrud(crud.CrudConfig{

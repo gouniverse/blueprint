@@ -11,11 +11,17 @@ import (
 
 const CMS_ENABLE_CACHE = false
 
+// == CONTROLLER ===============================================================
+
+type cmsController struct{}
+
+// == CONSTRUCTOR ==============================================================
+
 func NewCmsController() *cmsController {
 	return &cmsController{}
 }
 
-type cmsController struct{}
+// == PUBLIC METHODS ===========================================================
 
 func (controller cmsController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
 	uri := r.RequestURI
@@ -28,6 +34,8 @@ func (controller cmsController) AnyIndex(w http.ResponseWriter, r *http.Request)
 	responses.HTMLResponseF(w, r, controller.cmsFrontend)
 	return ""
 }
+
+// == PRIVATE METHODS ==========================================================
 
 // cmsFrontend shows a page from the CMS based on a defined URI
 func (controller cmsController) cmsFrontend(w http.ResponseWriter, r *http.Request) string {
