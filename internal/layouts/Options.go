@@ -10,7 +10,7 @@ type Options struct {
 	Request        *http.Request
 	WebsiteSection string
 	Title          string
-	Content        *hb.Tag
+	Content        hb.TagInterface
 	ScriptURLs     []string
 	Scripts        []string
 	StyleURLs      []string

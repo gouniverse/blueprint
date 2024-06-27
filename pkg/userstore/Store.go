@@ -128,6 +128,31 @@ func (store *Store) UserFindByEmail(email string) (*User, error) {
 	return nil, nil
 }
 
+// UserFindByEmailOrCreate - finds by email or creates a user (with active status)
+func (store *Store) UserFindByEmailOrCreate(email string, createStatus string) (*User, error) {
+	existingUser, errUser := store.UserFindByEmail(email)
+
+	if errUser != nil {
+		return nil, errUser
+	}
+
+	if existingUser != nil {
+		return existingUser, nil
+	}
+
+	newUser := NewUser().
+		SetEmail(email).
+		SetStatus(createStatus)
+
+	errCreate := store.UserCreate(newUser)
+
+	if errCreate != nil {
+		return nil, errCreate
+	}
+
+	return newUser, nil
+}
+
 func (store *Store) UserFindByID(id string) (*User, error) {
 	if id == "" {
 		return nil, errors.New("user id is empty")

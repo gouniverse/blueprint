@@ -66,7 +66,7 @@ func (c *authenticationController) AnyIndex(w http.ResponseWriter, r *http.Reque
 		return helpers.ToFlashError(w, r, "System Error. No email", links.NewWebsiteLinks().Home(), 5)
 	}
 
-	user, errUser := findOrCreateUser(email.(string))
+	user, errUser := config.UserStore.UserFindByEmailOrCreate(email.(string), userstore.USER_STATUS_ACTIVE)
 
 	if errUser != nil {
 		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > User Create Error: ", errUser.Error())
@@ -150,29 +150,11 @@ func (c *authenticationController) calculateRedirectURL(user userstore.User) str
 		redirectUrl = links.NewAdminLinks().Home()
 	}
 	
+	// 3. If user does not have any names, redirect to profile
+	if user.FirstName() == "" || user.LastName() == "" {
+		redirectUrl = links.NewUserLinks().Profile()
+		redirectUrl = helpers.ToFlashInfoURL("Please complete your profile to finish your registration", redirectUrl, 5)
+	}
+
 	return redirectUrl
-}
-
-func findOrCreateUser(email string) (*userstore.User, error) {
-	existingUser, errUser := config.UserStore.UserFindByEmail(email)
-
-	if errUser != nil {
-		return nil, errUser
-	}
-
-	if existingUser != nil {
-		return existingUser, nil
-	}
-
-	newUser := userstore.NewUser().
-		SetEmail(email).
-		SetStatus(userstore.USER_STATUS_ACTIVE)
-
-	errCreate := config.UserStore.UserCreate(newUser)
-
-	if errCreate != nil {
-		return nil, errCreate
-	}
-
-	return newUser, nil
 }

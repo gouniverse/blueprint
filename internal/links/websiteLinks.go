@@ -14,12 +14,15 @@ func (l *websiteLinks) Blog() string {
 	return URL(BLOG, map[string]string{})
 }
 
-func (l *websiteLinks) BlogP(params map[string]string) string {
+func (l *websiteLinks) BlogWithParameters(params map[string]string) string {
 	return URL(BLOG, params)
 }
 
-func (l *websiteLinks) BlogPost(postId string, postTitle string) string {
-	return URL(BLOG_POST+"/"+postId+"/"+postTitle, map[string]string{})
+func (l *websiteLinks) BlogPost(postID string, postSlug string) string {
+	uri := BLOG_POST
+	uri += "/" + postID
+	uri += "/" + postSlug
+	return URL(uri, map[string]string{})
 }
 
 func (l *websiteLinks) Contact() string {
@@ -32,4 +35,9 @@ func (l *websiteLinks) Flash(params map[string]string) string {
 
 func (l *websiteLinks) Theme(params map[string]string) string {
 	return URL(THEME, params)
+}
+
+func (l *websiteLinks) Widget(alias string, params map[string]string) string {
+	params["alias"] = alias
+	return URL(WIDGET, params)
 }

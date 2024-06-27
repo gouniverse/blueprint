@@ -13,6 +13,7 @@ import (
 	"github.com/gouniverse/metastore"
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/sessionstore"
+	"github.com/gouniverse/shopstore"
 	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/webserver"
 	"github.com/jellydator/ttlcache/v3"
@@ -84,6 +85,7 @@ var GeoStore *geostore.Store
 var LogStore *logstore.Store
 var MetaStore *metastore.Store
 var SessionStore *sessionstore.Store
+var ShopStore *shopstore.Store
 
 // var SubscriptionStore *subscriptionstore.Store
 var TaskStore *taskstore.Store

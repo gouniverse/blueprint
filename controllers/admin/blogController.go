@@ -23,14 +23,22 @@ func NewBlogController() *blogController {
 
 type blogController struct{}
 
-func (c blogController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+// Index is the handler function for the blogController
+//
+// Parameters:
+//   - w http.ResponseWriter
+//   - r *http.Request
+//
+// Returns:
+//   - string
+func (c blogController) Index(w http.ResponseWriter, r *http.Request) string {
 	entityID := utils.Req(r, "entity_id", "")
 	contentType := ""
 	contentScript := ""
 	if entityID != "" {
 		blogpost, err := config.BlogStore.PostFindByID(entityID)
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("At blogController > AnyIndex", err.Error())
+			config.LogStore.ErrorWithContext("At blogController > AnyIndex", err.Error())
 		}
 		if blogpost != nil {
 			editor := blogpost.Meta("editor")
@@ -145,7 +153,7 @@ func (c blogController) AnyIndex(w http.ResponseWriter, r *http.Request) string 
 				Help:  "The content of this blog post to display on the details page.",
 			},
 			{
-				Type:  crud.FORM_FIELD_TYPE_IMAGE,
+				Type:  crud.FORM_FIELD_TYPE_IMAGE_INLINE,
 				Label: "Image URL",
 				Name:  "image_url",
 				Help:  "The image URL for the blogpost.",
@@ -245,7 +253,7 @@ func (c blogController) postCreate(data map[string]string) (serviceID string, er
 	err = config.BlogStore.PostCreate(post)
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("At blogController > postCreate", err.Error())
+		config.LogStore.ErrorWithContext("At blogController > postCreate", err.Error())
 		return "", errors.New("post failed to be created")
 	}
 
@@ -256,7 +264,7 @@ func (c blogController) postFetchUpdateData(entityID string) (map[string]string,
 	post, err := config.BlogStore.PostFindByID(entityID)
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("At blogController > postFetchUpdateData", err.Error())
+		config.LogStore.ErrorWithContext("At blogController > postFetchUpdateData", err.Error())
 		return nil, errors.New("user fetch failed")
 	}
 
@@ -272,7 +280,7 @@ func (c blogController) postFetchUpdateData(entityID string) (map[string]string,
 func (c blogController) postTrash(entityID string) error {
 	post, err := config.BlogStore.PostFindByID(entityID)
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("At blogController > postTrash", err.Error())
+		config.LogStore.ErrorWithContext("At blogController > postTrash", err.Error())
 		return err
 	}
 	return config.BlogStore.PostTrash(post)
@@ -282,7 +290,7 @@ func (c blogController) postUpdate(entityID string, data map[string]string) erro
 	post, err := config.BlogStore.PostFindByID(entityID)
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("At blogController > postUpdate", err.Error())
+		config.LogStore.ErrorWithContext("At blogController > postUpdate", err.Error())
 		return errors.New("user find failed")
 	}
 
@@ -314,7 +322,7 @@ func (c blogController) postUpdate(entityID string, data map[string]string) erro
 	errUpdate := config.BlogStore.PostUpdate(post)
 
 	if errUpdate != nil {
-		config.Cms.LogStore.ErrorWithContext("At blogController > postUpdate", errUpdate.Error())
+		config.LogStore.ErrorWithContext("At blogController > postUpdate", errUpdate.Error())
 		return errUpdate
 	}
 
@@ -326,7 +334,6 @@ func (c blogController) postRows() ([]crud.Row, error) {
 	pageNumber := 0
 	perPage := 1000
 	posts, err := config.BlogStore.
-		// EnableDebug().
 		PostList(blogstore.PostQueryOptions{
 			Limit:  perPage,
 			Offset: pageNumber * perPage,
@@ -338,7 +345,7 @@ func (c blogController) postRows() ([]crud.Row, error) {
 		})
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("At blogController > postRows", err.Error())
+		config.LogStore.ErrorWithContext("At blogController > postRows", err.Error())
 		return []crud.Row{}, err
 	}
 

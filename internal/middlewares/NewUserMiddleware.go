@@ -25,14 +25,14 @@ func NewUserMiddleware() router.Middleware {
 				if authUser == nil {
 					returnURL := links.URL(r.URL.Path, map[string]string{})
 					loginURL := links.NewAuthLinks().Login(returnURL)
-					helpers.ToFlash(w, r, "error", "Only authenticated users can access this page", loginURL, 15)
+					helpers.ToFlashError(w, r, "Only authenticated users can access this page", loginURL, 15)
 					return
 				}
 
 				// Check if user is active? No => redirect to website home
 				if !authUser.IsActive() {
 					homeURL := links.NewWebsiteLinks().Home()
-					helpers.ToFlash(w, r, "error", "User account not active", homeURL, 15)
+					helpers.ToFlashError(w, r, "User account not active", homeURL, 15)
 					return
 				}
 

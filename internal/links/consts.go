@@ -19,7 +19,7 @@ const ADMIN_USERS = "/admin/users"
 // == USER LINKS =============================================================
 
 const USER_HOME = "/user"
-const USER_PROFILE = "/user/profile"
+const USER_PROFILE = USER_HOME + "/profile"
 const USER_PROFILE_UPDATE = "/user/profile/update"
 
 // == WEBSITE LINKS ==========================================================

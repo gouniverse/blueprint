@@ -15,6 +15,7 @@ import (
 	"github.com/gouniverse/metastore"
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/sessionstore"
+	"github.com/gouniverse/shopstore"
 	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/utils"
 	"github.com/jellydator/ttlcache/v3"
@@ -134,7 +135,7 @@ func initializeDatabase() error {
 	}
 
 	Database = sb.NewDatabase(db, DbDriver)
-	
+
 	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
 		DB:            Database.DB(),
 		PostTableName: "snv_blogs_post",
@@ -194,6 +195,7 @@ func initializeDatabase() error {
 	GeoStore, err = geostore.NewStore(geostore.NewStoreOptions{
 		DB:                db,
 		CountryTableName:  "snv_geo_country",
+		StateTableName:    "snv_geo_state",
 		TimezoneTableName: "snv_geo_timezone",
 	})
 
@@ -235,6 +237,20 @@ func initializeDatabase() error {
 
 	if err != nil {
 		return errors.Join(errors.New("sessionstore.NewStore"), err)
+	}
+
+	ShopStore, err = shopstore.NewStore(shopstore.NewStoreOptions{
+		DB:                Database.DB(),
+		DiscountTableName: "snv_shop_discount",
+		OrderTableName:    "snv_shop_order",
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("shopstore.NewStore"), err)
+	}
+
+	if ShopStore == nil {
+		panic("ShopStore is nil")
 	}
 
 	SqlFileStorage, err = filesystem.NewStorage(filesystem.Disk{
@@ -324,6 +340,12 @@ func migrateDatabase() (err error) {
 
 	if err != nil {
 		return errors.Join(errors.New("sessionstore.AutoMigrate"), err)
+	}
+
+	err = ShopStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("shopstore.AutoMigrate"), err)
 	}
 
 	err = TaskStore.AutoMigrate()

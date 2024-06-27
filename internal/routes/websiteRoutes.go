@@ -18,6 +18,11 @@ func websiteRoutes() []router.Route {
 		// 	Handler: sharedControllers.NewPageNotFoundControllerController().AnyIndex,
 		// },
 		{
+			Name:    "Website > Widget Controller > Handler",
+			Path:    links.WIDGET,
+			Handler: website.NewWidgetController().Handler,
+		},
+		{
 			Name:    "Website > Cms > Home Page",
 			Path:    links.HOME,
 			Handler: website.NewCmsController().AnyIndex,

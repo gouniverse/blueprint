@@ -9,7 +9,7 @@ import (
 
 type guestLayout struct {
 	title      string
-	content    *hb.Tag
+	content    hb.TagInterface
 	scriptURLs []string
 	scripts    []string
 	styleURLs  []string

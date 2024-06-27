@@ -15,7 +15,7 @@ func adminRoutes() []router.Route {
 		{
 			Name:    "Admin > Blog",
 			Path:    links.ADMIN_BLOG,
-			Handler: admin.NewBlogController().AnyIndex,
+			Handler: admin.NewBlogController().Index,
 		},
 		{
 			Name:    "Admin > Cms Manager",
