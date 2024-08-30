@@ -22,7 +22,7 @@ func TestAuthControllerOnceIsRequired(t *testing.T) {
 	}
 
 	recorder := httptest.NewRecorder()
-	(http.Handler(responses.JSONHandler(NewAuthenticationController().AnyIndex))).ServeHTTP(recorder, req)
+	(http.Handler(responses.JSONHandler(NewAuthenticationController().Handler))).ServeHTTP(recorder, req)
 
 	code := recorder.Code
 
@@ -44,8 +44,8 @@ func TestAuthControllerOnceIsRequired(t *testing.T) {
 		t.Fatal(`Response be of type 'success', but got: `, flashMessage.Type, flashMessage.Message)
 	}
 
-	if flashMessage.Message != "System Error. Once is required field" {
-		t.Fatal(`Response MUST contain 'System Error. Once is required field', but got: `, flashMessage.Message)
+	if flashMessage.Message != "Authentication Provider Error. Once is required field" {
+		t.Fatal(`Response MUST contain 'Authentication Provider Error. Once is required field', but got: `, flashMessage.Message)
 	}
 }
 
@@ -63,7 +63,7 @@ func TestAuthControllerOnceMustBeValid(t *testing.T) {
 	}
 
 	recorder := httptest.NewRecorder()
-	(http.Handler(responses.JSONHandler(NewAuthenticationController().AnyIndex))).ServeHTTP(recorder, req)
+	(http.Handler(responses.JSONHandler(NewAuthenticationController().Handler))).ServeHTTP(recorder, req)
 	// response := recorder.Body.String()
 
 	code := recorder.Code
@@ -86,8 +86,8 @@ func TestAuthControllerOnceMustBeValid(t *testing.T) {
 		t.Fatal(`Response be of type 'success', but got: `, flashMessage.Type, flashMessage.Message)
 	}
 
-	if flashMessage.Message != "System Error. Invalid authentication response status" {
-		t.Fatal(`Response MUST contain 'System Error. Invalid authentication response status', but got: `, flashMessage.Message, flashMessage.Message)
+	if flashMessage.Message != "Authentication Provider Error. Invalid authentication response status" {
+		t.Fatal(`Response MUST contain 'Authentication Provider Error. Invalid authentication response status', but got: `, flashMessage.Message, flashMessage.Message)
 	}
 }
 
@@ -105,7 +105,7 @@ func TestAuthControllerOnceSuccess(t *testing.T) {
 	}
 
 	recorder := httptest.NewRecorder()
-	(http.Handler(responses.JSONHandler(NewAuthenticationController().AnyIndex))).ServeHTTP(recorder, req)
+	(http.Handler(responses.JSONHandler(NewAuthenticationController().Handler))).ServeHTTP(recorder, req)
 	// response := recorder.Body.String()
 	code := recorder.Code
 

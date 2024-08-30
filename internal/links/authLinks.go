@@ -22,3 +22,7 @@ func (l *authLinks) Login(backUrl string) string {
 func (l *authLinks) Logout() string {
 	return URL(AUTH_LOGOUT, nil)
 }
+
+func (l *authLinks) Register(params map[string]string) string {
+	return URL(AUTH_REGISTER, params)
+}

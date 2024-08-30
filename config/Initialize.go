@@ -5,6 +5,7 @@ import (
 	"os"
 	"project/pkg/userstore"
 
+	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
@@ -18,6 +19,7 @@ import (
 	"github.com/gouniverse/shopstore"
 	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/utils"
+	"github.com/gouniverse/vaultstore"
 	"github.com/jellydator/ttlcache/v3"
 )
 
@@ -53,6 +55,10 @@ func Initialize() {
 	OpenAiApiKey = utils.Env("OPENAI_API_KEY")
 	StripeKeyPrivate = utils.Env("STRIPE_KEY_PRIVATE")
 	StripeKeyPublic = utils.Env("STRIPE_KEY_PUBLIC")
+	VaultKey = utils.Env("VAULT_KEY")
+	VertexModelID = utils.Env("VERTEX_MODEL_ID")
+	VertexProjectID = utils.Env("VERTEX_PROJECT_ID")
+	VertexRegionID = utils.Env("VERTEX_REGION_ID")
 	WebServerHost = utils.Env("SERVER_HOST")
 	WebServerPort = utils.Env("SERVER_PORT")
 
@@ -100,6 +106,25 @@ func Initialize() {
 		panic("Environment variable DB_PASSWORD is required")
 	}
 
+	if VaultKey == "" {
+		panic("Environment variable VAULT_KEY is required")
+	}
+
+	// Enable if you use Vertex
+	// if VertexModelID == "" {
+	// 	panic("Environment variable VERTEX_MODEL_ID is required")
+	// }
+
+	// Enable if you use Vertex
+	// if VertexProjectID == "" {
+	// 	panic("Environment variable VERTEX_PROJECT_ID is required")
+	// }
+
+	// Enable if you use Vertex
+	// if VertexRegionID == "" {
+	// 	panic("Environment variable VERTEX_REGION_ID is required")
+	// }
+
 	// Enable if you use Stripe
 	// if StripeKeyPrivate == "" {
 	// 	panic("Environment variable STRIPE_KEY_PRIVATE is required")
@@ -135,6 +160,36 @@ func initializeDatabase() error {
 	}
 
 	Database = sb.NewDatabase(db, DbDriver)
+
+	BlindIndexStoreEmail, err = blindindexstore.NewStore(blindindexstore.NewStoreOptions{
+		DB:          Database.DB(),
+		TableName:   "snv_bindx_email",
+		Transformer: &blindindexstore.Sha256Transformer{},
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstore.NewStore"), err)
+	}
+
+	BlindIndexStoreFirstName, err = blindindexstore.NewStore(blindindexstore.NewStoreOptions{
+		DB:          Database.DB(),
+		TableName:   "snv_bindx_first_name",
+		Transformer: &blindindexstore.Sha256Transformer{},
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstore.NewStore"), err)
+	}
+
+	BlindIndexStoreLastName, err = blindindexstore.NewStore(blindindexstore.NewStoreOptions{
+		DB:          Database.DB(),
+		TableName:   "snv_bindx_last_name",
+		Transformer: &blindindexstore.Sha256Transformer{},
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstore.NewStore"), err)
+	}
 
 	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
 		DB:            Database.DB(),
@@ -243,6 +298,7 @@ func initializeDatabase() error {
 		DB:                Database.DB(),
 		DiscountTableName: "snv_shop_discount",
 		OrderTableName:    "snv_shop_order",
+		ProductTableName:  "snv_shop_product",
 	})
 
 	if err != nil {
@@ -292,6 +348,19 @@ func initializeDatabase() error {
 		panic("UserStore is nil")
 	}
 
+	VaultStore, err = vaultstore.NewStore(vaultstore.NewStoreOptions{
+		DB:             db,
+		VaultTableName: "snv_vault_vault",
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("vaultstore.NewStore"), err)
+	}
+
+	if VaultStore == nil {
+		panic("VaultStore is nil")
+	}
+
 	return nil
 }
 
@@ -300,6 +369,24 @@ func initializeInMemoryCache() {
 }
 
 func migrateDatabase() (err error) {
+	err = BlindIndexStoreEmail.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstoreemail.AutoMigrate"), err)
+	}
+
+	err = BlindIndexStoreFirstName.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstorefirstname.AutoMigrate"), err)
+	}
+
+	err = BlindIndexStoreLastName.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstorelastname.AutoMigrate"), err)
+	}
+
 	err = BlogStore.AutoMigrate()
 
 	if err != nil {
@@ -358,6 +445,12 @@ func migrateDatabase() (err error) {
 
 	if err != nil {
 		return errors.Join(errors.New("userstore.AutoMigrate"), err)
+	}
+
+	err = VaultStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("vaultstore.AutoMigrate"), err)
 	}
 
 	return nil

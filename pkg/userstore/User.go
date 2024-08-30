@@ -83,6 +83,20 @@ func (o *User) IsSuperuser() bool {
 	return o.Role() == USER_ROLE_SUPERUSER
 }
 
+// IsRegistrationCompleted checks if the user registration is incomplete.
+//
+// Registration is considered incomplete if the user's first name
+// or last name is empty.
+//
+// Parameters:
+// - authUser: a pointer to a userstore.User object representing the authenticated user.
+//
+// Returns:
+// - bool: true if the user registration is incomplete, false otherwise.
+func (o *User) IsRegistrationCompleted() bool {
+	return o.FirstName() != "" && o.LastName() != ""
+}
+
 // == SETTERS AND GETTERS =====================================================
 
 func (o *User) BusinessName() string {

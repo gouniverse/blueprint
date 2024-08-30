@@ -7,6 +7,7 @@ const CATCHALL = "/*"
 const AUTH_AUTH = "/auth/auth"
 const AUTH_LOGIN = "/auth/login"
 const AUTH_LOGOUT = "/auth/logout"
+const AUTH_REGISTER = "/auth/register"
 
 // == ADMIN LINKS ============================================================
 
@@ -20,7 +21,7 @@ const ADMIN_USERS = "/admin/users"
 
 const USER_HOME = "/user"
 const USER_PROFILE = USER_HOME + "/profile"
-const USER_PROFILE_UPDATE = "/user/profile/update"
+const USER_PROFILE_UPDATE = USER_HOME + "/profile/update"
 
 // == WEBSITE LINKS ==========================================================
 

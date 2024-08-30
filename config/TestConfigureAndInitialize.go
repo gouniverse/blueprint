@@ -33,9 +33,14 @@ func TestsConfigureAndInitialize() {
 
 	// os.Setenv("EMAIL_FROM_ADDRESS", "")
 	// os.Setenv("EMAIL_FROM_NAME", "")
-	
+
+	os.Setenv("VAULT_KEY", "abcdefghijklmnopqrstuvwxyz1234567890")
+
 	os.Setenv("STRIPE_KEY_PRIVATE", "123")
 	os.Setenv("STRIPE_KEY_PUBLIC", "345")
-	
+	os.Setenv("VERTEX_PROJECT_ID", "123")
+	os.Setenv("VERTEX_REGION_ID", "345")
+	os.Setenv("VERTEX_MODEL_ID", "678")
+
 	Initialize()
 }

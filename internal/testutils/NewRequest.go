@@ -11,11 +11,12 @@ import (
 
 // NewRequest options for the new request
 type NewRequestOptions struct {
-	Body       string
-	Headers    map[string]string
-	GetValues  url.Values
-	PostValues url.Values
-	Context    map[any]any
+	Body        string
+	Headers     map[string]string
+	GetValues   url.Values
+	PostValues  url.Values
+	Context     map[any]any
+	ContentType string
 }
 
 // NewRequest creates a new Request for testing, but adds RequestURI
@@ -31,8 +32,17 @@ func NewRequest(method string, url string, opts NewRequestOptions) (*http.Reques
 		if opts.Headers == nil {
 			opts.Headers = map[string]string{}
 		}
+
+		if opts.ContentType != "" {
+			opts.Headers["Content-Type"] = opts.ContentType
+		}
+
+		if opts.Headers["Content-Type"] == "" {
+			opts.Headers["Content-Type"] = "application/x-www-form-urlencoded"
+		}
+
 		opts.Body = opts.PostValues.Encode()
-		opts.Headers["Content-Type"] = "application/x-www-form-urlencoded"
+
 	}
 
 	req, err := http.NewRequest(method, url, bytes.NewBuffer([]byte(opts.Body)))

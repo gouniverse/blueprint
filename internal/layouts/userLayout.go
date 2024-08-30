@@ -5,14 +5,51 @@ import (
 	"project/config"
 	"project/internal/helpers"
 	"project/internal/links"
+	"project/pkg/userstore"
 
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/dashboard"
-	"github.com/samber/lo"
 )
 
 func NewUserLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	return userLayout(r, options)
+}
+
+func userUntokenized(authUser userstore.User) (firstName string, lastName string, err error) {
+	firstNameToken := authUser.FirstName()
+	lastNameToken := authUser.LastName()
+	emailToken := authUser.Email()
+
+	firstName, err = config.VaultStore.TokenRead(firstNameToken, config.VaultKey)
+
+	if err != nil {
+		config.Cms.LogStore.ErrorWithContext("Error reading first name", err.Error())
+		return "", "", err
+	}
+
+	lastName, err = config.VaultStore.TokenRead(lastNameToken, config.VaultKey)
+
+	if err != nil {
+		config.Cms.LogStore.ErrorWithContext("Error reading last name", err.Error())
+		return "", "", err
+	}
+
+	if firstName != "" {
+		return firstName, lastName, nil
+	}
+
+	email, err := config.VaultStore.TokenRead(emailToken, config.VaultKey)
+
+	if err != nil {
+		config.Cms.LogStore.ErrorWithContext("Error reading email", err.Error())
+		return "", "", err
+	}
+
+	if firstName == "" {
+		firstName = email
+	}
+
+	return firstName, lastName, nil
 }
 
 // layout generates a dashboard based on the provided request and layout options.
@@ -28,10 +65,12 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	dashboardUser := dashboard.User{}
 	if authUser != nil {
-		firstName := lo.If(authUser.FirstName() == "", authUser.Email()).Else(authUser.FirstName())
-		dashboardUser = dashboard.User{
-			FirstName: firstName,
-			LastName:  authUser.LastName(),
+		firtsName, lastName, err := userUntokenized(*authUser)
+		if err == nil {
+			dashboardUser = dashboard.User{
+				FirstName: firtsName,
+				LastName:  lastName,
+			}
 		}
 	}
 
@@ -68,7 +107,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		ScriptURLs:      scriptURLs,
 		Styles:          styles,
 		StyleURLs:       options.StyleURLs,
-		FaviconURL:      links.URL("favicon.svg", map[string]string{}),
+		FaviconURL:      FaviconURL(),
 		// Theme: dashboard.THEME_MINTY,
 	})
 

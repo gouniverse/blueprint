@@ -3,6 +3,7 @@ package config
 import (
 	"project/pkg/userstore"
 
+	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
@@ -15,6 +16,7 @@ import (
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/shopstore"
 	"github.com/gouniverse/taskstore"
+	"github.com/gouniverse/vaultstore"
 	"github.com/gouniverse/webserver"
 	"github.com/jellydator/ttlcache/v3"
 )
@@ -62,6 +64,10 @@ var MediaUrl string = "/files"
 var OpenAiApiKey string
 var StripeKeyPrivate string
 var StripeKeyPublic string
+var VaultKey string
+var VertexModelID string
+var VertexProjectID string
+var VertexRegionID string
 var WebServer *webserver.Server
 var WebServerHost string
 var WebServerPort string
@@ -76,6 +82,9 @@ var Cms *cms.Cms
 var CmsUserTemplateID string = ""
 
 // ===================================== //
+var BlindIndexStoreEmail *blindindexstore.Store
+var BlindIndexStoreFirstName *blindindexstore.Store
+var BlindIndexStoreLastName *blindindexstore.Store
 var BlogStore *blogstore.Store
 var CacheStore *cachestore.Store
 
@@ -90,6 +99,7 @@ var ShopStore *shopstore.Store
 // var SubscriptionStore *subscriptionstore.Store
 var TaskStore *taskstore.Store
 var UserStore *userstore.Store
+var VaultStore *vaultstore.Store
 
 var SqlFileStorage filesystem.StorageInterface
 

@@ -10,19 +10,24 @@ import (
 func authRoutes() []router.Route {
 	return []router.Route{
 		{
-			Name:    "Auth > Auth Controller > Index Page",
+			Name:    "Auth > Auth Controller",
 			Path:    links.AUTH_AUTH,
-			Handler: auth.NewAuthenticationController().AnyIndex,
+			Handler: auth.NewAuthenticationController().Handler,
 		},
 		{
-			Name:    "Auth > Login Controller > Index Page",
+			Name:    "Auth > Login Controller",
 			Path:    links.AUTH_LOGIN,
 			Handler: auth.NewLoginController().AnyIndex,
 		},
 		{
-			Name:    "Auth > Logout Controller > Index Page",
+			Name:    "Auth > Logout Controller",
 			Path:    links.AUTH_LOGOUT,
 			Handler: auth.NewLogoutController().AnyIndex,
+		},
+		{
+			Name:    "Auth > Register Controller",
+			Path:    links.AUTH_REGISTER,
+			Handler: auth.NewRegisterController().Handler,
 		},
 	}
 }

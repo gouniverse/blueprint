@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"project/internal/helpers"
 	"project/internal/links"
-	"project/pkg/userstore"
 	"strings"
 
 	"github.com/gouniverse/router"
@@ -37,11 +36,12 @@ func NewUserMiddleware() router.Middleware {
 				}
 
 				// Check if user has completed registration? No => redirect to profile to complete registration
-				notOnProfilePage := strings.Trim(r.URL.Path, "/") != strings.Trim(links.USER_PROFILE, "/")
+				notOnProfilePage := strings.Trim(r.URL.Path, "/") != strings.Trim(links.USER_PROFILE, "/") &&
+					strings.Trim(r.URL.Path, "/") != strings.Trim(links.AUTH_REGISTER, "/")
 
-				if isUserRegistrationIncomplete(authUser) && notOnProfilePage {
-					homeURL := links.NewUserLinks().Profile()
-					helpers.ToFlashInfo(w, r, "Please complete your registration to continue", homeURL, 15)
+				if !authUser.IsRegistrationCompleted() && notOnProfilePage {
+					registerURL := links.NewAuthLinks().Register(map[string]string{})
+					helpers.ToFlashInfo(w, r, "Please complete your registration to continue", registerURL, 15)
 					return
 				}
 
@@ -50,18 +50,4 @@ func NewUserMiddleware() router.Middleware {
 		},
 	}
 	return m
-}
-
-// isUserRegistrationIncomplete checks if the user is incomplete.
-//
-// Registration is considered incomplete if the user's first name
-// or last name is empty.
-//
-// Parameters:
-// - authUser: a pointer to a userstore.User object representing the authenticated user.
-//
-// Returns:
-// - bool: true if the user registration is incomplete, false otherwise.
-func isUserRegistrationIncomplete(authUser *userstore.User) bool {
-	return authUser.FirstName() == "" && authUser.LastName() == ""
 }
