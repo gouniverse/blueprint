@@ -4,6 +4,12 @@
 
 ![tests](https://github.com/gouniverse/blueprint/workflows/tests/badge.svg)
 
+## Development IDE
+
+<a href="https://gitpod.io/#https://github.com/gouniverse/blueprint" style="float:right:" target="_blank">
+    <img src="https://gitpod.io/button/open-in-gitpod.svg" alt="Open in Gitpod" loading="lazy">
+</a>
+
 ## URLS
 
 - https://YOURAPPURL
@@ -36,10 +42,22 @@ task dev:init
 task dev
 ```
 
+## Development on Gitpod
+
+Use the link on the top of this README
+
 ## Testing
+
+Running all tests
 
 ```bash
 task test
+```
+
+-Running individual test
+
+```
+go test -run ^TestGuestFunnelTestSuite$
 ```
 
 ## Coverage Report
