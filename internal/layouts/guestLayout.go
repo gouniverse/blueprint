@@ -28,10 +28,14 @@ func NewGuestLayout(options Options) *guestLayout {
 }
 
 func (layout *guestLayout) ToHTML() string {
-	layout.styleURLs = append([]string{cdn.BootstrapCss_5_3_0()}, layout.styleURLs...)
+	layout.styleURLs = append([]string{cdn.BootstrapCss_5_3_3()}, layout.styleURLs...)
 	webpage := hb.NewWebpage().
 		SetTitle(layout.title).
+		SetFavicon(FaviconURL()).
+		AddStyles(layout.styles).
 		AddStyleURLs(layout.styleURLs).
+		AddScripts(layout.scripts).
+		AddScriptURLs(layout.scriptURLs).
 		AddChild(layout.content)
 	return webpage.ToHTML()
 }

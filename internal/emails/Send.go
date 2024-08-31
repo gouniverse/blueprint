@@ -72,7 +72,7 @@ func Send(options SendOptions) error {
 
 	if err != nil {
 		// cfmt.Infoln(err.Error())
-		config.Cms.LogStore.ErrorWithContext("Error at Send", err.Error())
+		config.LogStore.ErrorWithContext("Error at Send", err.Error())
 		return err
 	}
 

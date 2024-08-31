@@ -1,15 +1,18 @@
 package helpers
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 func ToCurrencySymbol(currency string) string {
-	if currency == "GBP" {
+	if strings.ToUpper(currency) == "GBP" {
 		return "&pound;"
 	}
-	if currency == "EUR" {
+	if strings.ToUpper(currency) == "EUR" {
 		return "&euro;"
 	}
-	if currency == "GBP" {
+	if strings.ToUpper(currency) == "USD" {
 		return "$"
 	}
 	return currency

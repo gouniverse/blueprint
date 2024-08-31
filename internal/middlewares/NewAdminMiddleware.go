@@ -8,8 +8,8 @@ import (
 	"github.com/gouniverse/router"
 )
 
-// NewAdminMiddleware checks if the user is an admin before allowing access
-// to the protected route.
+// NewAdminMiddleware checks if the user is an administrator or superuser
+// before allowing access to the protected route.
 func NewAdminMiddleware() router.Middleware {
 	m := router.Middleware{
 		Name: "Admin Middleware",

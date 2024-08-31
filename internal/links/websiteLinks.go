@@ -10,11 +10,7 @@ func (l *websiteLinks) Home() string {
 	return URL(HOME, map[string]string{})
 }
 
-func (l *websiteLinks) Blog() string {
-	return URL(BLOG, map[string]string{})
-}
-
-func (l *websiteLinks) BlogWithParameters(params map[string]string) string {
+func (l *websiteLinks) Blog(params map[string]string) string {
 	return URL(BLOG, params)
 }
 

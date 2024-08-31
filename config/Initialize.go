@@ -110,6 +110,16 @@ func Initialize() {
 		panic("Environment variable VAULT_KEY is required")
 	}
 
+	// Enable if you use Stripe
+	// if StripeKeyPrivate == "" {
+	// 	panic("Environment variable STRIPE_KEY_PRIVATE is required")
+	// }
+
+	// Enable if you use Stripe
+	// if StripeKeyPublic == "" {
+	// 	panic("Environment variable STRIPE_KEY_PUBLIC is required")
+	// }
+
 	// Enable if you use Vertex
 	// if VertexModelID == "" {
 	// 	panic("Environment variable VERTEX_MODEL_ID is required")
@@ -123,16 +133,6 @@ func Initialize() {
 	// Enable if you use Vertex
 	// if VertexRegionID == "" {
 	// 	panic("Environment variable VERTEX_REGION_ID is required")
-	// }
-
-	// Enable if you use Stripe
-	// if StripeKeyPrivate == "" {
-	// 	panic("Environment variable STRIPE_KEY_PRIVATE is required")
-	// }
-
-	// Enable if you use Stripe
-	// if StripeKeyPublic == "" {
-	// 	panic("Environment variable STRIPE_KEY_PUBLIC is required")
 	// }
 
 	os.Setenv("TZ", "UTC")
@@ -221,7 +221,7 @@ func initializeDatabase() error {
 		EntitiesAutomigrate: true,
 		//LogsEnable:          true,
 		//LogsAutomigrate:     true,
-		SettingsEnable: true,
+		// SettingsEnable: true,
 		//SettingsAutomigrate: true,
 		//SessionAutomigrate:  true,
 		//SessionEnable:       true,

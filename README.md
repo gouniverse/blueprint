@@ -68,6 +68,18 @@ task cover
 
 ## CLI Commands
 
+Deploy Live:
+
+```bash
+task deploy-live
+```
+
+Deploy Staging:
+
+```bash
+task deploy-staging
+```
+
 List Routes:
 
 ```bash

@@ -72,11 +72,22 @@ func (*homeController) tiles() []hb.TagInterface {
 			"icon":  "bi-people",
 			"link":  links.NewAdminLinks().Users(),
 		},
+		// {
+		// 	"title": "FAQ Manager",
+		// 	"icon":  "bi-question-circle",
+		// 	"link":  links.NewAdminLinks().Faq(map[string]string{}),
+		// },
 		{
 			"title": "Media Manager",
 			"icon":  "bi-box",
 			"link":  links.NewAdminLinks().FileManager(),
 		},
+		// {
+		// 	"title":  "CDN Manager",
+		// 	"icon":   "bi-folder-symlink",
+		// 	"link":   "https://gitlab.com/repo/cdn",
+		// 	"target": "_blank",
+		// },
 	}
 
 	cards := lo.Map(tiles, func(tile map[string]string, index int) hb.TagInterface {
@@ -118,5 +129,6 @@ func (*homeController) tiles() []hb.TagInterface {
 
 		return column
 	})
+
 	return cards
 }

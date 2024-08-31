@@ -68,7 +68,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		ScriptURLs:      scriptURLs,
 		Styles:          styles,
 		StyleURLs:       options.StyleURLs,
-		FaviconURL:      links.URL("favicon.svg", map[string]string{}),
+		FaviconURL:      FaviconURL(),
 		// Theme: dashboard.THEME_MINTY,
 	})
 

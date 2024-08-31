@@ -95,7 +95,6 @@ var LogStore *logstore.Store
 var MetaStore *metastore.Store
 var SessionStore *sessionstore.Store
 var ShopStore *shopstore.Store
-
 // var SubscriptionStore *subscriptionstore.Store
 var TaskStore *taskstore.Store
 var UserStore *userstore.Store

@@ -7,8 +7,6 @@ import (
 	"project/internal/layouts"
 	"project/internal/links"
 
-	// "project/controllers/partials"
-
 	"strings"
 
 	"github.com/gouniverse/cdn"
@@ -26,7 +24,7 @@ func NewFlashController() *flashController {
 func (controller flashController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
 	authUser := helpers.GetAuthUser(r)
 
-	if authUser != nil {
+	if authUser != nil && authUser.IsRegistrationCompleted() {
 		return layouts.NewUserLayout(r, layouts.Options{
 			Title: "System Message",
 			// CanonicalURL: links.NewWebsiteLinks().Flash(map[string]string{}),
