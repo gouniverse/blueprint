@@ -10,7 +10,11 @@ import (
 
 func ExtendSession(r *http.Request, seconds int64) error {
 	sessionKey := r.Context().Value(config.AuthenticatedSessionKey{}).(string)
-	err := config.Cms.SessionStore.Extend(sessionKey, 3600, sessionstore.SessionOptions{IPAddress: utils.IP(r), UserAgent: r.UserAgent()})
+
+	err := config.SessionStore.Extend(sessionKey, 3600, sessionstore.SessionOptions{
+		IPAddress: utils.IP(r),
+		UserAgent: r.UserAgent(),
+	})
 
 	return err
 }

@@ -45,7 +45,6 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 	if errUser != nil {
 		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > User Create Error: ", errUser.Error())
 		return helpers.ToFlashError(w, r, "Error finding user", links.NewWebsiteLinks().Home(), 5)
-
 	}
 
 	if user == nil {

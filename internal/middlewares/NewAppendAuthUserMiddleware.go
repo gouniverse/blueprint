@@ -62,6 +62,7 @@ func AppendUserHandler(next http.Handler) http.Handler {
 		}
 
 		userID, err := config.SessionStore.Get(userSessionKey, "", sessionstore.SessionOptions{
+			// !!! Important: leave UserID out, we don't know it at this point
 			IPAddress: utils.IP(r),
 			UserAgent: r.UserAgent(),
 		})
@@ -94,6 +95,7 @@ func AppendUserHandler(next http.Handler) http.Handler {
 
 func sessionKey(r *http.Request) string {
 	authTokenFromCookie, err := r.Cookie(auth.CookieName)
+
 	if err != nil {
 		if err != http.ErrNoCookie {
 			log.Println(err.Error())

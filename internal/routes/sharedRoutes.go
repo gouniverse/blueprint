@@ -26,6 +26,12 @@ func sharedRoutes() []router.Route {
 		// 	Path:    links.MEDIA,
 		// 	Handler: websiteControllers.NewMediaController().Index,
 		// },
+
+		{
+			Name:    "Resources",
+			Path:    links.RESOURCES + links.CATCHALL,
+			Handler: shared.NewResourceController().AnyIndex,
+		},
 		{
 			Name: "Shared > Theme",
 			Path: links.THEME,

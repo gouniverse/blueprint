@@ -6,7 +6,7 @@ import (
 	"github.com/go-co-op/gocron"
 )
 
-// Starts the scheduler without blocking the current thread
+// StartAsync starts the scheduler in the backgroun without blocking the main thread
 func StartAsync() {
 	scheduler := gocron.NewScheduler(time.UTC)
 

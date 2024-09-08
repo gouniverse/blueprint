@@ -11,6 +11,7 @@ import (
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 )
@@ -24,11 +25,13 @@ type blogControllerData struct {
 	perPage   int
 }
 
+var _ router.ControllerInterface = (*blogController)(nil)
+
 func NewBlogController() *blogController {
 	return &blogController{}
 }
 
-func (controller *blogController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+func (controller *blogController) Handler(w http.ResponseWriter, r *http.Request) string {
 	data, errorMessage := controller.prepareData(r)
 
 	if errorMessage != "" {

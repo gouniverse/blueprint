@@ -29,6 +29,17 @@ func (l *websiteLinks) Flash(params map[string]string) string {
 	return URL(FLASH, params)
 }
 
+func (l *websiteLinks) Resource(resourcePath string, params map[string]string) string {
+	if resourcePath == "" {
+		return ""
+	}
+	if resourcePath[0] != '/' {
+		resourcePath = "/" + resourcePath
+	}
+
+	return URL(RESOURCES+resourcePath, params)
+}
+
 func (l *websiteLinks) Theme(params map[string]string) string {
 	return URL(THEME, params)
 }

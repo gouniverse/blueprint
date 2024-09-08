@@ -1,17 +1,23 @@
 package website
 
 import (
+	"bytes"
 	"net/http"
 	"project/config"
 	"project/internal/helpers"
 	"project/internal/layouts"
 	"project/internal/links"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 type blogPostController struct {
@@ -21,7 +27,9 @@ func NewBlogPostController() *blogPostController {
 	return &blogPostController{}
 }
 
-func (c blogPostController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+var _ router.ControllerInterface = (*blogPostController)(nil)
+
+func (c blogPostController) Handler(w http.ResponseWriter, r *http.Request) string {
 	postID := chi.URLParam(r, "id")
 	postSlug := chi.URLParam(r, "title")
 	blogsUrl := links.NewWebsiteLinks().Blog(map[string]string{})
@@ -46,7 +54,7 @@ func (c blogPostController) AnyIndex(w http.ResponseWriter, r *http.Request) str
 		return ""
 	}
 
-	if post.IsUnpublished() {
+	if !c.accessAllowed(r, *post) {
 		config.LogStore.WarnWithContext("WARNING: anyPost: post with ID "+postID+" is unpublished", map[string]any{"postID": postID})
 		helpers.ToFlash(w, r, "warning", "The post you are looking for is no longer active. Redirecting to the blog location...", blogsUrl, 5)
 		return ""
@@ -80,11 +88,31 @@ func (c blogPostController) AnyIndex(w http.ResponseWriter, r *http.Request) str
 		Request:        r,
 		WebsiteSection: "Blog.",
 		Title:          post.Title(),
-		Content:        hb.NewWrap().HTML(c.page(w, r, *post)),
+		Content:        hb.NewWrap().HTML(c.page(*post)),
 	}).ToHTML()
 }
 
-func (c blogPostController) page(w http.ResponseWriter, r *http.Request, post blogstore.Post) string {
+func (controller blogPostController) accessAllowed(r *http.Request, post blogstore.Post) bool {
+	if post.IsPublished() {
+		return true // everyone can access published posts
+	}
+
+	authUser := helpers.GetAuthUser(r)
+
+	// If the user is not logged in, they can't access unpublished posts
+	if authUser == nil {
+		return false
+	}
+
+	// If the user is an administrator, they can access unpublished posts
+	if authUser.IsAdministrator() {
+		return true
+	}
+
+	return false // default to false
+}
+
+func (c blogPostController) page(post blogstore.Post) string {
 	sectionBanner := NewBlogController().sectionBanner()
 	return hb.NewWrap().Children([]hb.TagInterface{
 		// hb.NewStyle(c.cssSectionIntro()),
@@ -122,9 +150,12 @@ func (c blogPostController) css() string {
 	`
 }
 
-func (c *blogPostController) processContent(content string, editor string) string {
-	if editor == "BlockArea" {
+func (controller *blogPostController) processContent(content string, editor string) string {
+	if editor == blogstore.POST_EDITOR_BLOCKAREA {
 		return helpers.BlogPostBlocksToString(content)
+	}
+	if editor == blogstore.POST_EDITOR_MARKDOWN {
+		return controller.markdownToHtml(content)
 	}
 	return content
 }
@@ -212,40 +243,32 @@ func (c *blogPostController) sectionPost(post blogstore.Post) *hb.Tag {
 	return sectionPost
 }
 
-// func (c blogPostController) sectionIntro() *hb.Tag {
-// 	sectionIntro := hb.NewSection().ID("SectionIntro").Children([]hb.TagInterface{
-// 		bs.Container().Children([]hb.TagInterface{
-// 			hb.NewHeading1().HTML("Blog"),
-// 		}),
-// 	})
-// 	return sectionIntro
-// }
+// markdownToHtml converts a markdown text to html
+//
+// 1. the text is trimmed of any white spaces
+// 2. if the text is empty, it returns an empty string
+// 3. the text is converted to html using the goldmark library
+func (controller *blogPostController) markdownToHtml(text string) string {
+	text = strings.TrimSpace(text)
 
-// func (c blogPostController) cssSectionIntro() string {
-// 	imgUrl := utils.PicsumURL(800, 500, utils.PicsumURLOptions{
-// 		ID:   82,
-// 		Blur: 0,
-// 		// Grayscale: true,
-// 	})
+	if text == "" {
+		return ""
+	}
 
-// 	return `
-// 	#SectionIntro {
-// 		padding: 80px 0px;
-// 		position: relative;
-// 		background-image: url(` + imgUrl + `);
-// 		background-position: center;
-// 		background-size: cover;
-// 	}
+	var buf bytes.Buffer
+	md := goldmark.New(
+		// goldmark.WithExtensions(extension.GFM),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+		goldmark.WithRendererOptions(
+			// html.WithHardWraps(),
+			html.WithXHTML(),
+		),
+	)
+	if err := md.Convert([]byte(text), &buf); err != nil {
+		panic(err)
+	}
 
-// 	#SectionIntro h1 {
-// 		color: #fff;
-// 		font-size: 55px;
-// 		font-weight: 700;
-// 		letter-spacing: 2px;
-// 		margin: 0px 0px 10px 0px;
-// 		text-shadow: 2px 2px 2px #333;
-// 		text-transform: uppercase;
-// 		text-align: center;
-// 	}
-// 	`
-// }
+	return buf.String()
+}

@@ -8,7 +8,6 @@ import (
 
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/dashboard"
-	"github.com/samber/lo"
 )
 
 func NewAdminLayout(r *http.Request, options Options) *dashboard.Dashboard {
@@ -28,17 +27,19 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	dashboardUser := dashboard.User{}
 	if authUser != nil {
-		firstName := lo.If(authUser.FirstName() == "", authUser.Email()).Else(authUser.FirstName())
-		dashboardUser = dashboard.User{
-			FirstName: firstName,
-			LastName:  authUser.LastName(),
+		firstName, lastName, err := userUntokenized(*authUser)
+		if err == nil {
+			dashboardUser = dashboard.User{
+				FirstName: firstName,
+				LastName:  lastName,
+			}
 		}
 	}
 
 	// Prepare script URLs
 	scriptURLs := []string{} // prepend any if required
 	scriptURLs = append(scriptURLs, options.ScriptURLs...)
-	scriptURLs = append(scriptURLs, cdn.Htmx_1_9_9())
+	scriptURLs = append(scriptURLs, cdn.Htmx_2_0_0())
 
 	// Prepare scripts
 	scripts := []string{} // prepend any if required
@@ -55,7 +56,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	dashboard := dashboard.NewDashboard(dashboard.Config{
 		HTTPRequest:     r,
 		Content:         options.Content.ToHTML(),
-		Title:           options.Title + " | User | " + config.AppName,
+		Title:           options.Title + " | Admin | " + config.AppName,
 		LoginURL:        links.NewAuthLinks().Login(homeLink),
 		Menu:            adminLayoutMainMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",
