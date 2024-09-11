@@ -13,7 +13,7 @@ import (
 // it is useful to detect spamming bots
 func NewLogRequestMiddleware() router.Middleware {
 	m := router.Middleware{
-		Name: "Admin Middleware",
+		Name: "Log Request Middleware",
 		Handler: func(next http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				uri := r.RequestURI

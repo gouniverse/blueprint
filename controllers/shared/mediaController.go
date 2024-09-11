@@ -7,6 +7,7 @@ import (
 
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
+	"github.com/spf13/cast"
 )
 
 type mediaController struct {
@@ -17,6 +18,9 @@ func NewMediaController() *mediaController {
 }
 
 func (c *mediaController) Handler(w http.ResponseWriter, r *http.Request) string {
+	if config.SqlFileStorage == nil {
+		return "File storage not configured"
+	}
 
 	filePath := lo.IfF(strings.HasPrefix(r.URL.Path, "/files"), func() string { return utils.StrRightFrom(r.URL.Path, "/files") }).
 		ElseIfF(strings.HasPrefix(r.URL.Path, "/file"), func() string { return utils.StrRightFrom(r.URL.Path, "/file") }).
@@ -72,7 +76,7 @@ func (c *mediaController) Handler(w http.ResponseWriter, r *http.Request) string
 	} else {
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename="+r.URL.Path)
-		w.Header().Set("Content-Length", string(len(content)))
+		w.Header().Set("Content-Length", cast.ToString(len(content)))
 	}
 
 	w.Write(content)

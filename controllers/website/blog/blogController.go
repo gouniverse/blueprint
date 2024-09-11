@@ -38,7 +38,7 @@ func (controller *blogController) Handler(w http.ResponseWriter, r *http.Request
 		return helpers.ToFlashError(w, r, errorMessage, links.NewWebsiteLinks().Home(), 10)
 	}
 
-	return layouts.NewGuestLayout(layouts.Options{
+	return layouts.NewWebsiteLayout(layouts.Options{
 		Request:        r,
 		WebsiteSection: "Blog",
 		Title:          "Recent Posts",

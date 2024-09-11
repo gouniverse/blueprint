@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/doug-martin/goqu/v9"
@@ -30,6 +31,10 @@ func (store *Store) AutoMigrate() error {
 		return errors.New("user table create sql is empty")
 	}
 
+	if store.db == nil {
+		return errors.New("userstore: database is nil")
+	}
+
 	_, err := store.db.Exec(sql)
 
 	if err != nil {
@@ -42,6 +47,45 @@ func (store *Store) AutoMigrate() error {
 // EnableDebug - enables the debug option
 func (st *Store) EnableDebug(debug bool) {
 	st.debugEnabled = debug
+}
+
+func (store *Store) UserCount(options UserQueryOptions) (int64, error) {
+	options.CountOnly = true
+	q := store.userQuery(options)
+
+	sqlStr, params, errSql := q.Prepared(true).
+		Limit(1).
+		Select(goqu.COUNT(goqu.Star()).As("count")).
+		ToSQL()
+
+	if errSql != nil {
+		return -1, nil
+	}
+
+	if store.debugEnabled {
+		log.Println(sqlStr)
+	}
+
+	db := sb.NewDatabase(store.db, store.dbDriverName)
+	mapped, err := db.SelectToMapString(sqlStr, params...)
+	if err != nil {
+		return -1, err
+	}
+
+	if len(mapped) < 1 {
+		return -1, nil
+	}
+
+	countStr := mapped[0]["count"]
+
+	i, err := strconv.ParseInt(countStr, 10, 64)
+
+	if err != nil {
+		return -1, err
+
+	}
+
+	return i, nil
 }
 
 func (store *Store) UserCreate(user *User) error {
@@ -62,6 +106,10 @@ func (store *Store) UserCreate(user *User) error {
 
 	if store.debugEnabled {
 		log.Println(sqlStr)
+	}
+
+	if store.db == nil {
+		return errors.New("userstore: database is nil")
 	}
 
 	_, err := store.db.Exec(sqlStr, params...)
@@ -187,8 +235,18 @@ func (store *Store) UserList(options UserQueryOptions) ([]User, error) {
 		log.Println(sqlStr)
 	}
 
+	if store.db == nil {
+		return []User{}, errors.New("userstore: database is nil")
+	}
+
 	db := sb.NewDatabase(store.db, store.dbDriverName)
+
+	if db == nil {
+		return []User{}, errors.New("userstore: database is nil")
+	}
+
 	modelMaps, err := db.SelectToMapString(sqlStr)
+
 	if err != nil {
 		return []User{}, err
 	}
@@ -225,14 +283,14 @@ func (store *Store) UserSoftDeleteByID(id string) error {
 
 func (store *Store) UserUpdate(user *User) error {
 	if user == nil {
-		return errors.New("order is nil")
+		return errors.New("user is nil")
 	}
 
 	user.SetUpdatedAt(carbon.Now(carbon.UTC).ToDateTimeString())
 
 	dataChanged := user.DataChanged()
 
-	delete(dataChanged, "id") // ID is not updateable
+	delete(dataChanged, COLUMN_ID) // ID is not updateable
 
 	if len(dataChanged) < 1 {
 		return nil
@@ -242,7 +300,7 @@ func (store *Store) UserUpdate(user *User) error {
 		Update(store.userTableName).
 		Prepared(true).
 		Set(dataChanged).
-		Where(goqu.C("id").Eq(user.ID())).
+		Where(goqu.C(COLUMN_ID).Eq(user.ID())).
 		ToSQL()
 
 	if errSql != nil {
@@ -251,6 +309,10 @@ func (store *Store) UserUpdate(user *User) error {
 
 	if store.debugEnabled {
 		log.Println(sqlStr)
+	}
+
+	if store.db == nil {
+		return errors.New("userstore: database is nil")
 	}
 
 	_, err := store.db.Exec(sqlStr, params...)
@@ -264,19 +326,19 @@ func (store *Store) userQuery(options UserQueryOptions) *goqu.SelectDataset {
 	q := goqu.Dialect(store.dbDriverName).From(store.userTableName)
 
 	if options.ID != "" {
-		q = q.Where(goqu.C("id").Eq(options.ID))
+		q = q.Where(goqu.C(COLUMN_ID).Eq(options.ID))
 	}
 
 	if options.Status != "" {
-		q = q.Where(goqu.C("status").Eq(options.Status))
+		q = q.Where(goqu.C(COLUMN_STATUS).Eq(options.Status))
 	}
 
 	if len(options.StatusIn) > 0 {
-		q = q.Where(goqu.C("status").In(options.StatusIn))
+		q = q.Where(goqu.C(COLUMN_STATUS).In(options.StatusIn))
 	}
 
 	if options.Email != "" {
-		q = q.Where(goqu.C("email").Eq(options.Email))
+		q = q.Where(goqu.C(COLUMN_EMAIL).Eq(options.Email))
 	}
 
 	if !options.CountOnly {
@@ -289,7 +351,7 @@ func (store *Store) userQuery(options UserQueryOptions) *goqu.SelectDataset {
 		}
 	}
 
-	sortOrder := "desc"
+	sortOrder := sb.DESC
 	if options.SortOrder != "" {
 		sortOrder = options.SortOrder
 	}
@@ -303,7 +365,7 @@ func (store *Store) userQuery(options UserQueryOptions) *goqu.SelectDataset {
 	}
 
 	if !options.WithDeleted {
-		q = q.Where(goqu.C("deleted_at").Eq(sb.NULL_DATETIME))
+		q = q.Where(goqu.C(COLUMN_DELETED_AT).Eq(sb.NULL_DATETIME))
 	}
 
 	return q

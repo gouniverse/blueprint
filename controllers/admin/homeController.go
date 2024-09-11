@@ -8,12 +8,15 @@ import (
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/icons"
+	"github.com/gouniverse/router"
 	"github.com/samber/lo"
 )
 
 // == CONTROLLER ===============================================================
 
 type homeController struct{}
+
+var _ router.ControllerInterface = (*homeController)(nil)
 
 // == CONSTRUCTOR ==============================================================
 
@@ -23,7 +26,7 @@ func NewHomeController() *homeController {
 
 // == PUBLIC METHODS ===========================================================
 
-func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) string {
 	return layouts.NewAdminLayout(r, layouts.Options{
 		Title:      "Home",
 		Content:    controller.view(),
@@ -46,7 +49,7 @@ func (c *homeController) view() *hb.Tag {
 	return hb.NewWrap().Child(header).Child(sectionTiles)
 }
 
-func (c *homeController) quickSearch(r *http.Request) []*hb.Tag {
+func (c *homeController) quickSearch(_ *http.Request) []*hb.Tag {
 	heading := hb.NewHeading2().HTML("Quick Search")
 
 	return []*hb.Tag{
@@ -70,7 +73,7 @@ func (*homeController) tiles() []hb.TagInterface {
 		{
 			"title": "User Manager",
 			"icon":  "bi-people",
-			"link":  links.NewAdminLinks().Users(),
+			"link":  links.NewAdminLinks().Users(map[string]string{}),
 		},
 		// {
 		// 	"title": "FAQ Manager",

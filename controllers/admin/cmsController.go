@@ -22,6 +22,8 @@ func (controller cmsController) AnyIndex(w http.ResponseWriter, r *http.Request)
 			Content: hb.NewHTML(content),
 		}).ToHTML()
 	})
+
 	config.Cms.Router(w, r)
+
 	return ""
 }

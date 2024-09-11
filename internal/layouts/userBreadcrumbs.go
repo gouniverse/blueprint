@@ -8,6 +8,8 @@ import (
 	"github.com/gouniverse/icons"
 )
 
+// userBreadcrumbs generates the user breadcrumbs
+// the first breadcrumb is always the dashboard
 func userBreadcrumbs(path []bs.Breadcrumb) *hb.Tag {
 	breadcrumbsPath := []bs.Breadcrumb{
 		{

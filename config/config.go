@@ -76,29 +76,30 @@ var WebServerPort string
 var InMem *ttlcache.Cache[string, any]
 
 // Cms is the CMS instance.
-var Cms *cms.Cms
+var Cms cms.Cms
 
 // CmsUserTemplateID is the CMS user template ID.
 var CmsUserTemplateID string = ""
 
 // ===================================== //
-var BlindIndexStoreEmail *blindindexstore.Store
-var BlindIndexStoreFirstName *blindindexstore.Store
-var BlindIndexStoreLastName *blindindexstore.Store
-var BlogStore *blogstore.Store
-var CacheStore *cachestore.Store
+var BlindIndexStoreEmail blindindexstore.Store
+var BlindIndexStoreFirstName blindindexstore.Store
+var BlindIndexStoreLastName blindindexstore.Store
+var BlogStore blogstore.Store
+var CacheStore cachestore.Store
 
 // var CommentStore *commentstore.Store
-var CustomStore *customstore.Store
-var GeoStore *geostore.Store
-var LogStore *logstore.Store
-var MetaStore *metastore.Store
-var SessionStore *sessionstore.Store
-var ShopStore *shopstore.Store
+var CustomStore customstore.Store
+var GeoStore geostore.Store
+var LogStore logstore.Store
+var MetaStore metastore.Store
+var SessionStore sessionstore.Store
+var ShopStore shopstore.Store
+
 // var SubscriptionStore *subscriptionstore.Store
-var TaskStore *taskstore.Store
-var UserStore *userstore.Store
-var VaultStore *vaultstore.Store
+var TaskStore taskstore.Store
+var UserStore userstore.Store
+var VaultStore vaultstore.Store
 
 var SqlFileStorage filesystem.StorageInterface
 

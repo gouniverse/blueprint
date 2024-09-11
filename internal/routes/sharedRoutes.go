@@ -22,11 +22,6 @@ func sharedRoutes() []router.Route {
 			Path:    links.FLASH,
 			Handler: shared.NewFlashController().AnyIndex,
 		},
-		// {
-		// 	Path:    links.MEDIA,
-		// 	Handler: websiteControllers.NewMediaController().Index,
-		// },
-
 		{
 			Name:    "Resources",
 			Path:    links.RESOURCES + links.CATCHALL,

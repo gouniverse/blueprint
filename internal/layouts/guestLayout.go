@@ -7,6 +7,10 @@ import (
 	"github.com/gouniverse/hb"
 )
 
+// == TYPE ===================================================================
+
+// GuestLayout is a layout for guest pages, which are not connected to the CMS
+// it differs from the website layout, which uses the CMS template
 type guestLayout struct {
 	title      string
 	content    hb.TagInterface
@@ -16,6 +20,9 @@ type guestLayout struct {
 	styles     []string
 }
 
+// == CONSTRUCTOR =============================================================
+
+// NewGuestLayout creates a new guest layout
 func NewGuestLayout(options Options) *guestLayout {
 	layout := &guestLayout{}
 	layout.title = options.Title + " | " + config.AppName
@@ -27,6 +34,9 @@ func NewGuestLayout(options Options) *guestLayout {
 	return layout
 }
 
+// == PUBLIC METHODS ==========================================================
+
+// ToHTML generates the HTML for the guest layout
 func (layout *guestLayout) ToHTML() string {
 	layout.styleURLs = append([]string{cdn.BootstrapCss_5_3_3()}, layout.styleURLs...)
 	webpage := hb.NewWebpage().

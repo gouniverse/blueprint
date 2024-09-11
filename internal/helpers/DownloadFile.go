@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -15,6 +16,11 @@ func DownloadFile(filepath string, url string) error {
 	if err != nil {
 		return err
 	}
+
+	if resp == nil {
+		return errors.New("no response")
+	}
+
 	defer resp.Body.Close()
 
 	// Create the file

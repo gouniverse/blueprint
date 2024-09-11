@@ -30,7 +30,7 @@ func (userController *userController) AnyIndex(w http.ResponseWriter, r *http.Re
 	usersCrud, err := crud.NewCrud(crud.CrudConfig{
 		EntityNameSingular: "User",
 		EntityNamePlural:   "Users",
-		Endpoint:           links.NewAdminLinks().Users(),
+		Endpoint:           links.NewAdminLinks().Users(map[string]string{}),
 		ColumnNames: []string{
 			"Name",
 			"BusinessName",
@@ -139,10 +139,6 @@ func (userController *userController) FuncLayout(w http.ResponseWriter, r *http.
 		Styles:     []string{style},
 	}).ToHTML()
 }
-
-// func (userController *userController) FuncCreate(entityID string, data map[string]string) error {
-
-// }
 
 func (userController *userController) FuncRows() ([]crud.Row, error) {
 	users, err := config.UserStore.UserList(userstore.UserQueryOptions{})

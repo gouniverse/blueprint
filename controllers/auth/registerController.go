@@ -357,7 +357,7 @@ func (controller *registerController) untokenizeData(user userstore.User) (email
 		email, err = config.VaultStore.TokenRead(emailToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading email", err.Error())
+			config.LogStore.ErrorWithContext("Error reading email", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -366,7 +366,7 @@ func (controller *registerController) untokenizeData(user userstore.User) (email
 		firstName, err = config.VaultStore.TokenRead(firstNameToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading first name", err.Error())
+			config.LogStore.ErrorWithContext("Error reading first name", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -375,7 +375,7 @@ func (controller *registerController) untokenizeData(user userstore.User) (email
 		lastName, err = config.VaultStore.TokenRead(lastNameToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading last name", err.Error())
+			config.LogStore.ErrorWithContext("Error reading last name", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -384,7 +384,7 @@ func (controller *registerController) untokenizeData(user userstore.User) (email
 		businessName, err = config.VaultStore.TokenRead(businessNameToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading business name", err.Error())
+			config.LogStore.ErrorWithContext("Error reading business name", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -393,7 +393,7 @@ func (controller *registerController) untokenizeData(user userstore.User) (email
 		phone, err = config.VaultStore.TokenRead(phoneToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading phone", err.Error())
+			config.LogStore.ErrorWithContext("Error reading phone", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -415,7 +415,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 	})
 
 	if errCountries != nil {
-		config.Cms.LogStore.ErrorWithContext("Error listing countries", errCountries.Error())
+		config.LogStore.ErrorWithContext("Error listing countries", errCountries.Error())
 		return registerControllerData{}, "Error listing countries"
 	}
 
@@ -423,7 +423,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 
 	if r.Method == http.MethodGet {
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading email", err.Error())
+			config.LogStore.ErrorWithContext("Error reading email", err.Error())
 			return registerControllerData{}, "Error reading email"
 		}
 
@@ -472,7 +472,7 @@ func (controller *registerController) selectTimezoneByCountry(country string, se
 	timezones, errZones := config.GeoStore.TimezoneList(query)
 
 	if errZones != nil {
-		config.Cms.LogStore.ErrorWithContext("Error listing timezones", errZones.Error())
+		config.LogStore.ErrorWithContext("Error listing timezones", errZones.Error())
 		return hb.NewHTML("Error listing timezones")
 	}
 

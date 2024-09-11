@@ -3,6 +3,7 @@ package admin
 import (
 	"net/http"
 	"project/config"
+	"project/pkg/userstore"
 
 	"project/internal/helpers"
 	"project/internal/layouts"
@@ -10,7 +11,6 @@ import (
 	"strings"
 
 	"github.com/golang-module/carbon/v2"
-	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/hb"
@@ -23,17 +23,17 @@ import (
 
 // == CONTROLLER ==============================================================
 
-type blogPostManagerController struct{}
+type userManagerController struct{}
 
-var _ router.ControllerInterface = (*blogPostManagerController)(nil)
+var _ router.ControllerInterface = (*userManagerController)(nil)
 
 // == CONSTRUCTOR =============================================================
 
-func NewBlogPostManagerController() *blogPostManagerController {
-	return &blogPostManagerController{}
+func NewUserManagerController() *userManagerController {
+	return &userManagerController{}
 }
 
-func (controller *blogPostManagerController) Handler(w http.ResponseWriter, r *http.Request) string {
+func (controller *userManagerController) Handler(w http.ResponseWriter, r *http.Request) string {
 	data, errorMessage := controller.prepareData(r)
 
 	if errorMessage != "" {
@@ -41,7 +41,7 @@ func (controller *blogPostManagerController) Handler(w http.ResponseWriter, r *h
 	}
 
 	return layouts.NewAdminLayout(r, layouts.Options{
-		Title:   "Blog | Post Manager",
+		Title:   "Users | User Manager",
 		Content: controller.page(data),
 		ScriptURLs: []string{
 			cdn.Htmx_1_9_4(),
@@ -51,108 +51,102 @@ func (controller *blogPostManagerController) Handler(w http.ResponseWriter, r *h
 	}).ToHTML()
 }
 
-func (controller *blogPostManagerController) page(data blogPostManagerControllerData) hb.TagInterface {
+func (controller *userManagerController) page(data userManagerControllerData) hb.TagInterface {
 	breadcrumbs := layouts.Breadcrumbs([]layouts.Breadcrumb{
 		{
 			Name: "Home",
 			URL:  links.NewAdminLinks().Home(),
 		},
 		{
-			Name: "Blog",
-			URL:  links.NewAdminLinks().BlogPostManager(map[string]string{}),
+			Name: "Users",
+			URL:  links.NewAdminLinks().UsersUserManager(map[string]string{}),
 		},
 		{
-			Name: "Post Manager",
-			URL:  links.NewAdminLinks().BlogPostManager(map[string]string{}),
+			Name: "User Manager",
+			URL:  links.NewAdminLinks().UsersUserManager(map[string]string{}),
 		},
 	})
 
-	buttonPostNew := hb.NewButton().
+	buttonUserNew := hb.NewButton().
 		Class("btn btn-primary float-end").
 		Child(hb.NewI().Class("bi bi-plus-circle").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
-		HTML("New Post").
-		HxGet(links.NewAdminLinks().BlogPostCreate(map[string]string{})).
+		HTML("New User").
+		HxGet(links.NewAdminLinks().UsersUserCreate(map[string]string{})).
 		HxTarget("body").
 		HxSwap("beforeend")
 
 	title := hb.NewHeading1().
-		HTML("Blog. Post Manager").
-		Child(buttonPostNew)
+		HTML("Users. User Manager").
+		Child(buttonUserNew)
 
 	return hb.NewDiv().
 		Class("container").
-		Child(title).
 		Child(breadcrumbs).
-		Child(controller.tablePosts(data))
+		Child(hb.NewHR()).
+		Child(title).
+		Child(controller.tableUsers(data))
 }
 
-func (controller *blogPostManagerController) prepareData(r *http.Request) (data blogPostManagerControllerData, errorMessage string) {
+func (controller *userManagerController) prepareData(r *http.Request) (data userManagerControllerData, errorMessage string) {
 	var err error
 
 	data.page = utils.Req(r, "page", "0")
 	data.pageInt = cast.ToInt(data.page)
 	data.perPage = cast.ToInt(utils.Req(r, "per_page", "10"))
 	data.sortOrder = utils.Req(r, "sort_order", sb.DESC)
-	data.sortBy = utils.Req(r, "by", blogstore.COLUMN_CREATED_AT)
+	data.sortBy = utils.Req(r, "by", userstore.COLUMN_CREATED_AT)
 	data.status = utils.Req(r, "status", "")
 	data.search = utils.Req(r, "search", "")
 	data.dateFrom = utils.Req(r, "date_from", carbon.Now().AddYears(-1).ToDateString())
 	data.dateTo = utils.Req(r, "date_to", carbon.Now().ToDateString())
 	data.customerID = utils.Req(r, "customer_id", "")
-	
-	query := blogstore.PostQueryOptions{
-		Search:               data.search,
-		Offset:               data.pageInt * data.perPage,
-		Limit:                data.perPage,
-		Status:               data.status,
-		CreatedAtGreaterThan: data.dateFrom + " 00:00:00",
-		CreatedAtLessThan:    data.dateTo + " 23:59:59",
-		SortOrder:            data.sortOrder,
-		OrderBy:              data.sortBy,
+
+	query := userstore.UserQueryOptions{
+		//Search:               data.search,
+		Offset: data.pageInt * data.perPage,
+		Limit:  data.perPage,
+		Status: data.status,
+		//CreatedAtGreaterThan: data.dateFrom + " 00:00:00",
+		//CreatedAtLessThan:    data.dateTo + " 23:59:59",
+		SortOrder: data.sortOrder,
+		OrderBy:   data.sortBy,
 	}
 
-	data.blogList, err = config.BlogStore.
-		// EnableDebug(true).
-		PostList(query)
+	data.userList, err = config.UserStore.UserList(query)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("At blogPostManagerController > prepareData", err.Error())
-		return data, "error retrieving posts"
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return data, "error retrieving users"
 	}
 
-	// DEBUG: cfmt.Successln("Invoice List: ", blogList)
-
-	data.blogCount, err = config.BlogStore.
-		// EnableDebug().
-		PostCount(query)
+	data.userCount, err = config.UserStore.UserCount(query)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("At blogPostManagerController > prepareData", err.Error())
-		return data, "Error retrieving posts count"
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return data, "Error retrieving users count"
 	}
 
 	return data, ""
 }
 
-func (controller *blogPostManagerController) tablePosts(data blogPostManagerControllerData) hb.TagInterface {
+func (controller *userManagerController) tableUsers(data userManagerControllerData) hb.TagInterface {
 	table := hb.NewTable().
 		Class("table table-striped table-hover table-bordered").
 		Children([]hb.TagInterface{
 			hb.NewThead().Children([]hb.TagInterface{
 				hb.NewTR().Children([]hb.TagInterface{
 					hb.NewTH().
-						Child(controller.sortableColumnLabel(data, "Post", "title")).
+						Child(controller.sortableColumnLabel(data, "First Name", "first_name")).
 						Text(", ").
-						Child(controller.sortableColumnLabel(data, "Reference", "title")).
+						Child(controller.sortableColumnLabel(data, "Last Name", "last_name")).
+						Text(", ").
+						Child(controller.sortableColumnLabel(data, "Reference", "id")).
 						Style(`cursor: pointer;`),
 					hb.NewTH().
 						Child(controller.sortableColumnLabel(data, "Status", "status")).
 						Style("width: 200px;cursor: pointer;"),
 					hb.NewTH().
-						Child(controller.sortableColumnLabel(data, "Featured", "featured")).
-						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
-						Child(controller.sortableColumnLabel(data, "Published", "published_at")).
+						Child(controller.sortableColumnLabel(data, "E-mail", "email")).
 						Style("width: 1px;cursor: pointer;"),
 					hb.NewTH().
 						Child(controller.sortableColumnLabel(data, "Created", "created_at")).
@@ -164,58 +158,66 @@ func (controller *blogPostManagerController) tablePosts(data blogPostManagerCont
 						HTML("Actions"),
 				}),
 			}),
-			hb.NewTbody().Children(lo.Map(data.blogList, func(blog blogstore.Post, _ int) hb.TagInterface {
-				blogLink := hb.NewHyperlink().
-					HTML(blog.Title()).
-					Href(links.NewWebsiteLinks().BlogPost(blog.ID(), blog.Slug())).
-					Target("_blank")
+			hb.NewTbody().Children(lo.Map(data.userList, func(user userstore.User, _ int) hb.TagInterface {
+				firstName, lastName, email, err := userUntokenized(user)
+
+				if err != nil {
+					config.LogStore.ErrorWithContext("At userManagerController > tableUsers", err.Error())
+					firstName = "n/a"
+					lastName = "n/a"
+					email = "n/a"
+				}
+
+				userLink := hb.NewHyperlink().
+					Text(firstName).
+					Text(` `).
+					Text(lastName).
+					Href(links.NewAdminLinks().UsersUserUpdate(map[string]string{"user_id": user.ID()}))
 
 				status := hb.NewSpan().
 					Style(`font-weight: bold;`).
-					StyleIf(blog.IsPublished(), `color:green;`).
-					StyleIf(blog.IsTrashed(), `color:silver;`).
-					StyleIf(blog.IsDraft(), `color:blue;`).
-					StyleIf(blog.IsUnpublished(), `color:red;`).
-					HTML(blog.Status())
+					StyleIf(user.IsActive(), `color:green;`).
+					StyleIf(user.IsDeleted(), `color:silver;`).
+					StyleIf(user.IsUnverified(), `color:blue;`).
+					StyleIf(user.IsInactive(), `color:red;`).
+					HTML(user.Status())
 
 				buttonEdit := hb.NewHyperlink().
 					Class("btn btn-primary me-2").
 					Child(hb.NewI().Class("bi bi-pencil-square")).
 					Title("Edit").
-					Href(links.NewAdminLinks().BlogPostUpdate(map[string]string{"post_id": blog.ID()})).
+					Href(links.NewAdminLinks().UsersUserUpdate(map[string]string{"user_id": user.ID()})).
 					Target("_blank")
 
 				buttonDelete := hb.NewHyperlink().
 					Class("btn btn-danger").
 					Child(hb.NewI().Class("bi bi-trash")).
 					Title("Delete").
-					HxGet(links.NewAdminLinks().BlogPostDelete(map[string]string{"post_id": blog.ID()})).
+					HxGet(links.NewAdminLinks().UsersUserDelete(map[string]string{"user_id": user.ID()})).
 					HxTarget("body").
 					HxSwap("beforeend")
 
 				return hb.NewTR().Children([]hb.TagInterface{
 					hb.NewTD().
-						Child(hb.NewDiv().Child(blogLink)).
+						Child(hb.NewDiv().Child(userLink)).
 						Child(hb.NewDiv().
 							Style("font-size: 11px;").
 							HTML("Ref: ").
-							HTML(blog.ID())),
+							HTML(user.ID())),
 					hb.NewTD().
 						Child(status),
 					hb.NewTD().
-						HTML(blog.Featured()),
+						Child(hb.NewDiv().
+							Style("font-size: 13px;white-space: nowrap;").
+							HTML(email)),
 					hb.NewTD().
 						Child(hb.NewDiv().
 							Style("font-size: 13px;white-space: nowrap;").
-							HTML(blog.PublishedAtCarbon().Format("d M Y"))),
+							HTML(user.CreatedAtCarbon().Format("d M Y"))),
 					hb.NewTD().
 						Child(hb.NewDiv().
 							Style("font-size: 13px;white-space: nowrap;").
-							HTML(blog.CreatedAtCarbon().Format("d M Y"))),
-					hb.NewTD().
-						Child(hb.NewDiv().
-							Style("font-size: 13px;white-space: nowrap;").
-							HTML(blog.UpdatedAtCarbon().Format("d M Y"))),
+							HTML(user.UpdatedAtCarbon().Format("d M Y"))),
 					hb.NewTD().
 						Child(buttonEdit).
 						Child(buttonDelete),
@@ -228,11 +230,11 @@ func (controller *blogPostManagerController) tablePosts(data blogPostManagerCont
 	return hb.NewWrap().Children([]hb.TagInterface{
 		controller.tableFilter(data),
 		table,
-		controller.tablePagination(data, int(data.blogCount), data.pageInt, data.perPage),
+		controller.tablePagination(data, int(data.userCount), data.pageInt, data.perPage),
 	})
 }
 
-func (controller *blogPostManagerController) sortableColumnLabel(data blogPostManagerControllerData, tableLabel string, columnName string) hb.TagInterface {
+func (controller *userManagerController) sortableColumnLabel(data userManagerControllerData, tableLabel string, columnName string) hb.TagInterface {
 	isSelected := strings.EqualFold(data.sortBy, columnName)
 
 	direction := lo.If(data.sortOrder == "asc", "desc").Else("asc")
@@ -241,7 +243,7 @@ func (controller *blogPostManagerController) sortableColumnLabel(data blogPostMa
 		direction = "asc"
 	}
 
-	link := links.NewAdminLinks().BlogPostManager(map[string]string{
+	link := links.NewAdminLinks().UsersUserManager(map[string]string{
 		"page":        "0",
 		"by":          columnName,
 		"sort":        direction,
@@ -257,7 +259,7 @@ func (controller *blogPostManagerController) sortableColumnLabel(data blogPostMa
 		Href(link)
 }
 
-func (controller *blogPostManagerController) sortingIndicator(columnName string, sortByColumnName string, sortOrder string) hb.TagInterface {
+func (controller *userManagerController) sortingIndicator(columnName string, sortByColumnName string, sortOrder string) hb.TagInterface {
 	isSelected := strings.EqualFold(sortByColumnName, columnName)
 
 	direction := lo.If(isSelected && sortOrder == "asc", "up").
@@ -273,13 +275,13 @@ func (controller *blogPostManagerController) sortingIndicator(columnName string,
 	return sortingIndicator
 }
 
-func (controller *blogPostManagerController) tableFilter(data blogPostManagerControllerData) hb.TagInterface {
+func (controller *userManagerController) tableFilter(data userManagerControllerData) hb.TagInterface {
 	statusList := []map[string]string{
 		{"id": "", "name": "All Statuses"},
-		{"id": blogstore.POST_STATUS_DRAFT, "name": "Draft"},
-		{"id": blogstore.POST_STATUS_UNPUBLISHED, "name": "Unpublished"},
-		{"id": blogstore.POST_STATUS_PUBLISHED, "name": "Published"},
-		{"id": blogstore.POST_STATUS_TRASH, "name": "Deleted"},
+		{"id": userstore.USER_STATUS_ACTIVE, "name": "Active"},
+		{"id": userstore.USER_STATUS_INACTIVE, "name": "Inactive"},
+		{"id": userstore.USER_STATUS_UNVERIFIED, "name": "Unverified"},
+		{"id": userstore.USER_STATUS_DELETED, "name": "Deleted"},
 	}
 
 	searchButton := hb.NewButton().
@@ -369,8 +371,8 @@ func (controller *blogPostManagerController) tableFilter(data blogPostManagerCon
 		})
 }
 
-func (controller *blogPostManagerController) tablePagination(data blogPostManagerControllerData, count int, page int, perPage int) hb.TagInterface {
-	url := links.NewAdminLinks().BlogPostManager(map[string]string{
+func (controller *userManagerController) tablePagination(data userManagerControllerData, count int, page int, perPage int) hb.TagInterface {
+	url := links.NewAdminLinks().UsersUserManager(map[string]string{
 		"search":    data.search,
 		"status":    data.status,
 		"date_from": data.dateFrom,
@@ -394,7 +396,7 @@ func (controller *blogPostManagerController) tablePagination(data blogPostManage
 		HTML(pagination)
 }
 
-type blogPostManagerControllerData struct {
+type userManagerControllerData struct {
 	// r            *http.Request
 	page       string
 	pageInt    int
@@ -406,6 +408,6 @@ type blogPostManagerControllerData struct {
 	customerID string
 	dateFrom   string
 	dateTo     string
-	blogList   []blogstore.Post
-	blogCount  int64
+	userList   []userstore.User
+	userCount  int64
 }

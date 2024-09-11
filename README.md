@@ -71,13 +71,13 @@ task cover
 Deploy Live:
 
 ```bash
-task deploy-live
+task deploy:live
 ```
 
 Deploy Staging:
 
 ```bash
-task deploy-staging
+task deploy:staging
 ```
 
 List Routes:

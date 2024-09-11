@@ -29,5 +29,13 @@ func StartAsync() {
 	// 	}
 	// })
 
+	// Schedule Building the Cache Every 2 Minutes
+	// only on production, no need on dev and local
+	// if config.IsEnvStaging() || config.IsEnvProduction() {
+	// 	scheduler.Every(2).Minutes().Do(func() {
+	// 		pool.BuildCache()
+	// 	})
+	// }
+
 	scheduler.StartAsync()
 }

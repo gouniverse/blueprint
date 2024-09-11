@@ -159,9 +159,19 @@ func initializeDatabase() error {
 		return err
 	}
 
-	Database = sb.NewDatabase(db, DbDriver)
+	if db == nil {
+		return errors.New("db is nil")
+	}
 
-	BlindIndexStoreEmail, err = blindindexstore.NewStore(blindindexstore.NewStoreOptions{
+	dbInstance := sb.NewDatabase(db, DbDriver)
+
+	if dbInstance == nil {
+		return errors.New("dbInstance is nil")
+	}
+
+	Database = dbInstance
+
+	blindIndexStoreEmailInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
 		DB:          Database.DB(),
 		TableName:   "snv_bindx_email",
 		Transformer: &blindindexstore.Sha256Transformer{},
@@ -171,7 +181,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("blindindexstore.NewStore"), err)
 	}
 
-	BlindIndexStoreFirstName, err = blindindexstore.NewStore(blindindexstore.NewStoreOptions{
+	if blindIndexStoreEmailInstance == nil {
+		return errors.New("blindindexstore.NewStore: blindIndexStoreEmailInstance is nil")
+	}
+
+	BlindIndexStoreEmail = *blindIndexStoreEmailInstance
+
+	blindIndexStoreFirstNameInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
 		DB:          Database.DB(),
 		TableName:   "snv_bindx_first_name",
 		Transformer: &blindindexstore.Sha256Transformer{},
@@ -181,7 +197,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("blindindexstore.NewStore"), err)
 	}
 
-	BlindIndexStoreLastName, err = blindindexstore.NewStore(blindindexstore.NewStoreOptions{
+	if blindIndexStoreFirstNameInstance == nil {
+		return errors.New("blindindexstore.NewStore: blindIndexStoreFirstNameInstance is nil")
+	}
+
+	BlindIndexStoreFirstName = *blindIndexStoreFirstNameInstance
+
+	blindIndexStoreLastNameInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
 		DB:          Database.DB(),
 		TableName:   "snv_bindx_last_name",
 		Transformer: &blindindexstore.Sha256Transformer{},
@@ -191,7 +213,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("blindindexstore.NewStore"), err)
 	}
 
-	BlogStore, err = blogstore.NewStore(blogstore.NewStoreOptions{
+	if blindIndexStoreLastNameInstance == nil {
+		return errors.New("blindindexstore.NewStore: blindIndexStoreLastNameInstance is nil")
+	}
+
+	BlindIndexStoreLastName = *blindIndexStoreLastNameInstance
+
+	blogStoreInstance, err := blogstore.NewStore(blogstore.NewStoreOptions{
 		DB:            Database.DB(),
 		PostTableName: "snv_blogs_post",
 	})
@@ -200,7 +228,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("blogstore.NewStore"), err)
 	}
 
-	CacheStore, err = cachestore.NewStore(cachestore.NewStoreOptions{
+	if blogStoreInstance == nil {
+		return errors.New("blogstore.NewStore: blogStoreInstance is nil")
+	}
+
+	BlogStore = *blogStoreInstance
+
+	cacheStoreInstance, err := cachestore.NewStore(cachestore.NewStoreOptions{
 		DB:             db,
 		CacheTableName: "snv_caches_cache",
 	})
@@ -209,7 +243,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("cachestore.NewStore"), err)
 	}
 
-	Cms, err = cms.NewCms(cms.Config{
+	if cacheStoreInstance == nil {
+		return errors.New("cachestore.NewStore: cacheStoreInstance is nil")
+	}
+
+	CacheStore = *cacheStoreInstance
+
+	cmsInstance, err := cms.NewCms(cms.Config{
 		Database:        Database,
 		Prefix:          "cms_",
 		TemplatesEnable: true,
@@ -238,7 +278,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("cms.NewCms"), err)
 	}
 
-	CustomStore, err = customstore.NewStore(customstore.NewStoreOptions{
+	if cmsInstance == nil {
+		panic("cmsInstance is nil")
+	}
+
+	Cms = *cmsInstance
+
+	customStoreInstance, err := customstore.NewStore(customstore.NewStoreOptions{
 		DB:        db,
 		TableName: "snv_custom_record",
 	})
@@ -247,7 +293,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("customstore.NewStore"), err)
 	}
 
-	GeoStore, err = geostore.NewStore(geostore.NewStoreOptions{
+	if customStoreInstance == nil {
+		panic("customStoreInstance is nil")
+	}
+
+	CustomStore = *customStoreInstance
+
+	geoStoreInstance, err := geostore.NewStore(geostore.NewStoreOptions{
 		DB:                db,
 		CountryTableName:  "snv_geo_country",
 		StateTableName:    "snv_geo_state",
@@ -258,11 +310,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("geostore.NewStore"), err)
 	}
 
-	if GeoStore == nil {
+	if geoStoreInstance == nil {
 		panic("GeoStore is nil")
 	}
 
-	LogStore, err = logstore.NewStore(logstore.NewStoreOptions{
+	GeoStore = *geoStoreInstance
+
+	logStoreInstance, err := logstore.NewStore(logstore.NewStoreOptions{
 		DB:           db,
 		LogTableName: "snv_logs_log",
 	})
@@ -271,7 +325,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("logstore.NewStore"), err)
 	}
 
-	MetaStore, err = metastore.NewStore(metastore.NewStoreOptions{
+	if logStoreInstance == nil {
+		panic("logStoreInstance is nil")
+	}
+
+	LogStore = *logStoreInstance
+
+	metaStoreInstance, err := metastore.NewStore(metastore.NewStoreOptions{
 		DB:            db,
 		MetaTableName: "snv_metas_meta",
 	})
@@ -280,11 +340,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("metastore.NewStore"), err)
 	}
 
-	if MetaStore == nil {
+	if metaStoreInstance == nil {
 		panic("MetaStore is nil")
 	}
 
-	SessionStore, err = sessionstore.NewStore(sessionstore.NewStoreOptions{
+	MetaStore = *metaStoreInstance
+
+	sessionStoreInstance, err := sessionstore.NewStore(sessionstore.NewStoreOptions{
 		DB:               db,
 		SessionTableName: "snv_sessions_session",
 		TimeoutSeconds:   7200,
@@ -294,7 +356,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("sessionstore.NewStore"), err)
 	}
 
-	ShopStore, err = shopstore.NewStore(shopstore.NewStoreOptions{
+	if sessionStoreInstance == nil {
+		panic("sessionStoreInstance is nil")
+	}
+
+	SessionStore = *sessionStoreInstance
+
+	shopStoreInstance, err := shopstore.NewStore(shopstore.NewStoreOptions{
 		DB:                Database.DB(),
 		DiscountTableName: "snv_shop_discount",
 		OrderTableName:    "snv_shop_order",
@@ -305,11 +373,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("shopstore.NewStore"), err)
 	}
 
-	if ShopStore == nil {
+	if shopStoreInstance == nil {
 		panic("ShopStore is nil")
 	}
 
-	SqlFileStorage, err = filesystem.NewStorage(filesystem.Disk{
+	ShopStore = *shopStoreInstance
+
+	sqlFileStorageInstance, err := filesystem.NewStorage(filesystem.Disk{
 		DiskName:  filesystem.DRIVER_SQL,
 		Driver:    filesystem.DRIVER_SQL,
 		Url:       "/file",
@@ -321,7 +391,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("filesystem.NewStorage"), err)
 	}
 
-	TaskStore, err = taskstore.NewStore(taskstore.NewStoreOptions{
+	if sqlFileStorageInstance == nil {
+		panic("sqlFileStorageInstance is nil")
+	}
+
+	SqlFileStorage = sqlFileStorageInstance
+
+	taskStoreInstance, err := taskstore.NewStore(taskstore.NewStoreOptions{
 		DB:             db,
 		TaskTableName:  "snv_tasks_task",
 		QueueTableName: "snv_tasks_queue",
@@ -331,11 +407,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("taskstore.NewStore"), err)
 	}
 
-	if TaskStore == nil {
+	if taskStoreInstance == nil {
 		panic("TaskStore is nil")
 	}
 
-	UserStore, err = userstore.NewStore(userstore.NewStoreOptions{
+	TaskStore = *taskStoreInstance
+
+	userStoreInstance, err := userstore.NewStore(userstore.NewStoreOptions{
 		DB:            db,
 		UserTableName: "snv_users_user",
 	})
@@ -344,11 +422,13 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("userstore.NewStore"), err)
 	}
 
-	if UserStore == nil {
+	if userStoreInstance == nil {
 		panic("UserStore is nil")
 	}
 
-	VaultStore, err = vaultstore.NewStore(vaultstore.NewStoreOptions{
+	UserStore = *userStoreInstance
+
+	vaultStoreInstance, err := vaultstore.NewStore(vaultstore.NewStoreOptions{
 		DB:             db,
 		VaultTableName: "snv_vault_vault",
 	})
@@ -357,9 +437,11 @@ func initializeDatabase() error {
 		return errors.Join(errors.New("vaultstore.NewStore"), err)
 	}
 
-	if VaultStore == nil {
+	if vaultStoreInstance == nil {
 		panic("VaultStore is nil")
 	}
+
+	VaultStore = *vaultStoreInstance
 
 	return nil
 }

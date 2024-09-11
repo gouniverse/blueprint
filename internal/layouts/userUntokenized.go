@@ -13,14 +13,14 @@ func userUntokenized(authUser userstore.User) (firstName string, lastName string
 	firstName, err = config.VaultStore.TokenRead(firstNameToken, config.VaultKey)
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("Error reading first name", err.Error())
+		config.LogStore.ErrorWithContext("Error reading first name", err.Error())
 		return "", "", err
 	}
 
 	lastName, err = config.VaultStore.TokenRead(lastNameToken, config.VaultKey)
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("Error reading last name", err.Error())
+		config.LogStore.ErrorWithContext("Error reading last name", err.Error())
 		return "", "", err
 	}
 
@@ -31,7 +31,7 @@ func userUntokenized(authUser userstore.User) (firstName string, lastName string
 	email, err := config.VaultStore.TokenRead(emailToken, config.VaultKey)
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("Error reading email", err.Error())
+		config.LogStore.ErrorWithContext("Error reading email", err.Error())
 		return "", "", err
 	}
 

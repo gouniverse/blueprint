@@ -56,9 +56,9 @@ func adminRoutes() []router.Route {
 			Handler: adminFiles.NewFileManagerController().AnyIndex,
 		},
 		{
-			Name:    "Admin > Home Controller > Index Page",
+			Name:    "Admin > Home Controller",
 			Path:    links.ADMIN_HOME,
-			Handler: admin.NewHomeController().AnyIndex,
+			Handler: admin.NewHomeController().Handler,
 		},
 	}
 

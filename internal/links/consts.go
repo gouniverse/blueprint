@@ -19,7 +19,11 @@ const ADMIN_BLOG_POST_DELETE = "/admin/blog/post-delete"
 const ADMIN_BLOG_POST_UPDATE = "/admin/blog/post-update"
 const ADMIN_CMS = "/admin/cms"
 const ADMIN_MEDIA = "/admin/media"
-const ADMIN_USERS = "/admin/users"
+const ADMIN_USERS = ADMIN_HOME + "/users"
+const ADMIN_USERS_USER_CREATE = ADMIN_USERS + "/user-create"
+const ADMIN_USERS_USER_DELETE = ADMIN_USERS + "/user-delete"
+const ADMIN_USERS_USER_MANAGER = ADMIN_USERS + "/user-manager"
+const ADMIN_USERS_USER_UPDATE = ADMIN_USERS + "/user-update"
 
 // == USER LINKS =============================================================
 

@@ -3,6 +3,7 @@ module project
 go 1.23
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-co-op/gocron v1.37.0
@@ -10,7 +11,7 @@ require (
 	github.com/goravel/framework v1.14.5
 	github.com/gouniverse/auth v0.21.0
 	github.com/gouniverse/blindindexstore v0.0.2
-	github.com/gouniverse/blogstore v0.4.0
+	github.com/gouniverse/blogstore v0.5.0
 	github.com/gouniverse/bs v0.11.1
 	github.com/gouniverse/cachestore v0.18.1
 	github.com/gouniverse/cdn v1.5.0
@@ -21,30 +22,29 @@ require (
 	github.com/gouniverse/form v0.3.2
 	github.com/gouniverse/hb v1.75.1
 	github.com/gouniverse/icons v1.3.1
-	github.com/gouniverse/logstore v1.4.0
+	github.com/gouniverse/logstore v1.4.1
 	github.com/gouniverse/metastore v1.1.0
 	github.com/gouniverse/responses v0.6.0
-	github.com/gouniverse/router v1.2.0
+	github.com/gouniverse/router v1.2.1
 	github.com/gouniverse/sessionstore v0.26.0
 	github.com/gouniverse/shopstore v0.0.4
 	github.com/gouniverse/strutils v0.6.0
 	github.com/gouniverse/taskstore v1.0.2
-	github.com/gouniverse/utils v1.40.0
-	github.com/gouniverse/vaultstore v0.14.1
+	github.com/gouniverse/utils v1.41.0
+	github.com/gouniverse/vaultstore v0.15.0
 	github.com/gouniverse/webserver v0.1.0
 	github.com/hyperjiang/php v1.0.2
 	github.com/jellydator/ttlcache/v3 v3.3.0
 	github.com/mingrammer/cfmt v1.1.0
 	github.com/robertkrimen/otto v0.4.0
 	github.com/sfreiberg/simplessh v0.0.0-20220719182921-185eafd40485
-	github.com/spf13/cast v1.6.0
-	github.com/yuin/goldmark v1.4.13
+	github.com/spf13/cast v1.7.0
+	github.com/yuin/goldmark v1.7.4
 	modernc.org/sqlite v1.33.0
 )
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.30.5 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.4 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.32 // indirect
@@ -82,7 +82,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	go.mongodb.org/mongo-driver v1.16.1 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/exp v0.0.0-20240904232852-e7e105dedf7e // indirect
+	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/term v0.24.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
@@ -97,10 +97,10 @@ require (
 	github.com/golang-module/carbon/v2 v2.3.12
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gouniverse/api v1.6.0
-	github.com/gouniverse/cms v1.4.1
+	github.com/gouniverse/cms v1.4.2
 	github.com/gouniverse/customstore v0.5.0
 	github.com/gouniverse/dataobject v0.3.0
-	github.com/gouniverse/entitystore v0.62.1
+	github.com/gouniverse/entitystore v0.62.1 // indirect
 	github.com/gouniverse/geostore v0.11.1
 	github.com/gouniverse/maputils v0.7.0
 	github.com/gouniverse/sb v0.6.0

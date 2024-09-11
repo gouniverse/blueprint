@@ -84,7 +84,7 @@ func (c blogPostController) Handler(w http.ResponseWriter, r *http.Request) stri
 		// })
 	}
 
-	return layouts.NewGuestLayout(layouts.Options{
+	return layouts.NewWebsiteLayout(layouts.Options{
 		Request:        r,
 		WebsiteSection: "Blog.",
 		Title:          post.Title(),

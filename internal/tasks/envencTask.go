@@ -41,6 +41,10 @@ func (handler *envencTask) Description() string {
 }
 
 func (handler *envencTask) Handle() bool {
+	if len(os.Args) < 3 {
+		return false
+	}
+
 	envenc.Cli(os.Args[2:])
 	return true
 }

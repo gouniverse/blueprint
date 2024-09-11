@@ -3,6 +3,7 @@ package auth
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/url"
 	"project/config"
@@ -220,6 +221,10 @@ func (*authenticationController) callAuthKnight(once string) (map[string]interfa
 
 	if err != nil {
 		return nil, err
+	}
+
+	if req == nil {
+		return nil, errors.New("no response")
 	}
 
 	defer req.Body.Close()

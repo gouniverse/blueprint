@@ -44,6 +44,9 @@ func main() {
 	tasks.RegisterTasks()  // 4. Register the task handlers
 
 	if isCliMode() {
+		if len(os.Args) < 2 {
+			return
+		}
 		executeCliCommand(os.Args[1:]) // 5. Execute the command
 		return
 	}

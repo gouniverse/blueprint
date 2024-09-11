@@ -15,5 +15,5 @@ func NewHomeController() *homeController {
 // == PUBLIC METHODS ===========================================================
 
 func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
-	return "You are at the website / guest home page"
+	return "You are at the website home page"
 }

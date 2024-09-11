@@ -45,7 +45,7 @@ tasks:
       - echo "Done!"
     silent: true
 
-  # deploy-cloudrun:
+  # deploy:cloudrun:
   #   desc: Build and deploys the app to Google Cloud Run
   #   cmds:
   #     - gcloud config set account YOUREMAIL
@@ -54,7 +54,7 @@ tasks:
   #     - gcloud builds submit --tag gcr.io/YOURPROJECT/YOURPACKAGENAME
   #     - gcloud run deploy YOURAPPNAME --image gcr.io/YOURPROJECT/YOURPACKAGENAME --platform managed --region europe-west4 --allow-unauthenticated
 
-  deploy-ssh:
+  deploy:live:
     desc: Builds and deploys the app to VM (i.e. Digital Ocean) via SSH
     cmds:
       - go run cmd/deploy/main.go
@@ -85,7 +85,7 @@ tasks:
     
   profile:
     cmds:
-      - echo "Running tests..."
+      - echo "Running profiling..."
       - go test -cpuprofile=cpu.out ./...
       - go tool pprof cpu.out
       - go tool pprof -aloc_objects -top -cup mem.profile

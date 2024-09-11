@@ -22,7 +22,6 @@ type SendOptions struct {
 
 // Send sends an email
 func Send(options SendOptions) error {
-	// drvr := os.Getenv("MAIL_DRIVER")
 	host := config.MailHost
 	port := config.MailPort
 	user := config.MailUsername
@@ -71,7 +70,6 @@ func Send(options SendOptions) error {
 	err := e.Send(addr, auth)
 
 	if err != nil {
-		// cfmt.Infoln(err.Error())
 		config.LogStore.ErrorWithContext("Error at Send", err.Error())
 		return err
 	}

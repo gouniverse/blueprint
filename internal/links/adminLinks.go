@@ -42,10 +42,22 @@ func (l *adminLinks) FileManagerWithParams(params map[string]string) string {
 	return URL(ADMIN_MEDIA, params)
 }
 
-func (l *adminLinks) Users() string {
-	return URL(ADMIN_USERS, nil)
+func (l *adminLinks) Users(params map[string]string) string {
+	return URL(ADMIN_USERS, params)
 }
 
-func (l *adminLinks) UsersWithParams(params map[string]string) string {
-	return URL(ADMIN_USERS, params)
+func (l *adminLinks) UsersUserCreate(params map[string]string) string {
+	return URL(ADMIN_USERS_USER_CREATE, params)
+}
+
+func (l *adminLinks) UsersUserDelete(params map[string]string) string {
+	return URL(ADMIN_USERS_USER_DELETE, params)
+}
+
+func (l *adminLinks) UsersUserManager(params map[string]string) string {
+	return URL(ADMIN_USERS_USER_MANAGER, params)
+}
+
+func (l *adminLinks) UsersUserUpdate(params map[string]string) string {
+	return URL(ADMIN_USERS_USER_UPDATE, params)
 }

@@ -16,6 +16,20 @@ func UserSettingGet(r *http.Request, key string, defaultValue string) string {
 		return defaultValue
 	}
 
+	hasValue, err := config.SessionStore.Has(key, sessionstore.SessionOptions{
+		UserID:    authUser.ID(),
+		UserAgent: r.UserAgent(),
+		IPAddress: utils.IP(r),
+	})
+
+	if err != nil {
+		return defaultValue
+	}
+
+	if !hasValue {
+		return defaultValue
+	}
+
 	value, err := config.SessionStore.Get(key, defaultValue, sessionstore.SessionOptions{
 		UserID:    authUser.ID(),
 		UserAgent: r.UserAgent(),

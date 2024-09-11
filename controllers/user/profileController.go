@@ -335,7 +335,7 @@ func (controller *profileController) selectTimezoneByCountry(country string, sel
 	timezones, errZones := config.GeoStore.TimezoneList(query)
 
 	if errZones != nil {
-		config.Cms.LogStore.ErrorWithContext("Error listing timezones", errZones.Error())
+		config.LogStore.ErrorWithContext("Error listing timezones", errZones.Error())
 		return hb.NewHTML("Error listing timezones")
 	}
 
@@ -364,14 +364,14 @@ func (controller *profileController) prepareData(r *http.Request) (data profileC
 	})
 
 	if errCountries != nil {
-		config.Cms.LogStore.ErrorWithContext("Error listing countries", errCountries.Error())
+		config.LogStore.ErrorWithContext("Error listing countries", errCountries.Error())
 		return profileControllerData{}, "Error listing countries"
 	}
 
 	email, firstName, lastName, buinessName, phone, err := controller.untokenizeProfileData(*authUser)
 
 	if err != nil {
-		config.Cms.LogStore.ErrorWithContext("Error reading profile data", err.Error())
+		config.LogStore.ErrorWithContext("Error reading profile data", err.Error())
 		return profileControllerData{}, "Error reading profile data"
 	}
 
@@ -413,7 +413,7 @@ func (controller *profileController) untokenizeProfileData(user userstore.User) 
 		email, err = config.VaultStore.TokenRead(emailToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading email", err.Error())
+			config.LogStore.ErrorWithContext("Error reading email", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -422,7 +422,7 @@ func (controller *profileController) untokenizeProfileData(user userstore.User) 
 		firstName, err = config.VaultStore.TokenRead(firstNameToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading first name", err.Error())
+			config.LogStore.ErrorWithContext("Error reading first name", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -431,7 +431,7 @@ func (controller *profileController) untokenizeProfileData(user userstore.User) 
 		lastName, err = config.VaultStore.TokenRead(lastNameToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading last name", err.Error())
+			config.LogStore.ErrorWithContext("Error reading last name", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -440,7 +440,7 @@ func (controller *profileController) untokenizeProfileData(user userstore.User) 
 		businessName, err = config.VaultStore.TokenRead(businessNameToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading business name", err.Error())
+			config.LogStore.ErrorWithContext("Error reading business name", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
@@ -449,7 +449,7 @@ func (controller *profileController) untokenizeProfileData(user userstore.User) 
 		phone, err = config.VaultStore.TokenRead(phoneToken, config.VaultKey)
 
 		if err != nil {
-			config.Cms.LogStore.ErrorWithContext("Error reading phone", err.Error())
+			config.LogStore.ErrorWithContext("Error reading phone", err.Error())
 			return "", "", "", "", "", err
 		}
 	}

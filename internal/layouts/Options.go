@@ -6,6 +6,7 @@ import (
 	"github.com/gouniverse/hb"
 )
 
+// Options defines the options for the layout
 type Options struct {
 	Request        *http.Request
 	WebsiteSection string
