@@ -8,19 +8,19 @@ import (
 	"github.com/gouniverse/router"
 )
 
-func userRoutes() []router.Route {
-	userRoutes := []router.Route{
-		{
+func userRoutes() []router.RouteInterface {
+	userRoutes := []router.RouteInterface{
+		&router.Route{
 			// User > Home Page
-			Name:    "User > Home Controller > Handle",
-			Path:    links.USER_HOME,
-			Handler: user.NewHomeController().Handle,
+			Name:        "User > Home Controller > Handle",
+			Path:        links.USER_HOME,
+			HTMLHandler: user.NewHomeController().Handler,
 		},
-		{
+		&router.Route{
 			// User > Profile Page
-			Name:    "User > Profile Controller > Handle",
-			Path:    links.USER_PROFILE,
-			Handler: user.NewProfileController().Handle,
+			Name:        "User > Profile Controller > Handle",
+			Path:        links.USER_PROFILE,
+			HTMLHandler: user.NewProfileController().Handler,
 		},
 	}
 

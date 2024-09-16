@@ -25,7 +25,7 @@ type blogControllerData struct {
 	perPage   int
 }
 
-var _ router.ControllerInterface = (*blogController)(nil)
+var _ router.HTMLControllerInterface = (*blogController)(nil)
 
 func NewBlogController() *blogController {
 	return &blogController{}

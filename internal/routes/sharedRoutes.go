@@ -9,31 +9,28 @@ import (
 	"github.com/gouniverse/router"
 )
 
-func sharedRoutes() []router.Route {
-	sharedRoutes := []router.Route{
-		{
-			Name:    "Shared > Media Controller > Handler",
-			Path:    links.MEDIA,
-			Methods: []string{http.MethodGet},
-			Handler: shared.NewMediaController().Handler,
+func sharedRoutes() []router.RouteInterface {
+	sharedRoutes := []router.RouteInterface{
+		&router.Route{
+			Name:        "Shared > Media Controller > Handler",
+			Path:        links.MEDIA,
+			Methods:     []string{http.MethodGet},
+			HTMLHandler: shared.NewMediaController().Handler,
 		},
-		{
-			Name:    "Shared > Flash Controller > Index Page",
-			Path:    links.FLASH,
-			Handler: shared.NewFlashController().AnyIndex,
+		&router.Route{
+			Name:        "Shared > Flash Controller",
+			Path:        links.FLASH,
+			HTMLHandler: shared.NewFlashController().Handler,
 		},
-		{
-			Name:    "Resources",
-			Path:    links.RESOURCES + links.CATCHALL,
-			Handler: shared.NewResourceController().AnyIndex,
+		&router.Route{
+			Name:        "Resources",
+			Path:        links.RESOURCES + links.CATCHALL,
+			HTMLHandler: shared.NewResourceController().Handler,
 		},
-		{
-			Name: "Shared > Theme",
-			Path: links.THEME,
-			Handler: func(w http.ResponseWriter, r *http.Request) string {
-				dashboard.ThemeHandler(w, r)
-				return ""
-			},
+		&router.Route{
+			Name:    "Shared > Theme",
+			Path:    links.THEME,
+			Handler: dashboard.ThemeHandler,
 		},
 	}
 

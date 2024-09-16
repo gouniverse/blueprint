@@ -1,40 +1,22 @@
-package shared
+package website
 
 import (
 	"net/http"
 	"project/config"
 	"strings"
 
-	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"
-	"github.com/samber/lo"
-	"github.com/spf13/cast"
 )
 
-// == CONTROLLER ==============================================================
-
-type mediaController struct {
+type fileController struct {
 }
 
-var _ router.HTMLControllerInterface = (*mediaController)(nil)
-
-// == CONSTRUCTOR =============================================================
-
-func NewMediaController() *mediaController {
-	return &mediaController{}
+func NewFileController() *fileController {
+	return &fileController{}
 }
 
-// == PUBLIC METHODS ==========================================================
-
-func (c *mediaController) Handler(w http.ResponseWriter, r *http.Request) string {
-	if config.SqlFileStorage == nil {
-		return "File storage not configured"
-	}
-
-	filePath := lo.IfF(strings.HasPrefix(r.URL.Path, "/files"), func() string { return utils.StrRightFrom(r.URL.Path, "/files") }).
-		ElseIfF(strings.HasPrefix(r.URL.Path, "/file"), func() string { return utils.StrRightFrom(r.URL.Path, "/file") }).
-		ElseIfF(strings.HasPrefix(r.URL.Path, "/media"), func() string { return utils.StrRightFrom(r.URL.Path, "/media") }).
-		Else(r.URL.Path)
+func (c *fileController) Handler(w http.ResponseWriter, r *http.Request) string {
+	filePath := utils.StrRightFrom(r.URL.Path, "/files")
 
 	exists, err := config.SqlFileStorage.Exists(filePath)
 
@@ -85,7 +67,7 @@ func (c *mediaController) Handler(w http.ResponseWriter, r *http.Request) string
 	} else {
 		w.Header().Set("Content-Type", "application/octet-stream")
 		w.Header().Set("Content-Disposition", "attachment; filename="+r.URL.Path)
-		w.Header().Set("Content-Length", cast.ToString(len(content)))
+		w.Header().Set("Content-Length", string(len(content)))
 	}
 
 	w.Write(content)
@@ -93,7 +75,7 @@ func (c *mediaController) Handler(w http.ResponseWriter, r *http.Request) string
 	return ""
 }
 
-func (controller mediaController) findFileName(path string) string {
+func (controller fileController) findFileName(path string) string {
 	uriParts := strings.Split(strings.Trim(path, "/"), "/")
 
 	if len(uriParts) < 1 {
@@ -110,7 +92,7 @@ func (controller mediaController) findFileName(path string) string {
 //
 // Return type(s):
 //   - string - the file extension
-func (controller mediaController) findExtension(path string) string {
+func (controller fileController) findExtension(path string) string {
 	fileName := controller.findFileName(path)
 
 	if fileName == "" {

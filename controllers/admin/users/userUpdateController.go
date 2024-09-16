@@ -18,7 +18,7 @@ import (
 
 type userUpdateController struct{}
 
-var _ router.ControllerInterface = (*userUpdateController)(nil)
+var _ router.HTMLControllerInterface = (*userUpdateController)(nil)
 
 func NewUserUpdateController() *userUpdateController {
 	return &userUpdateController{}

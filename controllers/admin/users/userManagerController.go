@@ -25,7 +25,7 @@ import (
 
 type userManagerController struct{}
 
-var _ router.ControllerInterface = (*userManagerController)(nil)
+var _ router.HTMLControllerInterface = (*userManagerController)(nil)
 
 // == CONSTRUCTOR =============================================================
 

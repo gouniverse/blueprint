@@ -5,8 +5,8 @@ import (
 	"github.com/gouniverse/router"
 )
 
-func routes() []router.Route {
-	routes := []router.Route{}
+func routes() []router.RouteInterface {
+	routes := []router.RouteInterface{}
 	routes = append(routes, adminRoutes()...)
 	routes = append(routes, authRoutes()...)
 	routes = append(routes, userRoutes()...)
@@ -16,7 +16,7 @@ func routes() []router.Route {
 	return routes
 }
 
-func RoutesList() (globalMiddlewareList []router.Middleware, routeList []router.Route) {
+func RoutesList() (globalMiddlewareList []router.Middleware, routeList []router.RouteInterface) {
 	return globalMiddlewares(), routes()
 }
 

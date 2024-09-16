@@ -1,13 +1,26 @@
 package shared
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/gouniverse/router"
+)
+
+// == CONTROLLER ==============================================================
 
 type pageNotFoundController struct{}
 
-func NewPageNotFoundControllerController() *pageNotFoundController {
+var _ router.HTMLControllerInterface = (*pageNotFoundController)(nil)
+
+// == CONSTRUCTOR =============================================================
+
+func NewPageNotFoundController() *pageNotFoundController {
 	return &pageNotFoundController{}
 }
 
-func (controller *pageNotFoundController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+// PUBLIC METHODS =============================================================
+
+func (controller *pageNotFoundController) Handler(w http.ResponseWriter, r *http.Request) string {
+	w.WriteHeader(http.StatusNotFound)
 	return "Sorry, page not found."
 }

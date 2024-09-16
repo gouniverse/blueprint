@@ -15,7 +15,7 @@ import (
 
 type postDeleteController struct{}
 
-var _ router.ControllerInterface = (*postDeleteController)(nil)
+var _ router.HTMLControllerInterface = (*postDeleteController)(nil)
 
 type postDeleteControllerData struct {
 	postID         string

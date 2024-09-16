@@ -16,7 +16,7 @@ import (
 
 type homeController struct{}
 
-var _ router.ControllerInterface = (*homeController)(nil)
+var _ router.HTMLControllerInterface = (*homeController)(nil)
 
 // == CONSTRUCTOR ==============================================================
 
@@ -81,9 +81,9 @@ func (*homeController) tiles() []hb.TagInterface {
 		// 	"link":  links.NewAdminLinks().Faq(map[string]string{}),
 		// },
 		{
-			"title": "Media Manager",
+			"title": "File Manager",
 			"icon":  "bi-box",
-			"link":  links.NewAdminLinks().FileManager(),
+			"link":  links.NewAdminLinks().FileManager(map[string]string{}),
 		},
 		// {
 		// 	"title":  "CDN Manager",

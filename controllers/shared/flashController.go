@@ -12,16 +12,25 @@ import (
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/icons"
+	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"
 )
 
+// == CONTROLLER ==============================================================
+
 type flashController struct{}
+
+var _ router.HTMLControllerInterface = (*flashController)(nil)
+
+// == CONSTRUCTOR =============================================================
 
 func NewFlashController() *flashController {
 	return &flashController{}
 }
 
-func (controller flashController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+// == PUBLIC METHODS ==========================================================
+
+func (controller flashController) Handler(w http.ResponseWriter, r *http.Request) string {
 	authUser := helpers.GetAuthUser(r)
 
 	if authUser != nil && authUser.IsRegistrationCompleted() {

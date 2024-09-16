@@ -13,7 +13,7 @@ const CMS_ENABLE_CACHE = false
 
 type cmsController struct{}
 
-var _ router.ControllerInterface = (*cmsController)(nil)
+var _ router.HTMLControllerInterface = (*cmsController)(nil)
 
 // == CONSTRUCTOR ==============================================================
 

@@ -2,7 +2,6 @@ package testutils
 
 import (
 	"project/config"
-	"project/models"
 	//smtpmock "github.com/mocktools/go-smtp-mock"
 )
 
@@ -16,7 +15,6 @@ func Setup() {
 	}
 
 	config.TestsConfigureAndInitialize()
-	models.Initialize()
 	// var errAuthInit error
 	// config.Auth, errAuthInit = authentication.SetupAuth()
 	// if errAuthInit != nil {

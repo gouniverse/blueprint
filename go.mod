@@ -9,15 +9,14 @@ require (
 	github.com/go-co-op/gocron v1.37.0
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/goravel/framework v1.14.5
-	github.com/gouniverse/auth v0.21.0
+	github.com/gouniverse/auth v0.21.1
 	github.com/gouniverse/blindindexstore v0.0.2
 	github.com/gouniverse/blogstore v0.5.0
 	github.com/gouniverse/bs v0.11.1
 	github.com/gouniverse/cachestore v0.18.1
 	github.com/gouniverse/cdn v1.5.0
-	github.com/gouniverse/crud v1.1.0
-	github.com/gouniverse/dashboard v1.3.0
-	github.com/gouniverse/envenc v0.4.0
+	github.com/gouniverse/dashboard v1.3.1
+	github.com/gouniverse/envenc v0.5.0
 	github.com/gouniverse/filesystem v0.3.0
 	github.com/gouniverse/form v0.3.2
 	github.com/gouniverse/hb v1.75.1
@@ -25,13 +24,13 @@ require (
 	github.com/gouniverse/logstore v1.4.1
 	github.com/gouniverse/metastore v1.1.0
 	github.com/gouniverse/responses v0.6.0
-	github.com/gouniverse/router v1.2.1
+	github.com/gouniverse/router v1.3.0
 	github.com/gouniverse/sessionstore v0.26.0
 	github.com/gouniverse/shopstore v0.0.4
 	github.com/gouniverse/strutils v0.6.0
 	github.com/gouniverse/taskstore v1.0.2
-	github.com/gouniverse/utils v1.41.0
-	github.com/gouniverse/vaultstore v0.15.0
+	github.com/gouniverse/utils v1.43.1
+	github.com/gouniverse/vaultstore v0.16.0
 	github.com/gouniverse/webserver v0.1.0
 	github.com/hyperjiang/php v1.0.2
 	github.com/jellydator/ttlcache/v3 v3.3.0
@@ -40,7 +39,7 @@ require (
 	github.com/sfreiberg/simplessh v0.0.0-20220719182921-185eafd40485
 	github.com/spf13/cast v1.7.0
 	github.com/yuin/goldmark v1.7.4
-	modernc.org/sqlite v1.33.0
+	modernc.org/sqlite v1.33.1
 )
 
 require (
@@ -87,6 +86,7 @@ require (
 	golang.org/x/term v0.24.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	modernc.org/gc/v3 v3.0.0-20240801135723-a856999a2e4a // indirect
+	modernc.org/libc v1.59.3 // indirect
 )
 
 require (

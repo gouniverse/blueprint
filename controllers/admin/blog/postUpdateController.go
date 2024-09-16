@@ -26,7 +26,7 @@ const VIEW_SEO = "seo"
 
 type postUpdateController struct{}
 
-var _ router.ControllerInterface = (*postUpdateController)(nil)
+var _ router.HTMLControllerInterface = (*postUpdateController)(nil)
 
 func NewPostUpdateController() *postUpdateController {
 	return &postUpdateController{}

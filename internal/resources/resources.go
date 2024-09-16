@@ -12,10 +12,14 @@ import (
 //go:embed *
 var files embed.FS
 
+func ResourceExists(path string) bool {
+	_, err := files.ReadFile(path)
+	return err == nil
+}
+
 func Resource(path string) string {
 	str, err := files.ReadFile(path)
 	if err != nil {
-		log.Println("Template: " + path + " NOT FOUND")
 		return ""
 	}
 	return string(str)

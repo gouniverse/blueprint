@@ -23,17 +23,42 @@ import (
 
 // == CONTROLLER ==============================================================
 
-type authenticationController struct {
-}
+// authenticationController handles the authentication of the user,
+// once the user has logged in successfully via the AuthKnight service.
+type authenticationController struct{}
 
 // == CONSTRUCTOR =============================================================
 
+// NewAuthenticationController creates a new instance of the authenticationController struct.
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - *authenticationController: a pointer to the authenticationController struct.
 func NewAuthenticationController() *authenticationController {
 	return &authenticationController{}
 }
 
 // == PUBLIC METHODS ==========================================================
 
+// AnyIndex handles the authentication.
+//
+// 1. Checks if there is a once parameter in the request from the AuthKnight service.
+// 2. Calls the AuthKnight service with the once parameter.
+// 3. Verifies the response from the AuthKnight service.
+// 4. Based on the email, it will find or create a user in the database.
+// 5. Creates a new session for the user.
+// 6. Checks if theuser has completed their profile.
+// 7. If not, it will redirect the user to the profile page.
+// 8. If yes, it will redirect the user to the home page, or the admin panel.
+//
+// Parameters:
+// - w: http.ResponseWriter: the response writer.
+// - r: *http.Request: the incoming request.
+//
+// Return:
+// - string: the result of the authentication request.
 func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Request) string {
 	email, errorMessage := c.emailFromAuthKnightRequest(r)
 
@@ -201,6 +226,20 @@ func (c *authenticationController) emailFromAuthKnightRequest(r *http.Request) (
 	return email, ""
 }
 
+// callAuthKnight makes a request to the authentication server
+// to verify the provided "once" token. The "once" token is provided
+// by the AuthKnight service.
+//
+// Note! If the environment is "testing", it will return a predefined response
+// which is used only for testing purposes. In the case of a successful response,
+// the email is "test@test.com".
+//
+// Parameters:
+//   - once: The once token to be verified.
+//
+// Returns:
+//   - response: A map containing the response data from the authentication server.
+//   - error: An error object if an error occurred during the request.
 func (*authenticationController) callAuthKnight(once string) (map[string]interface{}, error) {
 	var response map[string]interface{}
 

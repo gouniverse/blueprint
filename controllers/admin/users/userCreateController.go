@@ -16,7 +16,7 @@ import (
 
 type userCreateController struct{}
 
-var _ router.ControllerInterface = (*userCreateController)(nil)
+var _ router.HTMLControllerInterface = (*userCreateController)(nil)
 
 type userCreateControllerData struct {
 	firstName      string

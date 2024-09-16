@@ -25,7 +25,7 @@ import (
 
 type blogPostManagerController struct{}
 
-var _ router.ControllerInterface = (*blogPostManagerController)(nil)
+var _ router.HTMLControllerInterface = (*blogPostManagerController)(nil)
 
 // == CONSTRUCTOR =============================================================
 
@@ -99,7 +99,7 @@ func (controller *blogPostManagerController) prepareData(r *http.Request) (data 
 	data.dateFrom = utils.Req(r, "date_from", carbon.Now().AddYears(-1).ToDateString())
 	data.dateTo = utils.Req(r, "date_to", carbon.Now().ToDateString())
 	data.customerID = utils.Req(r, "customer_id", "")
-	
+
 	query := blogstore.PostQueryOptions{
 		Search:               data.search,
 		Offset:               data.pageInt * data.perPage,

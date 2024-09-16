@@ -27,7 +27,7 @@ func NewBlogPostController() *blogPostController {
 	return &blogPostController{}
 }
 
-var _ router.ControllerInterface = (*blogPostController)(nil)
+var _ router.HTMLControllerInterface = (*blogPostController)(nil)
 
 func (c blogPostController) Handler(w http.ResponseWriter, r *http.Request) string {
 	postID := chi.URLParam(r, "id")

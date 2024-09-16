@@ -5,15 +5,24 @@ import (
 	"project/internal/layouts"
 
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/router"
 )
 
+// == CONTROLLER ==============================================================
+
 type homeController struct{}
+
+var _ router.HTMLControllerInterface = (*homeController)(nil)
+
+// == CONSTRUCTOR =============================================================
 
 func NewHomeController() *homeController {
 	return &homeController{}
 }
 
-func (controller *homeController) Handle(w http.ResponseWriter, r *http.Request) string {
+// == PUBLIC METHODS ==========================================================
+
+func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) string {
 	return layouts.NewUserLayout(r, layouts.Options{
 		Request:    r,
 		Title:      "Home",

@@ -14,16 +14,23 @@ import (
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/geostore"
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/router"
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 )
+
+// == CONTROLLER ==============================================================
 
 type profileController struct {
 	actionOnCountrySelectedTimezoneOptions string
 	formCountry                            string
 	formTimezone                           string
 }
+
+var _ router.HTMLControllerInterface = (*profileController)(nil)
+
+// == CONSTRUCTOR =============================================================
 
 type profileControllerData struct {
 	request     *http.Request
@@ -43,6 +50,8 @@ type profileControllerData struct {
 	formRedirectURL    string
 }
 
+// == CONSTRUCTOR =============================================================
+
 func NewProfileController() *profileController {
 	return &profileController{
 		actionOnCountrySelectedTimezoneOptions: "on-country-selected-timezone-options",
@@ -51,7 +60,9 @@ func NewProfileController() *profileController {
 	}
 }
 
-func (controller *profileController) Handle(w http.ResponseWriter, r *http.Request) string {
+// == PUBLIC METHODS ==========================================================
+
+func (controller *profileController) Handler(w http.ResponseWriter, r *http.Request) string {
 	data, errorMessage := controller.prepareData(r)
 
 	if errorMessage != "" {
@@ -96,6 +107,7 @@ func (controller *profileController) Handle(w http.ResponseWriter, r *http.Reque
 				Child(formProfile).
 				Child(hb.NewBR()).
 				Child(hb.NewBR()),
+			// This feature is not ready, so keep it out until its fleshed out
 			// Child(controller.userSubscriptions(r, data)),
 		)
 
@@ -301,7 +313,7 @@ func (controller *profileController) formProfile(data profileControllerData) *hb
 		}).
 		ChildIf(data.formErrorMessage != "", hb.NewSwal(hb.SwalOptions{
 			Icon:              "error",
-			Title:             "Oops...",
+			Title:             "Error",
 			Text:              data.formErrorMessage,
 			ShowCancelButton:  false,
 			ConfirmButtonText: "OK",

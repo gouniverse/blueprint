@@ -13,3 +13,7 @@ func (l *userLinks) Home() string {
 func (l *userLinks) Profile() string {
 	return URL(USER_PROFILE, nil)
 }
+
+func (l *userLinks) ProfileSave() string {
+	return URL(USER_PROFILE_UPDATE, nil)
+}

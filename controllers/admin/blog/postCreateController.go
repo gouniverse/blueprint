@@ -16,7 +16,7 @@ import (
 
 type postCreateController struct{}
 
-var _ router.ControllerInterface = (*postCreateController)(nil)
+var _ router.HTMLControllerInterface = (*postCreateController)(nil)
 
 type postCreateControllerData struct {
 	title          string

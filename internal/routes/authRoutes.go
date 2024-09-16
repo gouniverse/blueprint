@@ -7,27 +7,27 @@ import (
 	"github.com/gouniverse/router"
 )
 
-func authRoutes() []router.Route {
-	return []router.Route{
-		{
-			Name:    "Auth > Auth Controller",
-			Path:    links.AUTH_AUTH,
-			Handler: auth.NewAuthenticationController().Handler,
+func authRoutes() []router.RouteInterface {
+	return []router.RouteInterface{
+		&router.Route{
+			Name:        "Auth > Auth Controller",
+			Path:        links.AUTH_AUTH,
+			HTMLHandler: auth.NewAuthenticationController().Handler,
 		},
-		{
-			Name:    "Auth > Login Controller",
-			Path:    links.AUTH_LOGIN,
-			Handler: auth.NewLoginController().AnyIndex,
+		&router.Route{
+			Name:        "Auth > Login Controller",
+			Path:        links.AUTH_LOGIN,
+			HTMLHandler: auth.NewLoginController().AnyIndex,
 		},
-		{
-			Name:    "Auth > Logout Controller",
-			Path:    links.AUTH_LOGOUT,
-			Handler: auth.NewLogoutController().AnyIndex,
+		&router.Route{
+			Name:        "Auth > Logout Controller",
+			Path:        links.AUTH_LOGOUT,
+			HTMLHandler: auth.NewLogoutController().AnyIndex,
 		},
-		{
-			Name:    "Auth > Register Controller",
-			Path:    links.AUTH_REGISTER,
-			Handler: auth.NewRegisterController().Handler,
+		&router.Route{
+			Name:        "Auth > Register Controller",
+			Path:        links.AUTH_REGISTER,
+			HTMLHandler: auth.NewRegisterController().Handler,
 		},
 	}
 }

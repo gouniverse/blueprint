@@ -15,7 +15,7 @@ import (
 
 type userDeleteController struct{}
 
-var _ router.ControllerInterface = (*userDeleteController)(nil)
+var _ router.HTMLControllerInterface = (*userDeleteController)(nil)
 
 type userDeleteControllerData struct {
 	userID         string

@@ -13,7 +13,7 @@ func globalMiddlewares() []router.Middleware {
 		router.NewGetHeadMiddleware(),
 		router.NewCleanPathMiddleware(),
 		router.NewRedirectSlashesMiddleware(),
-		router.NewNakedDomainToWwwMiddleware([]string{"localhost", "127.0.0.1", "http://sinevia.local"}),
+		//router.NewNakedDomainToWwwMiddleware([]string{"localhost", "127.0.0.1", "http://sinevia.local"}),
 		router.NewTimeoutMiddleware(30), // 30s timeout
 		router.NewRateLimitByIpMiddleware(20, 1),        // 20 req per second
 		router.NewRateLimitByIpMiddleware(180, 1*60),    // 180 req per minute
