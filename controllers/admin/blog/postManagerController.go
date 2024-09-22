@@ -37,7 +37,7 @@ func (controller *blogPostManagerController) Handler(w http.ResponseWriter, r *h
 	data, errorMessage := controller.prepareData(r)
 
 	if errorMessage != "" {
-		return helpers.ToFlashError(w, r, errorMessage, links.NewAdminLinks().Home(), 10)
+		return helpers.ToFlashError(w, r, errorMessage, links.NewAdminLinks().Home(map[string]string{}), 10)
 	}
 
 	return layouts.NewAdminLayout(r, layouts.Options{
@@ -55,7 +55,7 @@ func (controller *blogPostManagerController) page(data blogPostManagerController
 	breadcrumbs := layouts.Breadcrumbs([]layouts.Breadcrumb{
 		{
 			Name: "Home",
-			URL:  links.NewAdminLinks().Home(),
+			URL:  links.NewAdminLinks().Home(map[string]string{}),
 		},
 		{
 			Name: "Blog",

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"net/http"
-	"net/url"
 
 	urlpkg "net/url"
 )
@@ -13,8 +12,8 @@ import (
 type NewRequestOptions struct {
 	Body        string
 	Headers     map[string]string
-	GetValues   url.Values
-	PostValues  url.Values
+	GetValues   urlpkg.Values
+	PostValues  urlpkg.Values
 	Context     map[any]any
 	ContentType string
 }

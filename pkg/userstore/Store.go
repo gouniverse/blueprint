@@ -329,6 +329,10 @@ func (store *Store) userQuery(options UserQueryOptions) *goqu.SelectDataset {
 		q = q.Where(goqu.C(COLUMN_ID).Eq(options.ID))
 	}
 
+	if len(options.IDIn) > 0 {
+		q = q.Where(goqu.C(COLUMN_ID).In(options.IDIn))
+	}
+
 	if options.Status != "" {
 		q = q.Where(goqu.C(COLUMN_STATUS).Eq(options.Status))
 	}
@@ -339,6 +343,17 @@ func (store *Store) userQuery(options UserQueryOptions) *goqu.SelectDataset {
 
 	if options.Email != "" {
 		q = q.Where(goqu.C(COLUMN_EMAIL).Eq(options.Email))
+	}
+
+	if options.CreatedAtGte != "" && options.CreatedAtLte != "" {
+		q = q.Where(
+			goqu.C(COLUMN_CREATED_AT).Gte(options.CreatedAtGte),
+			goqu.C(COLUMN_CREATED_AT).Lte(options.CreatedAtLte),
+		)
+	} else if options.CreatedAtGte != "" {
+		q = q.Where(goqu.C(COLUMN_CREATED_AT).Gte(options.CreatedAtGte))
+	} else if options.CreatedAtLte != "" {
+		q = q.Where(goqu.C(COLUMN_CREATED_AT).Lte(options.CreatedAtLte))
 	}
 
 	if !options.CountOnly {
@@ -372,17 +387,19 @@ func (store *Store) userQuery(options UserQueryOptions) *goqu.SelectDataset {
 }
 
 type UserQueryOptions struct {
-	ID          string
-	IDIn        []string
-	Status      string
-	StatusIn    []string
-	Email       string
-	Offset      int
-	Limit       int
-	SortOrder   string
-	OrderBy     string
-	CountOnly   bool
-	WithDeleted bool
+	ID           string
+	IDIn         []string
+	Status       string
+	StatusIn     []string
+	Email        string
+	CreatedAtGte string
+	CreatedAtLte string
+	Offset       int
+	Limit        int
+	SortOrder    string
+	OrderBy      string
+	CountOnly    bool
+	WithDeleted  bool
 }
 
 type TimezoneQueryOptions struct {

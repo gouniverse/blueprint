@@ -4,32 +4,34 @@ go 1.23
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
+	github.com/boombuler/barcode v1.0.2
+	github.com/disintegration/imaging v1.6.2
 	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-co-op/gocron v1.37.0
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/goravel/framework v1.14.5
+	github.com/goravel/framework v1.14.7
 	github.com/gouniverse/auth v0.21.1
-	github.com/gouniverse/blindindexstore v0.0.2
+	github.com/gouniverse/blindindexstore v1.0.0
 	github.com/gouniverse/blogstore v0.5.0
 	github.com/gouniverse/bs v0.11.1
 	github.com/gouniverse/cachestore v0.18.1
 	github.com/gouniverse/cdn v1.5.0
-	github.com/gouniverse/dashboard v1.3.1
+	github.com/gouniverse/dashboard v1.3.2
 	github.com/gouniverse/envenc v0.5.0
 	github.com/gouniverse/filesystem v0.3.0
 	github.com/gouniverse/form v0.3.2
-	github.com/gouniverse/hb v1.75.1
+	github.com/gouniverse/hb v1.75.2
 	github.com/gouniverse/icons v1.3.1
 	github.com/gouniverse/logstore v1.4.1
 	github.com/gouniverse/metastore v1.1.0
 	github.com/gouniverse/responses v0.6.0
-	github.com/gouniverse/router v1.3.0
+	github.com/gouniverse/router v1.4.0
 	github.com/gouniverse/sessionstore v0.26.0
-	github.com/gouniverse/shopstore v0.0.4
+	github.com/gouniverse/shopstore v0.2.0
 	github.com/gouniverse/strutils v0.6.0
 	github.com/gouniverse/taskstore v1.0.2
-	github.com/gouniverse/utils v1.43.1
+	github.com/gouniverse/utils v1.43.2
 	github.com/gouniverse/vaultstore v0.16.0
 	github.com/gouniverse/webserver v0.1.0
 	github.com/hyperjiang/php v1.0.2
@@ -44,18 +46,18 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/aws/aws-sdk-go-v2 v1.30.5 // indirect
-	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.4 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.32 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.17 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.17 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.17 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.3.19 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.19 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.17.17 // indirect
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.61.2 // indirect
-	github.com/aws/smithy-go v1.20.4 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.31.0 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.5 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.34 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.18 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.18 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.18 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.3.20 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.20 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.17.18 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.63.0 // indirect
+	github.com/aws/smithy-go v1.21.0 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.5 // indirect
@@ -79,14 +81,15 @@ require (
 	github.com/pkg/sftp v1.13.6 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
-	go.mongodb.org/mongo-driver v1.16.1 // indirect
+	go.mongodb.org/mongo-driver v1.17.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
+	golang.org/x/image v0.20.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/term v0.24.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	modernc.org/gc/v3 v3.0.0-20240801135723-a856999a2e4a // indirect
-	modernc.org/libc v1.59.3 // indirect
+	modernc.org/libc v1.61.0 // indirect
 )
 
 require (

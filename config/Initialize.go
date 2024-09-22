@@ -1,15 +1,20 @@
 package config
 
 import (
+	"crypto/sha256"
 	"errors"
+	"fmt"
 	"os"
+	"project/internal/resources"
 	"project/pkg/userstore"
+	"strings"
 
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/customstore"
+	"github.com/gouniverse/envenc"
 	"github.com/gouniverse/filesystem"
 	"github.com/gouniverse/geostore"
 	"github.com/gouniverse/logstore"
@@ -25,20 +30,35 @@ import (
 )
 
 func Initialize() {
+	initializeEnvVariables()
+
+	os.Setenv("TZ", "UTC")
+
+	err := initializeDatabase()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = migrateDatabase()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	initializeInMemoryCache()
+}
+
+func initializeEnvVariables() {
 	utils.EnvInitialize(".env")
-	utils.EnvEncInitialize(struct {
-		Password      string
-		VaultFilePath string
-		VaultContent  string
-	}{
-		Password:      ENV1 + ENV2 + ENV3,
-		VaultFilePath: ".env.vault",
-	})
+
+	AppEnvironment = utils.EnvMust("APP_ENV")
+
+	intializeEnvEncVariables(AppEnvironment)
 
 	AppName = utils.Env("APP_NAME")
 	AppUrl = utils.Env("APP_URL")
 	DbDriver = utils.EnvMust("DB_DRIVER")
-	DbHost = utils.Env("DB_HOST")
 	DbHost = lo.TernaryF(DbDriver == "sqlite", func() string {
 		return utils.Env("DB_HOST")
 	}, func() string {
@@ -93,22 +113,39 @@ func Initialize() {
 
 	WebServerHost = utils.EnvMust("SERVER_HOST")
 	WebServerPort = utils.EnvMust("SERVER_PORT")
+}
 
-	os.Setenv("TZ", "UTC")
+func intializeEnvEncVariables(appEnvironment string) {
+	appEnvironment = strings.ToLower(appEnvironment)
+	envEncryptionKey := utils.EnvMust("ENV_ENCRYPTION_KEY")
 
-	err := initializeDatabase()
+	vaultFilePath := ".env." + appEnvironment + ".vault"
+
+	vaultContent := resources.Resource(".env." + appEnvironment + ".vault")
+
+	err := utils.EnvEncInitialize(struct {
+		Password      string
+		VaultFilePath string
+		VaultContent  string
+	}{
+		Password:      buildEnvEncKey(envEncryptionKey),
+		VaultFilePath: lo.Ternary(vaultContent == "", vaultFilePath, ""),
+		VaultContent:  lo.Ternary(vaultContent != "", vaultContent, ""),
+	})
 
 	if err != nil {
 		panic(err.Error())
 	}
+}
 
-	err = migrateDatabase()
+func buildEnvEncKey(envEncryptionKey string) string {
+	envEncryptionSalt, _ := envenc.Deobfuscate(ENV_ENCRYPTION_SALT)
+	tempKey := envEncryptionSalt + envEncryptionKey
 
-	if err != nil {
-		panic(err.Error())
-	}
+	hash := sha256.Sum256([]byte(tempKey))
+	realKey := fmt.Sprintf("%x", hash)
 
-	initializeInMemoryCache()
+	return realKey
 }
 
 func initializeDatabase() error {

@@ -17,7 +17,7 @@ import (
 func userLayoutUserMenu(authUser *userstore.User) []dashboard.MenuItem {
 	adminDashboardMenuItem := dashboard.MenuItem{
 		Title: "To Admin Dashboard",
-		URL:   links.NewAdminLinks().Home(),
+		URL:   links.NewAdminLinks().Home(map[string]string{}),
 	}
 
 	logoutMenuItem := dashboard.MenuItem{
@@ -27,7 +27,7 @@ func userLayoutUserMenu(authUser *userstore.User) []dashboard.MenuItem {
 
 	profileMenuItem := dashboard.MenuItem{
 		Title: "Profile",
-		URL:   links.NewUserLinks().Profile(),
+		URL:   links.NewUserLinks().Profile(map[string]string{}),
 	}
 
 	items := []dashboard.MenuItem{profileMenuItem}

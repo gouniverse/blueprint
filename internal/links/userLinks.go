@@ -6,12 +6,12 @@ func NewUserLinks() *userLinks {
 	return &userLinks{}
 }
 
-func (l *userLinks) Home() string {
-	return URL(USER_HOME, nil)
+func (l *userLinks) Home(params map[string]string) string {
+	return URL(USER_HOME, params)
 }
 
-func (l *userLinks) Profile() string {
-	return URL(USER_PROFILE, nil)
+func (l *userLinks) Profile(params map[string]string) string {
+	return URL(USER_PROFILE, params)
 }
 
 func (l *userLinks) ProfileSave() string {

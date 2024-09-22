@@ -68,7 +68,7 @@ func (*homeController) tiles() []hb.TagInterface {
 		{
 			"title": "Blog Manager",
 			"icon":  "bi-newspaper",
-			"link":  links.NewAdminLinks().Blog(),
+			"link":  links.NewAdminLinks().Blog(map[string]string{}),
 		},
 		{
 			"title": "User Manager",

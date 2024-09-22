@@ -66,7 +66,7 @@ func (controller *profileController) Handler(w http.ResponseWriter, r *http.Requ
 	data, errorMessage := controller.prepareData(r)
 
 	if errorMessage != "" {
-		return helpers.ToFlashError(w, r, errorMessage, links.NewUserLinks().Home(), 10)
+		return helpers.ToFlashError(w, r, errorMessage, links.NewUserLinks().Home(map[string]string{}), 10)
 	}
 
 	if data.action == controller.actionOnCountrySelectedTimezoneOptions {
@@ -80,7 +80,7 @@ func (controller *profileController) Handler(w http.ResponseWriter, r *http.Requ
 	breadcrumbs := layouts.NewUserBreadcrumbsSectionWithContainer([]bs.Breadcrumb{
 		{
 			Name: "My Profile",
-			URL:  links.NewUserLinks().Profile(),
+			URL:  links.NewUserLinks().Profile(map[string]string{}),
 		},
 	})
 
@@ -107,8 +107,6 @@ func (controller *profileController) Handler(w http.ResponseWriter, r *http.Requ
 				Child(formProfile).
 				Child(hb.NewBR()).
 				Child(hb.NewBR()),
-			// This feature is not ready, so keep it out until its fleshed out
-			// Child(controller.userSubscriptions(r, data)),
 		)
 
 	return layouts.NewUserLayout(r, layouts.Options{
@@ -193,7 +191,7 @@ func (controller *profileController) postUpdate(data profileControllerData) stri
 	}
 
 	data.formSuccessMessage = "Profile updated successfully"
-	data.formRedirectURL = helpers.ToFlashSuccessURL(data.formSuccessMessage, links.NewUserLinks().Home(), 5)
+	data.formRedirectURL = helpers.ToFlashSuccessURL(data.formSuccessMessage, links.NewUserLinks().Home(map[string]string{}), 5)
 	return controller.formProfile(data).ToHTML()
 }
 
@@ -275,7 +273,7 @@ func (controller *profileController) formProfile(data profileControllerData) *hb
 		HxTarget("#CardUserProfile").
 		HxTrigger("click").
 		HxSwap("outerHTML").
-		HxPost(links.NewUserLinks().Profile())
+		HxPost(links.NewUserLinks().Profile(map[string]string{}))
 
 	formProfile := hb.NewDiv().ID("FormProfile").Children([]hb.TagInterface{
 		bs.Row().

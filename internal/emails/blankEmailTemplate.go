@@ -13,7 +13,7 @@ func blankEmailTemplate(title string, htmlContent string) string {
 	copyrightYear := carbon.Now(carbon.UTC).Format("Y")
 	linkLogin := hb.NewHyperlink().
 		HTML("Login").
-		Href(links.NewAuthLinks().Login(links.NewUserLinks().Home())).
+		Href(links.NewAuthLinks().Login(links.NewUserLinks().Home(map[string]string{}))).
 		Style("color:white;").
 		ToHTML()
 

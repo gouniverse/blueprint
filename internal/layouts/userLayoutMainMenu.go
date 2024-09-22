@@ -10,7 +10,7 @@ import (
 
 func userLayoutMainMenu(user *userstore.User) []dashboard.MenuItem {
 	websiteHomeLink := links.NewWebsiteLinks().Home()
-	dashboardLink := links.NewUserLinks().Home()
+	dashboardLink := links.NewUserLinks().Home(map[string]string{})
 	loginLink := links.NewAuthLinks().Login(dashboardLink)
 	logoutLink := links.NewAuthLinks().Logout()
 
@@ -23,7 +23,7 @@ func userLayoutMainMenu(user *userstore.User) []dashboard.MenuItem {
 	profileMenuItem := dashboard.MenuItem{
 		Icon:  hb.NewI().Class("bi bi-person").Style("margin-right:10px;").ToHTML(),
 		Title: "Profile",
-		URL:   links.NewUserLinks().Profile(),
+		URL:   links.NewUserLinks().Profile(map[string]string{}),
 	}
 
 	loginMenuItem := dashboard.MenuItem{

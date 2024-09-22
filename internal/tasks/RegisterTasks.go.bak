@@ -15,7 +15,6 @@ import (
 // - none
 func RegisterTasks() {
 	tasks := []taskstore.TaskHandlerInterface{
-		NewBlindIndexRebuildTask(),
 		NewEnvencTask(),
 		NewHelloWorldTask(),
 	}

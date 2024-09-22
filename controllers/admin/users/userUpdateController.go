@@ -64,7 +64,7 @@ func (controller userUpdateController) page(data userUpdateControllerData) hb.Ta
 	breadcrumbs := layouts.Breadcrumbs([]layouts.Breadcrumb{
 		{
 			Name: "Home",
-			URL:  links.NewAdminLinks().Home(),
+			URL:  links.NewAdminLinks().Home(map[string]string{}),
 		},
 		{
 			Name: "User Manager",
@@ -303,7 +303,7 @@ func (controller userUpdateController) prepareDataAndValidate(r *http.Request) (
 
 	data.user = user
 
-	firstName, lastName, email, err := userUntokenized(*data.user)
+	firstName, lastName, email, err := helpers.UserUntokenized(*data.user)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userManagerController > tableUsers", err.Error())

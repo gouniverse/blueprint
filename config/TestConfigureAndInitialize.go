@@ -36,11 +36,12 @@ func TestsConfigureAndInitialize() {
 
 	os.Setenv("VAULT_KEY", "abcdefghijklmnopqrstuvwxyz1234567890")
 
-	os.Setenv("STRIPE_KEY_PRIVATE", "123")
-	os.Setenv("STRIPE_KEY_PUBLIC", "345")
-	os.Setenv("VERTEX_PROJECT_ID", "123")
-	os.Setenv("VERTEX_REGION_ID", "345")
-	os.Setenv("VERTEX_MODEL_ID", "678")
+	os.Setenv("OPENAI_API_KEY", "openai_api_key")
+	os.Setenv("STRIPE_KEY_PRIVATE", "stripe_key_private")
+	os.Setenv("STRIPE_KEY_PUBLIC", "stripe_key_public")
+	os.Setenv("VERTEX_PROJECT_ID", "vertex_project_id")
+	os.Setenv("VERTEX_REGION_ID", "vertex_region_id")
+	os.Setenv("VERTEX_MODEL_ID", "vertex_model_id")
 
 	Initialize()
 }

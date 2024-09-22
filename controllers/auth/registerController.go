@@ -167,7 +167,7 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 	}
 
 	data.formSuccessMessage = "Your registration completed successfully. You can now continue browsing the website."
-	data.formRedirectURL = helpers.ToFlashSuccessURL(data.formSuccessMessage, links.NewUserLinks().Home(), 5)
+	data.formRedirectURL = helpers.ToFlashSuccessURL(data.formSuccessMessage, links.NewUserLinks().Home(map[string]string{}), 5)
 	return controller.formRegister(data).ToHTML()
 }
 

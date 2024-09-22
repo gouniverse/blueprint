@@ -29,9 +29,7 @@ const APP_ENVIRONMENT_LOCAL = "local"
 const APP_ENVIRONMENT_PRODUCTION = "production"
 const APP_ENVIRONMENT_STAGING = "staging"
 const APP_ENVIRONMENT_TESTING = "testing"
-const ENV1 = "c54f"         // CHANGE
-const ENV2 = "c54f"         // CHANGE
-const ENV3 = "4663a0642dc6" // CHANGE
+const ENV_ENCRYPTION_SALT = "YOUR_OBFUSCATED_SALT"
 
 var AppEnvironment string
 var AppName string

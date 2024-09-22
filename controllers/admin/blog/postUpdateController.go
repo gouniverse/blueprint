@@ -72,7 +72,7 @@ func (controller postUpdateController) page(data postUpdateControllerData) hb.Ta
 	breadcrumbs := layouts.Breadcrumbs([]layouts.Breadcrumb{
 		{
 			Name: "Home",
-			URL:  links.NewAdminLinks().Home(),
+			URL:  links.NewAdminLinks().Home(map[string]string{}),
 		},
 		{
 			Name: "Post Manager",

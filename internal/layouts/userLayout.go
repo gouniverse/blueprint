@@ -51,7 +51,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	}
 	styles = append(styles, options.Styles...)
 
-	homeLink := links.NewUserLinks().Home()
+	homeLink := links.NewUserLinks().Home(map[string]string{})
 
 	dashboard := dashboard.NewDashboard(dashboard.Config{
 		HTTPRequest:     r,
@@ -61,7 +61,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		Menu:            userLayoutMainMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",
 		LogoRawHtml:     userLogoHtml(),
-		LogoRedirectURL: links.NewUserLinks().Home(),
+		LogoRedirectURL: homeLink,
 		User:            dashboardUser,
 		UserMenu:        userLayoutUserMenu(authUser),
 		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),

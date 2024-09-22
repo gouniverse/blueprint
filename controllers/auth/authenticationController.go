@@ -286,11 +286,11 @@ func (*authenticationController) callAuthKnight(once string) (map[string]interfa
 // - string: The redirect URL.
 func (c *authenticationController) calculateRedirectURL(user userstore.User) string {
 	// 1. By default all users redirect to home
-	redirectUrl := links.NewUserLinks().Home()
+	redirectUrl := links.NewUserLinks().Home(map[string]string{})
 
 	// 2. If user is manager or admin, redirect to admin panel
 	if user.IsManager() || user.IsAdministrator() || user.IsSuperuser() {
-		redirectUrl = links.NewAdminLinks().Home()
+		redirectUrl = links.NewAdminLinks().Home(map[string]string{})
 	}
 
 	// 3. If user does not have any names, redirect to profile

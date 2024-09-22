@@ -29,7 +29,7 @@ func UserQuickLinks(req *http.Request) *hb.Tag {
 			Background:         "#87cefa",
 			BackgroundSelected: "cornflowerblue",
 			Count:              hb.NewI().Class("bi bi-file-earmark-text-fill").ToHTML(),
-			URL:                links.NewUserLinks().Home(),
+			URL:                links.NewUserLinks().Home(map[string]string{}),
 			IsSelected:         lo.If(req.URL.Path == links.USER_HOME, true).Else(false),
 		},
 		{
@@ -37,7 +37,7 @@ func UserQuickLinks(req *http.Request) *hb.Tag {
 			Background:         "#c2ff99",
 			BackgroundSelected: "forestgreen",
 			Count:              hb.NewI().Class("bi bi-person-circle").ToHTML(),
-			URL:                links.NewUserLinks().Profile(),
+			URL:                links.NewUserLinks().Profile(map[string]string{}),
 			IsSelected:         strings.Contains(req.URL.Path, "/profile"),
 		},
 	}

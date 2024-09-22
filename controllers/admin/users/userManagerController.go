@@ -10,9 +10,10 @@ import (
 	"project/internal/links"
 	"strings"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/cdn"
+	"github.com/gouniverse/form"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/sb"
@@ -20,6 +21,8 @@ import (
 	"github.com/samber/lo"
 	"github.com/spf13/cast"
 )
+
+const ActionModalUserFilterShow = "modal_user_filter_show"
 
 // == CONTROLLER ==============================================================
 
@@ -37,7 +40,11 @@ func (controller *userManagerController) Handler(w http.ResponseWriter, r *http.
 	data, errorMessage := controller.prepareData(r)
 
 	if errorMessage != "" {
-		return helpers.ToFlashError(w, r, errorMessage, links.NewAdminLinks().Home(), 10)
+		return helpers.ToFlashError(w, r, errorMessage, links.NewAdminLinks().Home(map[string]string{}), 10)
+	}
+
+	if data.action == ActionModalUserFilterShow {
+		return controller.onModalUserFilterShow(data).ToHTML()
 	}
 
 	return layouts.NewAdminLayout(r, layouts.Options{
@@ -51,11 +58,148 @@ func (controller *userManagerController) Handler(w http.ResponseWriter, r *http.
 	}).ToHTML()
 }
 
+func (controller *userManagerController) onModalUserFilterShow(data userManagerControllerData) *hb.Tag {
+	modalCloseScript := `document.getElementById('ModalMessage').remove();document.getElementById('ModalBackdrop').remove();`
+
+	title := hb.NewHeading5().
+		Text("Filters").
+		Style(`margin:0px;padding:0px;`)
+
+	buttonModalClose := hb.NewButton().Type("button").
+		Class("btn-close").
+		Data("bs-dismiss", "modal").
+		OnClick(modalCloseScript)
+
+	buttonCancel := hb.NewButton().
+		Child(hb.NewI().Class("bi bi-chevron-left me-2")).
+		HTML("Cancel").
+		Class("btn btn-secondary float-start").
+		OnClick(modalCloseScript)
+
+	buttonOk := hb.NewButton().
+		Child(hb.NewI().Class("bi bi-check me-2")).
+		HTML("Apply").
+		Class("btn btn-primary float-end").
+		OnClick(`FormFilters.submit();` + modalCloseScript)
+
+	filterForm := form.NewForm(form.FormOptions{
+		ID:     "FormFilters",
+		Method: http.MethodGet,
+		Fields: []form.Field{
+			{
+				Label: "Status",
+				Name:  "status",
+				Type:  form.FORM_FIELD_TYPE_SELECT,
+				Help:  `The status of the user.`,
+				Value: data.formStatus,
+				Options: []form.FieldOption{
+					{
+						Value: "",
+						Key:   "",
+					},
+					{
+						Value: "Active",
+						Key:   userstore.USER_STATUS_ACTIVE,
+					},
+					{
+						Value: "Inactive",
+						Key:   userstore.USER_STATUS_INACTIVE,
+					},
+					{
+						Value: "Unverified",
+						Key:   userstore.USER_STATUS_UNVERIFIED,
+					},
+					{
+						Value: "Deleted",
+						Key:   userstore.USER_STATUS_DELETED,
+					},
+				},
+			},
+			{
+				Label: "First Name",
+				Name:  "first_name",
+				Type:  form.FORM_FIELD_TYPE_STRING,
+				Value: data.formFirstName,
+				Help:  `Filter by first name.`,
+			},
+			{
+				Label: "Last Name",
+				Name:  "last_name",
+				Type:  form.FORM_FIELD_TYPE_STRING,
+				Value: data.formLastName,
+				Help:  `Filter by last name.`,
+			},
+			{
+				Label: "Email",
+				Name:  "email",
+				Type:  form.FORM_FIELD_TYPE_STRING,
+				Value: data.formEmail,
+				Help:  `Filter by email.`,
+			},
+			{
+				Label: "Created From",
+				Name:  "created_from",
+				Type:  form.FORM_FIELD_TYPE_DATE,
+				Value: data.formCreatedFrom,
+				Help:  `Filter by creation date.`,
+			},
+			{
+				Label: "Created To",
+				Name:  "created_to",
+				Type:  form.FORM_FIELD_TYPE_DATE,
+				Value: data.formCreatedTo,
+				Help:  `Filter by creation date.`,
+			},
+			{
+				Label: "User ID",
+				Name:  "user_id",
+				Type:  form.FORM_FIELD_TYPE_STRING,
+				Value: data.formUserID,
+				Help:  `Find user by reference number (ID).`,
+			},
+		},
+	}).Build()
+
+	modal := bs.Modal().
+		ID("ModalMessage").
+		Class("fade show").
+		Style(`display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1051;`).
+		Children([]hb.TagInterface{
+			bs.ModalDialog().Children([]hb.TagInterface{
+				bs.ModalContent().Children([]hb.TagInterface{
+					bs.ModalHeader().Children([]hb.TagInterface{
+						title,
+						buttonModalClose,
+					}),
+
+					bs.ModalBody().
+						Child(filterForm),
+
+					bs.ModalFooter().
+						Style(`display:flex;justify-content:space-between;`).
+						Child(buttonCancel).
+						Child(buttonOk),
+				}),
+			}),
+		})
+
+	backdrop := hb.NewDiv().
+		ID("ModalBackdrop").
+		Class("modal-backdrop fade show").
+		Style("display:block;")
+
+	return hb.NewWrap().Children([]hb.TagInterface{
+		modal,
+		backdrop,
+	})
+
+}
+
 func (controller *userManagerController) page(data userManagerControllerData) hb.TagInterface {
 	breadcrumbs := layouts.Breadcrumbs([]layouts.Breadcrumb{
 		{
 			Name: "Home",
-			URL:  links.NewAdminLinks().Home(),
+			URL:  links.NewAdminLinks().Home(map[string]string{}),
 		},
 		{
 			Name: "Users",
@@ -85,48 +229,6 @@ func (controller *userManagerController) page(data userManagerControllerData) hb
 		Child(hb.NewHR()).
 		Child(title).
 		Child(controller.tableUsers(data))
-}
-
-func (controller *userManagerController) prepareData(r *http.Request) (data userManagerControllerData, errorMessage string) {
-	var err error
-
-	data.page = utils.Req(r, "page", "0")
-	data.pageInt = cast.ToInt(data.page)
-	data.perPage = cast.ToInt(utils.Req(r, "per_page", "10"))
-	data.sortOrder = utils.Req(r, "sort_order", sb.DESC)
-	data.sortBy = utils.Req(r, "by", userstore.COLUMN_CREATED_AT)
-	data.status = utils.Req(r, "status", "")
-	data.search = utils.Req(r, "search", "")
-	data.dateFrom = utils.Req(r, "date_from", carbon.Now().AddYears(-1).ToDateString())
-	data.dateTo = utils.Req(r, "date_to", carbon.Now().ToDateString())
-	data.customerID = utils.Req(r, "customer_id", "")
-
-	query := userstore.UserQueryOptions{
-		//Search:               data.search,
-		Offset: data.pageInt * data.perPage,
-		Limit:  data.perPage,
-		Status: data.status,
-		//CreatedAtGreaterThan: data.dateFrom + " 00:00:00",
-		//CreatedAtLessThan:    data.dateTo + " 23:59:59",
-		SortOrder: data.sortOrder,
-		OrderBy:   data.sortBy,
-	}
-
-	data.userList, err = config.UserStore.UserList(query)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return data, "error retrieving users"
-	}
-
-	data.userCount, err = config.UserStore.UserCount(query)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return data, "Error retrieving users count"
-	}
-
-	return data, ""
 }
 
 func (controller *userManagerController) tableUsers(data userManagerControllerData) hb.TagInterface {
@@ -159,7 +261,7 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 				}),
 			}),
 			hb.NewTbody().Children(lo.Map(data.userList, func(user userstore.User, _ int) hb.TagInterface {
-				firstName, lastName, email, err := userUntokenized(user)
+				firstName, lastName, email, err := helpers.UserUntokenized(user)
 
 				if err != nil {
 					config.LogStore.ErrorWithContext("At userManagerController > tableUsers", err.Error())
@@ -197,6 +299,12 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 					HxTarget("body").
 					HxSwap("beforeend")
 
+				buttonImpersonate := hb.NewHyperlink().
+					Class("btn btn-warning me-2").
+					Child(hb.NewI().Class("bi bi-shuffle")).
+					Title("Impersonate").
+					Href(links.NewAdminLinks().UsersUserImpersonate(map[string]string{"user_id": user.ID()}))
+
 				return hb.NewTR().Children([]hb.TagInterface{
 					hb.NewTD().
 						Child(hb.NewDiv().Child(userLink)).
@@ -220,6 +328,7 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 							HTML(user.UpdatedAtCarbon().Format("d M Y"))),
 					hb.NewTD().
 						Child(buttonEdit).
+						Child(buttonImpersonate).
 						Child(buttonDelete),
 				})
 			})),
@@ -244,14 +353,13 @@ func (controller *userManagerController) sortableColumnLabel(data userManagerCon
 	}
 
 	link := links.NewAdminLinks().UsersUserManager(map[string]string{
-		"page":        "0",
-		"by":          columnName,
-		"sort":        direction,
-		"date_from":   data.dateFrom,
-		"date_to":     data.dateTo,
-		"status":      data.status,
-		"search":      data.search,
-		"customer_id": data.customerID,
+		"page":      "0",
+		"by":        columnName,
+		"sort":      direction,
+		"date_from": data.formCreatedFrom,
+		"date_to":   data.formCreatedTo,
+		"status":    data.formStatus,
+		"user_id":   data.formUserID,
 	})
 	return hb.NewHyperlink().
 		HTML(tableLabel).
@@ -276,109 +384,79 @@ func (controller *userManagerController) sortingIndicator(columnName string, sor
 }
 
 func (controller *userManagerController) tableFilter(data userManagerControllerData) hb.TagInterface {
-	statusList := []map[string]string{
-		{"id": "", "name": "All Statuses"},
-		{"id": userstore.USER_STATUS_ACTIVE, "name": "Active"},
-		{"id": userstore.USER_STATUS_INACTIVE, "name": "Inactive"},
-		{"id": userstore.USER_STATUS_UNVERIFIED, "name": "Unverified"},
-		{"id": userstore.USER_STATUS_DELETED, "name": "Deleted"},
+	buttonFilter := hb.NewButton().
+		Class("btn btn-sm btn-info me-2").
+		Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
+		Child(hb.NewI().Class("bi bi-filter me-2")).
+		Text("Filters").
+		HxPost(links.NewAdminLinks().UsersUserManager(map[string]string{
+			"action":       ActionModalUserFilterShow,
+			"first_name":   data.formFirstName,
+			"last_name":    data.formLastName,
+			"email":        data.formEmail,
+			"status":       data.formStatus,
+			"user_id":      data.formUserID,
+			"created_from": data.formCreatedFrom,
+			"created_to":   data.formCreatedTo,
+		})).
+		HxTarget("body").
+		HxSwap("beforeend")
+
+	description := []string{
+		hb.NewSpan().HTML("Showing users").Text(" ").ToHTML(),
 	}
 
-	searchButton := hb.NewButton().
-		Type("submit").
-		Child(hb.NewI().Class("bi bi-search")).
-		Class("btn btn-primary w-100 h-100")
+	if data.formStatus != "" {
+		description = append(description, hb.NewSpan().Text("with status: "+data.formStatus).ToHTML())
+	} else {
+		description = append(description, hb.NewSpan().Text("with status: any").ToHTML())
+	}
 
-	period := hb.NewDiv().Class("form-group").Children([]hb.TagInterface{
-		hb.NewLabel().
-			HTML("Period").
-			Style("margin-bottom: 0px;"),
-		hb.NewDiv().Class("input-group").Children([]hb.TagInterface{
-			hb.NewInput().
-				Type(hb.TYPE_DATE).
-				Name("date_from").
-				Value(data.dateFrom).
-				OnChange("FORM_TRANSACTIONS.submit()").
-				Class("form-control"),
-			hb.NewSpan().
-				HTML(" : ").
-				Class("input-group-text"),
-			hb.NewInput().
-				Type(hb.TYPE_DATE).
-				Name("date_to").
-				Value(data.dateTo).
-				OnChange("FORM_TRANSACTIONS.submit()").
-				Class("form-control"),
-		}),
-	})
+	if data.formEmail != "" {
+		description = append(description, hb.NewSpan().Text("and email: "+data.formEmail).ToHTML())
+	}
 
-	search := hb.NewDiv().Class("form-group").Children([]hb.TagInterface{
-		hb.NewLabel().
-			HTML("Search").
-			Style("margin-bottom: 0px;"),
-		hb.NewInput().
-			Type("search").
-			Name("search").
-			Value(data.search).
-			Class("form-control").
-			Placeholder("reference, title, content ..."),
-	})
+	if data.formUserID != "" {
+		description = append(description, hb.NewSpan().Text("and ID: "+data.formUserID).ToHTML())
+	}
 
-	status := hb.NewDiv().Class("form-group").Children([]hb.TagInterface{
-		hb.NewLabel().
-			HTML("Status").
-			Style("margin-bottom: 0px;"),
-		hb.NewSelect().
-			Name("status").
-			Class("form-select").
-			OnChange("FORM_TRANSACTIONS.submit()").
-			Children(lo.Map(statusList, func(status map[string]string, index int) hb.TagInterface {
-				return hb.NewOption().
-					Value(status["id"]).
-					HTML(status["name"]).
-					AttrIf(data.status == status["id"], "selected", "selected")
-			})),
-	})
+	if data.formFirstName != "" {
+		description = append(description, hb.NewSpan().Text("and first name: "+data.formFirstName).ToHTML())
+	}
 
-	form := hb.NewForm().
-		ID("FORM_TRANSACTIONS").
-		Style("display: block").
-		Method(http.MethodGet).
-		Children([]hb.TagInterface{
-			hb.NewDiv().Class("row").Children([]hb.TagInterface{
-				hb.NewDiv().Class("col-md-2").Children([]hb.TagInterface{
-					search,
-				}),
-				hb.NewDiv().Class("col-md-4").Children([]hb.TagInterface{
-					period,
-				}),
-				hb.NewDiv().Class("col-md-2").Children([]hb.TagInterface{
-					status,
-				}),
-				hb.NewDiv().Class("col-md-1").Children([]hb.TagInterface{
-					searchButton,
-				}),
-			}),
-		})
+	if data.formLastName != "" {
+		description = append(description, hb.NewSpan().Text("and last name: "+data.formLastName).ToHTML())
+	}
+
+	if data.formCreatedFrom != "" && data.formCreatedTo != "" {
+		description = append(description, hb.NewSpan().Text("and created between: "+data.formCreatedFrom+" and "+data.formCreatedTo).ToHTML())
+	} else if data.formCreatedFrom != "" {
+		description = append(description, hb.NewSpan().Text("and created after: "+data.formCreatedFrom).ToHTML())
+	} else if data.formCreatedTo != "" {
+		description = append(description, hb.NewSpan().Text("and created before: "+data.formCreatedTo).ToHTML())
+	}
 
 	return hb.NewDiv().
 		Class("card bg-light mb-3").
 		Style("").
 		Children([]hb.TagInterface{
-			hb.NewDiv().Class("card-body").Children([]hb.TagInterface{
-				form,
-			}),
+			hb.NewDiv().Class("card-body").
+				Child(buttonFilter).
+				Child(hb.NewSpan().
+					HTML(strings.Join(description, " "))),
 		})
 }
 
 func (controller *userManagerController) tablePagination(data userManagerControllerData, count int, page int, perPage int) hb.TagInterface {
 	url := links.NewAdminLinks().UsersUserManager(map[string]string{
-		"search":    data.search,
-		"status":    data.status,
-		"date_from": data.dateFrom,
-		"date_to":   data.dateTo,
-		"by":        data.sortBy,
-		"order":     data.sortOrder,
+		"status":       data.formStatus,
+		"first_name":   data.formFirstName,
+		"last_name":    data.formLastName,
+		"email":        data.formEmail,
+		"created_from": data.formCreatedFrom,
+		"created_to":   data.formCreatedTo,
+		"by":           data.sortBy,
+		"order":        data.sortOrder,
 	})
 
 	url = lo.Ternary(strings.Contains(url, "?"), url+"&page=", url+"?page=") // page must be last
@@ -396,18 +474,132 @@ func (controller *userManagerController) tablePagination(data userManagerControl
 		HTML(pagination)
 }
 
+func (controller *userManagerController) prepareData(r *http.Request) (data userManagerControllerData, errorMessage string) {
+	var err error
+	data.request = r
+	data.action = utils.Req(r, "action", "")
+	data.page = utils.Req(r, "page", "0")
+	data.pageInt = cast.ToInt(data.page)
+	data.perPage = cast.ToInt(utils.Req(r, "per_page", "10"))
+	data.sortOrder = utils.Req(r, "sort_order", sb.DESC)
+	data.sortBy = utils.Req(r, "by", userstore.COLUMN_CREATED_AT)
+	data.formEmail = utils.Req(r, "email", "")
+	data.formFirstName = utils.Req(r, "first_name", "")
+	data.formLastName = utils.Req(r, "last_name", "")
+	data.formStatus = utils.Req(r, "status", "")
+	data.formCreatedFrom = utils.Req(r, "created_from", "")
+	data.formCreatedTo = utils.Req(r, "created_to", "")
+
+	userList, userCount, err := controller.fetchUserList(data)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return data, "error retrieving users"
+	}
+
+	data.userList = userList
+	data.userCount = userCount
+
+	return data, ""
+}
+
+func (controller *userManagerController) fetchUserList(data userManagerControllerData) ([]userstore.User, int64, error) {
+	userIDs := []string{}
+
+	if data.formFirstName != "" {
+		firstNameUserIDs, err := config.BlindIndexStoreFirstName.Search(data.formFirstName, blindindexstore.SEARCH_TYPE_CONTAINS)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+			return []userstore.User{}, 0, err
+		}
+
+		if len(firstNameUserIDs) == 0 {
+			return []userstore.User{}, 0, nil
+		}
+
+		userIDs = append(userIDs, firstNameUserIDs...)
+	}
+
+	if data.formLastName != "" {
+		lastNameUserIDs, err := config.BlindIndexStoreLastName.Search(data.formLastName, blindindexstore.SEARCH_TYPE_CONTAINS)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+			return []userstore.User{}, 0, err
+		}
+
+		if len(lastNameUserIDs) == 0 {
+			return []userstore.User{}, 0, nil
+		}
+
+		userIDs = append(userIDs, lastNameUserIDs...)
+	}
+
+	if data.formEmail != "" {
+		emailUserIDs, err := config.BlindIndexStoreEmail.Search(data.formEmail, blindindexstore.SEARCH_TYPE_CONTAINS)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+			return []userstore.User{}, 0, err
+		}
+
+		if len(emailUserIDs) == 0 {
+			return []userstore.User{}, 0, nil
+		}
+
+		userIDs = append(userIDs, emailUserIDs...)
+	}
+
+	query := userstore.UserQueryOptions{
+		IDIn:      userIDs,
+		Offset:    data.pageInt * data.perPage,
+		Limit:     data.perPage,
+		Status:    data.formStatus,
+		SortOrder: data.sortOrder,
+		OrderBy:   data.sortBy,
+	}
+
+	if data.formCreatedFrom != "" {
+		query.CreatedAtGte = data.formCreatedFrom + " 00:00:00"
+	}
+
+	if data.formCreatedTo != "" {
+		query.CreatedAtLte = data.formCreatedTo + " 23:59:59"
+	}
+
+	userList, err := config.UserStore.UserList(query)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.User{}, 0, err
+	}
+
+	userCount, err := config.UserStore.UserCount(query)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.User{}, 0, err
+	}
+
+	return userList, userCount, nil
+}
+
 type userManagerControllerData struct {
-	// r            *http.Request
-	page       string
-	pageInt    int
-	perPage    int
-	sortOrder  string
-	sortBy     string
-	status     string
-	search     string
-	customerID string
-	dateFrom   string
-	dateTo     string
-	userList   []userstore.User
-	userCount  int64
+	request         *http.Request
+	action          string
+	page            string
+	pageInt         int
+	perPage         int
+	sortOrder       string
+	sortBy          string
+	formStatus      string
+	formEmail       string
+	formFirstName   string
+	formLastName    string
+	formCreatedFrom string
+	formCreatedTo   string
+	formUserID      string
+	userList        []userstore.User
+	userCount       int64
 }

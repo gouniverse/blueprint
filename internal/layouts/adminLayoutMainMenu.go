@@ -10,7 +10,7 @@ import (
 
 func adminLayoutMainMenu(user *userstore.User) []dashboard.MenuItem {
 	websiteHomeLink := links.NewWebsiteLinks().Home()
-	dashboardLink := links.NewAdminLinks().Home()
+	dashboardLink := links.NewAdminLinks().Home(map[string]string{})
 	loginLink := links.NewAuthLinks().Login(dashboardLink)
 	logoutLink := links.NewAuthLinks().Logout()
 

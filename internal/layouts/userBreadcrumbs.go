@@ -14,7 +14,7 @@ func userBreadcrumbs(path []bs.Breadcrumb) *hb.Tag {
 	breadcrumbsPath := []bs.Breadcrumb{
 		{
 			Name: "Dashboard",
-			URL:  links.NewUserLinks().Home(),
+			URL:  links.NewUserLinks().Home(map[string]string{}),
 			Icon: icons.Icon("bi-speedometer", 16, 16, "gray").ToHTML(),
 		},
 	}

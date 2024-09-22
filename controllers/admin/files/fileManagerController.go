@@ -91,8 +91,6 @@ type FileManagerController struct {
 }
 
 func (controller *FileManagerController) init(r *http.Request) string {
-	var err error
-
 	// cfmt.Infoln(config.MediaEndpoint)
 
 	// controller.storage, err = filesystem.NewStorage(filesystem.Disk{
@@ -107,13 +105,6 @@ func (controller *FileManagerController) init(r *http.Request) string {
 	// })
 
 	controller.storage = config.SqlFileStorage
-
-	cfmt.Infoln(controller.storage)
-
-	if err != nil {
-		cfmt.Errorln(err.Error())
-		return err.Error()
-	}
 
 	controller.funcLayout = func(content string) string {
 		return layouts.NewAdminLayout(r, layouts.Options{

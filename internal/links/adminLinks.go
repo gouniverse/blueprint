@@ -6,12 +6,12 @@ func NewAdminLinks() *adminLinks {
 	return &adminLinks{}
 }
 
-func (l *adminLinks) Home() string {
-	return URL(ADMIN_HOME, nil)
+func (l *adminLinks) Home(params map[string]string) string {
+	return URL(ADMIN_HOME, params)
 }
 
-func (l *adminLinks) Blog() string {
-	return URL(ADMIN_BLOG, nil)
+func (l *adminLinks) Blog(params map[string]string) string {
+	return URL(ADMIN_BLOG, params)
 }
 
 func (l *adminLinks) BlogPostCreate(params map[string]string) string {
@@ -35,7 +35,7 @@ func (l *adminLinks) Cms() string {
 }
 
 func (l *adminLinks) FileManager(params map[string]string) string {
-	return URL(ADMIN_FILE_MANAGER, params)
+	return URL(ADMIN_MEDIA, params)
 }
 
 func (l *adminLinks) Users(params map[string]string) string {
@@ -48,6 +48,10 @@ func (l *adminLinks) UsersUserCreate(params map[string]string) string {
 
 func (l *adminLinks) UsersUserDelete(params map[string]string) string {
 	return URL(ADMIN_USERS_USER_DELETE, params)
+}
+
+func (l *adminLinks) UsersUserImpersonate(params map[string]string) string {
+	return URL(ADMIN_USERS_USER_IMPERSONATE, params)
 }
 
 func (l *adminLinks) UsersUserManager(params map[string]string) string {
