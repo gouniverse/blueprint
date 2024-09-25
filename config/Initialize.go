@@ -4,9 +4,9 @@ import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
+	"log/slog"
 	"os"
 	"project/internal/resources"
-	"project/pkg/userstore"
 	"strings"
 
 	"github.com/gouniverse/blindindexstore"
@@ -23,6 +23,7 @@ import (
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/shopstore"
 	"github.com/gouniverse/taskstore"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 	"github.com/gouniverse/vaultstore"
 	"github.com/jellydator/ttlcache/v3"
@@ -47,6 +48,8 @@ func Initialize() {
 	}
 
 	initializeInMemoryCache()
+
+	Logger = *slog.New(logstore.NewSlogHandler(&LogStore))
 }
 
 func initializeEnvVariables() {
@@ -116,6 +119,9 @@ func initializeEnvVariables() {
 }
 
 func intializeEnvEncVariables(appEnvironment string) {
+	if appEnvironment == APP_ENVIRONMENT_TESTING {
+		return
+	}
 	appEnvironment = strings.ToLower(appEnvironment)
 	envEncryptionKey := utils.EnvMust("ENV_ENCRYPTION_KEY")
 
@@ -359,10 +365,11 @@ func initializeDatabase() error {
 	SessionStore = *sessionStoreInstance
 
 	shopStoreInstance, err := shopstore.NewStore(shopstore.NewStoreOptions{
-		DB:                Database.DB(),
-		DiscountTableName: "snv_shop_discount",
-		OrderTableName:    "snv_shop_order",
-		ProductTableName:  "snv_shop_product",
+		DB:                     Database.DB(),
+		DiscountTableName:      "snv_shop_discount",
+		OrderTableName:         "snv_shop_order",
+		OrderLineItemTableName: "snv_shop_order_line_item",
+		ProductTableName:       "snv_shop_product",
 	})
 
 	if err != nil {

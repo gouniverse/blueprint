@@ -16,6 +16,7 @@ func TestsConfigureAndInitialize() {
 	os.Setenv("DB_DATABASE", "file::memory:?cache=shared")
 	os.Setenv("DB_USERNAME", "")
 	os.Setenv("DB_PASSWORD", "")
+	os.Setenv("ENV_ENCRYPTION_KEY", "123456")
 	os.Setenv("SERVER_HOST", "localhost")
 	os.Setenv("SERVER_PORT", "8080")
 	// os.Setenv("DEBUG", "yes")

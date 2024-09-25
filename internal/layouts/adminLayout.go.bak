@@ -10,8 +10,8 @@ import (
 	"github.com/gouniverse/dashboard"
 )
 
-func NewUserLayout(r *http.Request, options Options) *dashboard.Dashboard {
-	return userLayout(r, options)
+func NewAdminLayout(r *http.Request, options Options) *dashboard.Dashboard {
+	return adminLayout(r, options)
 }
 
 // layout generates a dashboard based on the provided request and layout options.
@@ -22,15 +22,15 @@ func NewUserLayout(r *http.Request, options Options) *dashboard.Dashboard {
 //
 // Returns:
 // - a pointer to a dashboard.Dashboard object representing the generated dashboard.
-func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
+func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	authUser := helpers.GetAuthUser(r)
 
 	dashboardUser := dashboard.User{}
 	if authUser != nil {
-		firtsName, lastName, _, err := helpers.UserUntokenized(authUser)
+		firstName, lastName, err := userUntokenized(*authUser)
 		if err == nil {
 			dashboardUser = dashboard.User{
-				FirstName: firtsName,
+				FirstName: firstName,
 				LastName:  lastName,
 			}
 		}
@@ -47,23 +47,23 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	// Prepare styles
 	styles := []string{ // prepend any if required
-		`nav#Toolbar {border-bottom: 4px solid blue;}`,
+		`nav#Toolbar {border-bottom: 4px solid red;}`,
 	}
 	styles = append(styles, options.Styles...)
 
-	homeLink := links.NewUserLinks().Home(map[string]string{})
+	homeLink := links.NewAdminLinks().Home(map[string]string{})
 
 	dashboard := dashboard.NewDashboard(dashboard.Config{
 		HTTPRequest:     r,
 		Content:         options.Content.ToHTML(),
-		Title:           options.Title + " | User | " + config.AppName,
+		Title:           options.Title + " | Admin | " + config.AppName,
 		LoginURL:        links.NewAuthLinks().Login(homeLink),
-		Menu:            userLayoutMainMenu(authUser),
+		Menu:            adminLayoutMainMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",
-		LogoRawHtml:     userLogoHtml(),
+		LogoRawHtml:     adminLogoHtml(),
 		LogoRedirectURL: homeLink,
 		User:            dashboardUser,
-		UserMenu:        userLayoutUserMenu(authUser),
+		UserMenu:        adminLayoutUserMenu(authUser),
 		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
 		Scripts:         scripts,
 		ScriptURLs:      scriptURLs,

@@ -6,13 +6,13 @@ import (
 	"project/internal/helpers"
 	"project/internal/layouts"
 	"project/internal/links"
-	"project/pkg/userstore"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/form"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 )
 
@@ -269,7 +269,7 @@ func (controller userUpdateController) saveUser(r *http.Request, data userUpdate
 		return data, ""
 	}
 
-	err = userTokenize(*data.user, data.formFirstName, data.formLastName, data.formEmail)
+	err = userTokenize(data.user, data.formFirstName, data.formLastName, data.formEmail)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userUpdateController > prepareDataAndValidate", err.Error())
@@ -303,7 +303,7 @@ func (controller userUpdateController) prepareDataAndValidate(r *http.Request) (
 
 	data.user = user
 
-	firstName, lastName, email, err := helpers.UserUntokenized(*data.user)
+	firstName, lastName, email, err := helpers.UserUntokenized(data.user)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userManagerController > tableUsers", err.Error())
@@ -326,7 +326,7 @@ func (controller userUpdateController) prepareDataAndValidate(r *http.Request) (
 type userUpdateControllerData struct {
 	action string
 	userID string
-	user   *userstore.User
+	user   userstore.UserInterface
 
 	formErrorMessage   string
 	formSuccessMessage string

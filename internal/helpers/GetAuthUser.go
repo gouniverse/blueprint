@@ -3,11 +3,12 @@ package helpers
 import (
 	"net/http"
 	"project/config"
-	"project/pkg/userstore"
+
+	"github.com/gouniverse/userstore"
 )
 
 // GetAuthUser returns the authenticated user
-func GetAuthUser(r *http.Request) *userstore.User {
+func GetAuthUser(r *http.Request) userstore.UserInterface {
 	if r == nil {
 		return nil
 	}

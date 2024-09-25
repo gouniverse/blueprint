@@ -5,11 +5,11 @@ import (
 	"project/config"
 	"project/internal/helpers"
 	"project/internal/links"
-	"project/pkg/userstore"
 
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 )
 
@@ -19,7 +19,7 @@ var _ router.HTMLControllerInterface = (*userDeleteController)(nil)
 
 type userDeleteControllerData struct {
 	userID         string
-	user           *userstore.User
+	user           userstore.UserInterface
 	successMessage string
 	//errorMessage   string
 }

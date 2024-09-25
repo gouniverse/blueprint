@@ -3,7 +3,6 @@ package admin
 import (
 	"net/http"
 	"project/config"
-	"project/pkg/userstore"
 
 	"project/internal/helpers"
 	"project/internal/layouts"
@@ -17,6 +16,7 @@ import (
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/sb"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 	"github.com/spf13/cast"
@@ -260,7 +260,7 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 						HTML("Actions"),
 				}),
 			}),
-			hb.NewTbody().Children(lo.Map(data.userList, func(user userstore.User, _ int) hb.TagInterface {
+			hb.NewTbody().Children(lo.Map(data.userList, func(user userstore.UserInterface, _ int) hb.TagInterface {
 				firstName, lastName, email, err := helpers.UserUntokenized(user)
 
 				if err != nil {
@@ -503,7 +503,7 @@ func (controller *userManagerController) prepareData(r *http.Request) (data user
 	return data, ""
 }
 
-func (controller *userManagerController) fetchUserList(data userManagerControllerData) ([]userstore.User, int64, error) {
+func (controller *userManagerController) fetchUserList(data userManagerControllerData) ([]userstore.UserInterface, int64, error) {
 	userIDs := []string{}
 
 	if data.formFirstName != "" {
@@ -511,11 +511,11 @@ func (controller *userManagerController) fetchUserList(data userManagerControlle
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-			return []userstore.User{}, 0, err
+			return []userstore.UserInterface{}, 0, err
 		}
 
 		if len(firstNameUserIDs) == 0 {
-			return []userstore.User{}, 0, nil
+			return []userstore.UserInterface{}, 0, nil
 		}
 
 		userIDs = append(userIDs, firstNameUserIDs...)
@@ -526,11 +526,11 @@ func (controller *userManagerController) fetchUserList(data userManagerControlle
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-			return []userstore.User{}, 0, err
+			return []userstore.UserInterface{}, 0, err
 		}
 
 		if len(lastNameUserIDs) == 0 {
-			return []userstore.User{}, 0, nil
+			return []userstore.UserInterface{}, 0, nil
 		}
 
 		userIDs = append(userIDs, lastNameUserIDs...)
@@ -541,11 +541,11 @@ func (controller *userManagerController) fetchUserList(data userManagerControlle
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-			return []userstore.User{}, 0, err
+			return []userstore.UserInterface{}, 0, err
 		}
 
 		if len(emailUserIDs) == 0 {
-			return []userstore.User{}, 0, nil
+			return []userstore.UserInterface{}, 0, nil
 		}
 
 		userIDs = append(userIDs, emailUserIDs...)
@@ -572,14 +572,14 @@ func (controller *userManagerController) fetchUserList(data userManagerControlle
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.User{}, 0, err
+		return []userstore.UserInterface{}, 0, err
 	}
 
 	userCount, err := config.UserStore.UserCount(query)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.User{}, 0, err
+		return []userstore.UserInterface{}, 0, err
 	}
 
 	return userList, userCount, nil
@@ -600,6 +600,6 @@ type userManagerControllerData struct {
 	formCreatedFrom string
 	formCreatedTo   string
 	formUserID      string
-	userList        []userstore.User
+	userList        []userstore.UserInterface
 	userCount       int64
 }

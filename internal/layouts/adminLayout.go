@@ -27,7 +27,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	dashboardUser := dashboard.User{}
 	if authUser != nil {
-		firstName, lastName, err := userUntokenized(*authUser)
+		firstName, lastName, _, err := helpers.UserUntokenized(authUser)
 		if err == nil {
 			dashboardUser = dashboard.User{
 				FirstName: firstName,

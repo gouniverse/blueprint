@@ -11,6 +11,8 @@ github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.5 h1:xDAuZTn4IMm8o1Ln
 github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.5/go.mod h1:wYSv6iDS621sEFLfKvpPE2ugjTuGlAG7iROg0hLOkfc=
 github.com/aws/aws-sdk-go-v2/credentials v1.17.34 h1:gmkk1l/cDGSowPRzkdxYi8edw+gN4HmVK151D/pqGNc=
 github.com/aws/aws-sdk-go-v2/credentials v1.17.34/go.mod h1:4R9OEV3tgFMsok4ZeFpExn7zQaZRa9MRGFYnI/xC/vs=
+github.com/aws/aws-sdk-go-v2/credentials v1.17.35 h1:7QknrZhYySEB1lEXJxGAmuD5sWwys5ZXNr4m5oEz0IE=
+github.com/aws/aws-sdk-go-v2/credentials v1.17.35/go.mod h1:8Vy4kk7at4aPSmibr7K+nLTzG6qUQAUO4tW49fzUV4E=
 github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.18 h1:kYQ3H1u0ANr9KEKlGs/jTLrBFPo8P8NaH/w7A01NeeM=
 github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.18/go.mod h1:r506HmK5JDUh9+Mw4CfGJGSSoqIiLCndAuqXuhbv67Y=
 github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.18 h1:Z7IdFUONvTcvS7YuhtVxN99v2cCoHRXOS4mTr0B/pUc=
@@ -142,6 +144,8 @@ github.com/gouniverse/icons v1.3.1 h1:CCiBmWRkUcREX1nSvW9lJD6IjII3m6LZJkKd3y/Phd
 github.com/gouniverse/icons v1.3.1/go.mod h1:VR4mbFpJyWeFmoNAicVAyBJ2LsxOyB04e+DxnqY4cCU=
 github.com/gouniverse/logstore v1.4.1 h1:U2I9GMtzLzZQLGAAN+WYvkpur7HR3ggVdYZXag1eZeo=
 github.com/gouniverse/logstore v1.4.1/go.mod h1:Qsl1IyaP30KsIz/KmiF53VtWBYY+K29CKEPRWrPDa3Y=
+github.com/gouniverse/logstore v1.5.0 h1:12hh2rQbdh55k3Md5SblOegz3B4eB/d3l7gAGqZYrCU=
+github.com/gouniverse/logstore v1.5.0/go.mod h1:Qsl1IyaP30KsIz/KmiF53VtWBYY+K29CKEPRWrPDa3Y=
 github.com/gouniverse/maputils v0.7.0 h1:qoJnY8tY5gkdyuIkwGHJYwH7It7LnCevxU+P+c4nU/Y=
 github.com/gouniverse/maputils v0.7.0/go.mod h1:s8HbjSvEqBl+R+bFCvFd+mY07bx7EQM5YhIjDgF26Q0=
 github.com/gouniverse/metastore v1.1.0 h1:8PsAmM7NNOY6+z9dLZyVHNkS3HQdt3EKICOLxo3+0cg=
@@ -158,6 +162,8 @@ github.com/gouniverse/settingstore v0.12.0 h1:nRWK7PYK/m4THMSgkHdnzPf5IhWOinZAjW
 github.com/gouniverse/settingstore v0.12.0/go.mod h1:9Br8hNqrW3D9zszV3xv9bmGmJ/DPhKzob3cACZV7UpU=
 github.com/gouniverse/shopstore v0.2.0 h1:aJvNKArcDrC7GarQylNrMTUUr0kvoUbNNG9E74vG1fM=
 github.com/gouniverse/shopstore v0.2.0/go.mod h1:06ENpkzxAWSh83//IbmfRRGsPuMSKWz7l3MC7CGxC9s=
+github.com/gouniverse/shopstore v0.5.0 h1:zyr28KTIRaPu/vy/ab5r2pC4eOCRSKDYfqxBiHwLnqQ=
+github.com/gouniverse/shopstore v0.5.0/go.mod h1:Nn4w+PlkvRewmNmjF8lxn6kM/fTxKvNTp3EjpX9HywE=
 github.com/gouniverse/shortcode v0.1.4 h1:595X57QYdi7hUl2dqvL/oih1Ha0/FhU5i9xJr1pbChc=
 github.com/gouniverse/shortcode v0.1.4/go.mod h1:3AmIfeaJKbteiVmalROhmE6mcq73l37uPpDWlCrhvas=
 github.com/gouniverse/sqlfilestore v0.1.3 h1:dj/gdgedDpBZN9Lir960BDLpucePWBHsD9yZrIZ1ViI=
@@ -166,10 +172,14 @@ github.com/gouniverse/strutils v0.6.0 h1:isC0vv5TDYNW1IfPyOUB39JyBSWgHimDcsf+Bp9
 github.com/gouniverse/strutils v0.6.0/go.mod h1:NfVT8LbENvAT39bFtjuxQLFq6A4wHDJuyqcmsys1o0A=
 github.com/gouniverse/taskstore v1.0.2 h1:Jzzd3Fqv3XAIdfvNQHIIW9qF3CO9vthE0IZtu2ahx64=
 github.com/gouniverse/taskstore v1.0.2/go.mod h1:ismN5wdZYnijggwRPcv8Jdy0VBoBXGihONlIPnS97ik=
+github.com/gouniverse/taskstore v1.0.3 h1:VyoViyTfsmiSlYVgHILdwo6H/2OOaiIWYcXDdEcBaXg=
+github.com/gouniverse/taskstore v1.0.3/go.mod h1:HLw7SQhoieIN+pBCkpbsM61fb855O/Wfj+71PnWARBI=
 github.com/gouniverse/uid v1.5.0 h1:evyGegnY7+KeYirDhJntI9xmODf8jPMQw8DlMpQIPnM=
 github.com/gouniverse/uid v1.5.0/go.mod h1:06dzYTyBLOu+iRlKZ8GxzEfgDSLyoZwgKns9Fcvt7G4=
 github.com/gouniverse/uncdn v0.7.4 h1:Po7TpNpK+ZBpo6qTNgopmSvA+zdQB9g+dEIaYKE0n98=
 github.com/gouniverse/uncdn v0.7.4/go.mod h1:ipvItAUbddR3KHefw/cwClCT3T4T/c9BPRu45pfIvME=
+github.com/gouniverse/userstore v0.2.1 h1:xFRguhi5hDmJ9nqhZhlngGX7C16Sj1WAgY9u1PO6UMU=
+github.com/gouniverse/userstore v0.2.1/go.mod h1:565yZ3nDMDsF42bQvWg15Sf3x9isW1iEacgmJek/Up0=
 github.com/gouniverse/utils v1.43.2 h1:hMhnyG2covg18Y03Ftxz+u4vBZR6RWTLvbFNtqiHteE=
 github.com/gouniverse/utils v1.43.2/go.mod h1:DmUgYr/WmLu0uFm69yM7FhMq6rQHGAM7QZnPgoSpDwA=
 github.com/gouniverse/validator v0.11.0 h1:6Rf5TGr1IiD1s53lm0t+yFYVhx1JC/IjoE48ey1kWS4=

@@ -2,13 +2,14 @@ package admin
 
 import (
 	"project/config"
-	"project/pkg/userstore"
+
+	"github.com/gouniverse/userstore"
 )
 
-func userTokenize(authUser userstore.User, firstName string, lastName string, email string) (err error) {
-	firstNameToken := authUser.FirstName()
-	lastNameToken := authUser.LastName()
-	emailToken := authUser.Email()
+func userTokenize(user userstore.UserInterface, firstName string, lastName string, email string) (err error) {
+	firstNameToken := user.FirstName()
+	lastNameToken := user.LastName()
+	emailToken := user.Email()
 
 	err = config.VaultStore.TokenUpdate(firstNameToken, firstName, config.VaultKey)
 

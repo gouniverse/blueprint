@@ -38,6 +38,10 @@ func (l *adminLinks) FileManager(params map[string]string) string {
 	return URL(ADMIN_MEDIA, params)
 }
 
+func (l *adminLinks) Tasks(params map[string]string) string {
+	return URL(ADMIN_TASKS, params)
+}
+
 func (l *adminLinks) Users(params map[string]string) string {
 	return URL(ADMIN_USERS, params)
 }

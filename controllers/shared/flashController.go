@@ -36,7 +36,6 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 	if authUser != nil && authUser.IsRegistrationCompleted() {
 		return layouts.NewUserLayout(r, layouts.Options{
 			Title: "System Message",
-			// CanonicalURL: links.NewWebsiteLinks().Flash(map[string]string{}),
 			Content:    controller.pageHTML(r),
 			ScriptURLs: []string{cdn.BootstrapJs_5_3_0()},
 			Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},

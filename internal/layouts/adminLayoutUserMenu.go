@@ -2,9 +2,9 @@ package layouts
 
 import (
 	"project/internal/links"
-	"project/pkg/userstore"
 
 	"github.com/gouniverse/dashboard"
+	"github.com/gouniverse/userstore"
 )
 
 // userDashboardUserMenu generates the user menu items for the dashboard.
@@ -14,7 +14,7 @@ import (
 //
 // Returns:
 // - `[]dashboard.MenuItem`: The user menu items.
-func adminLayoutUserMenu(authUser *userstore.User) []dashboard.MenuItem {
+func adminLayoutUserMenu(authUser userstore.UserInterface) []dashboard.MenuItem {
 	userDashboardMenuItem := dashboard.MenuItem{
 		Title: "To User Panel",
 		URL:   links.NewUserLinks().Home(map[string]string{}),

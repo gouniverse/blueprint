@@ -6,8 +6,9 @@ import (
 	"project/internal/helpers"
 	"project/internal/layouts"
 	"project/internal/links"
-	"project/pkg/userstore"
 	"strings"
+
+	"github.com/gouniverse/userstore"
 
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"
@@ -81,7 +82,7 @@ func (controller *homeController) prepareData(r *http.Request) (data homeControl
 
 	return homeControllerData{
 		request:       r,
-		user:          *authUser,
+		user:          authUser,
 		userFirstName: userFirstName,
 		userLastName:  userLastName,
 		userEmail:     userEmail,
@@ -90,7 +91,7 @@ func (controller *homeController) prepareData(r *http.Request) (data homeControl
 
 type homeControllerData struct {
 	request       *http.Request
-	user          userstore.User
+	user          userstore.UserInterface
 	userFirstName string
 	userLastName  string
 	userEmail     string

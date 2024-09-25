@@ -3,12 +3,12 @@ package tasks
 import (
 	"project/config"
 	"project/internal/helpers"
-	"project/pkg/userstore"
 	"slices"
 	"strings"
 
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/taskstore"
+	"github.com/gouniverse/userstore"
 )
 
 // ============================================================================
@@ -205,7 +205,7 @@ func (task *blindIndexRebuildTask) rebuildLastNameIndex() bool {
 	return true
 }
 
-func (task *blindIndexRebuildTask) insertEmailForUser(user userstore.User) bool {
+func (task *blindIndexRebuildTask) insertEmailForUser(user userstore.UserInterface) bool {
 	searchValue, err := config.BlindIndexStoreEmail.SearchValueFindBySourceReferenceID(user.ID())
 
 	if err != nil {
@@ -268,7 +268,7 @@ func (task *blindIndexRebuildTask) insertEmailForUser(user userstore.User) bool 
 	return true
 }
 
-func (task *blindIndexRebuildTask) insertFirstNameForUser(user userstore.User) bool {
+func (task *blindIndexRebuildTask) insertFirstNameForUser(user userstore.UserInterface) bool {
 	searchValue, err := config.BlindIndexStoreFirstName.SearchValueFindBySourceReferenceID(user.ID())
 
 	if err != nil {
@@ -332,7 +332,7 @@ func (task *blindIndexRebuildTask) insertFirstNameForUser(user userstore.User) b
 	return true
 }
 
-func (task *blindIndexRebuildTask) insertLastNameForUser(user userstore.User) bool {
+func (task *blindIndexRebuildTask) insertLastNameForUser(user userstore.UserInterface) bool {
 	searchValue, err := config.BlindIndexStoreLastName.SearchValueFindBySourceReferenceID(user.ID())
 
 	if err != nil {

@@ -2,10 +2,11 @@ package testutils
 
 import (
 	"project/config"
-	"project/pkg/userstore"
+
+	"github.com/gouniverse/userstore"
 )
 
-func SeedUser(userID string) (*userstore.User, error) {
+func SeedUser(userID string) (userstore.UserInterface, error) {
 	user, err := config.UserStore.UserFindByID(userID)
 
 	if err != nil {

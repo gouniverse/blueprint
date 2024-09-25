@@ -2,10 +2,11 @@ package helpers
 
 import (
 	"project/config"
-	"project/pkg/userstore"
+
+	"github.com/gouniverse/userstore"
 )
 
-func UserUntokenized(authUser userstore.User) (firstName string, lastName string, email string, err error) {
+func UserUntokenized(authUser userstore.UserInterface) (firstName string, lastName string, email string, err error) {
 	firstNameToken := authUser.FirstName()
 	lastNameToken := authUser.LastName()
 	emailToken := authUser.Email()

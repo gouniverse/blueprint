@@ -4,6 +4,8 @@ import (
 	"project/controllers/admin"
 	adminBlog "project/controllers/admin/blog"
 	adminFiles "project/controllers/admin/files"
+	adminTasks "project/controllers/admin/tasks"
+	adminUsers "project/controllers/admin/users"
 	"project/internal/links"
 	"project/internal/middlewares"
 
@@ -53,12 +55,23 @@ func adminRoutes() []router.RouteInterface {
 			Path:        links.ADMIN_MEDIA,
 			HTMLHandler: adminFiles.NewFileManagerController().AnyIndex,
 		},
+	}
+
+	adminRoutes = append(adminRoutes, adminTasks.TaskRoutes()...)
+	adminRoutes = append(adminRoutes, adminUsers.UserRoutes()...)
+
+	adminRoutes = append(adminRoutes, []router.RouteInterface{
 		&router.Route{
-			Name:        "Admin > Home Controller",
+			Name:        "Admin > Home",
 			Path:        links.ADMIN_HOME,
 			HTMLHandler: admin.NewHomeController().Handler,
 		},
-	}
+		&router.Route{
+			Name:        "Admin > Catch All",
+			Path:        links.ADMIN_HOME + links.CATCHALL,
+			HTMLHandler: admin.NewHomeController().Handler,
+		},
+	}...)
 
 	router.RoutesPrependMiddlewares(adminRoutes, []router.Middleware{
 		middlewares.NewAdminMiddleware(),

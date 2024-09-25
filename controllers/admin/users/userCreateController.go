@@ -5,12 +5,12 @@ import (
 	"project/config"
 	"project/internal/helpers"
 	"project/internal/links"
-	"project/pkg/userstore"
 	"strings"
 
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 )
 

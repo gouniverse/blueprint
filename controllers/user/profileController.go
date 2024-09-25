@@ -7,7 +7,6 @@ import (
 	"project/internal/helpers"
 	"project/internal/layouts"
 	"project/internal/links"
-	"project/pkg/userstore"
 	"strings"
 
 	"github.com/gouniverse/bs"
@@ -16,6 +15,7 @@ import (
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/sb"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 )
@@ -29,26 +29,6 @@ type profileController struct {
 }
 
 var _ router.HTMLControllerInterface = (*profileController)(nil)
-
-// == CONSTRUCTOR =============================================================
-
-type profileControllerData struct {
-	request     *http.Request
-	action      string
-	authUser    userstore.User
-	email       string
-	firstName   string
-	lastName    string
-	buinessName string
-	phone       string
-	// email        string
-	country            string
-	countryList        []geostore.Country
-	timezone           string
-	formErrorMessage   string
-	formSuccessMessage string
-	formRedirectURL    string
-}
 
 // == CONSTRUCTOR =============================================================
 
@@ -181,7 +161,7 @@ func (controller *profileController) postUpdate(data profileControllerData) stri
 	data.authUser.SetCountry(data.country)
 	data.authUser.SetTimezone(data.timezone)
 
-	err = config.UserStore.UserUpdate(&data.authUser)
+	err = config.UserStore.UserUpdate(data.authUser)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error updating user profile", err.Error())
@@ -378,7 +358,7 @@ func (controller *profileController) prepareData(r *http.Request) (data profileC
 		return profileControllerData{}, "Error listing countries"
 	}
 
-	email, firstName, lastName, buinessName, phone, err := controller.untokenizeProfileData(*authUser)
+	email, firstName, lastName, buinessName, phone, err := controller.untokenizeProfileData(authUser)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error reading profile data", err.Error())
@@ -386,7 +366,7 @@ func (controller *profileController) prepareData(r *http.Request) (data profileC
 	}
 
 	data.request = r
-	data.authUser = *authUser
+	data.authUser = authUser
 	data.countryList = countryList
 
 	if r.Method == http.MethodGet {
@@ -412,7 +392,7 @@ func (controller *profileController) prepareData(r *http.Request) (data profileC
 	return data, ""
 }
 
-func (controller *profileController) untokenizeProfileData(user userstore.User) (email string, firstName string, lastName string, businessName string, phone string, err error) {
+func (controller *profileController) untokenizeProfileData(user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
 	emailToken := user.Email()
 	firstNameToken := user.FirstName()
 	lastNameToken := user.LastName()
@@ -465,4 +445,22 @@ func (controller *profileController) untokenizeProfileData(user userstore.User) 
 	}
 
 	return email, firstName, lastName, businessName, phone, nil
+}
+
+type profileControllerData struct {
+	request     *http.Request
+	action      string
+	authUser    userstore.UserInterface
+	email       string
+	firstName   string
+	lastName    string
+	buinessName string
+	phone       string
+	// email        string
+	country            string
+	countryList        []geostore.Country
+	timezone           string
+	formErrorMessage   string
+	formSuccessMessage string
+	formRedirectURL    string
 }

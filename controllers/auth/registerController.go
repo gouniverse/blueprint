@@ -6,7 +6,6 @@ import (
 	"project/internal/helpers"
 	"project/internal/layouts"
 	"project/internal/links"
-	"project/pkg/userstore"
 	"strings"
 
 	"github.com/gouniverse/bs"
@@ -14,6 +13,7 @@ import (
 	"github.com/gouniverse/geostore"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/sb"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 )
@@ -33,7 +33,7 @@ type registerController struct {
 
 type registerControllerData struct {
 	action             string
-	authUser           userstore.User
+	authUser           userstore.UserInterface
 	email              string
 	firstName          string
 	lastName           string
@@ -157,7 +157,7 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 	data.authUser.SetCountry(data.country)
 	data.authUser.SetTimezone(data.timezone)
 
-	err = config.UserStore.UserUpdate(&data.authUser)
+	err = config.UserStore.UserUpdate(data.authUser)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error updating user profile", err.Error())
@@ -346,7 +346,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 		ChildIf(data.formRedirectURL != "", hb.NewScript(`window.location.href = '`+data.formRedirectURL+`'`))
 }
 
-func (controller *registerController) untokenizeData(user userstore.User) (email string, firstName string, lastName string, businessName string, phone string, err error) {
+func (controller *registerController) untokenizeData(user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
 	emailToken := user.Email()
 	firstNameToken := user.FirstName()
 	lastNameToken := user.LastName()
@@ -419,7 +419,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 		return registerControllerData{}, "Error listing countries"
 	}
 
-	email, firstName, lastName, businessName, phone, err := controller.untokenizeData(*authUser)
+	email, firstName, lastName, businessName, phone, err := controller.untokenizeData(authUser)
 
 	if r.Method == http.MethodGet {
 		if err != nil {
@@ -429,7 +429,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 
 		data = registerControllerData{
 			action:      action,
-			authUser:    *authUser,
+			authUser:    authUser,
 			email:       email,
 			firstName:   firstName,
 			lastName:    lastName,
@@ -444,7 +444,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 	if r.Method == http.MethodPost {
 		data = registerControllerData{
 			action:      action,
-			authUser:    *authUser,
+			authUser:    authUser,
 			email:       email,
 			firstName:   strings.TrimSpace(utils.Req(r, controller.formFirstName, "")),
 			lastName:    strings.TrimSpace(utils.Req(r, controller.formLastName, "")),

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"project/pkg/userstore"
+	"log/slog"
 
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/blogstore"
@@ -16,6 +16,7 @@ import (
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/shopstore"
 	"github.com/gouniverse/taskstore"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/vaultstore"
 	"github.com/gouniverse/webserver"
 	"github.com/jellydator/ttlcache/v3"
@@ -100,6 +101,8 @@ var UserStore userstore.Store
 var VaultStore vaultstore.Store
 
 var SqlFileStorage filesystem.StorageInterface
+
+var Logger slog.Logger
 
 func init() {
 	AppVersion = "0.0.1" // default

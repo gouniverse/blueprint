@@ -2,13 +2,13 @@ package layouts
 
 import (
 	"project/internal/links"
-	"project/pkg/userstore"
 
 	"github.com/gouniverse/dashboard"
 	"github.com/gouniverse/hb"
+	"github.com/gouniverse/userstore"
 )
 
-func adminLayoutMainMenu(user *userstore.User) []dashboard.MenuItem {
+func adminLayoutMainMenu(user userstore.UserInterface) []dashboard.MenuItem {
 	websiteHomeLink := links.NewWebsiteLinks().Home()
 	dashboardLink := links.NewAdminLinks().Home(map[string]string{})
 	loginLink := links.NewAuthLinks().Login(dashboardLink)

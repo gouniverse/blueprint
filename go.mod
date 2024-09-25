@@ -6,7 +6,6 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/boombuler/barcode v1.0.2
 	github.com/disintegration/imaging v1.6.2
-	github.com/doug-martin/goqu/v9 v9.19.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-co-op/gocron v1.37.0
 	github.com/go-sql-driver/mysql v1.8.1
@@ -23,14 +22,15 @@ require (
 	github.com/gouniverse/form v0.3.2
 	github.com/gouniverse/hb v1.75.2
 	github.com/gouniverse/icons v1.3.1
-	github.com/gouniverse/logstore v1.4.1
+	github.com/gouniverse/logstore v1.5.0
 	github.com/gouniverse/metastore v1.1.0
 	github.com/gouniverse/responses v0.6.0
 	github.com/gouniverse/router v1.4.0
 	github.com/gouniverse/sessionstore v0.26.0
-	github.com/gouniverse/shopstore v0.2.0
+	github.com/gouniverse/shopstore v0.5.0
 	github.com/gouniverse/strutils v0.6.0
-	github.com/gouniverse/taskstore v1.0.2
+	github.com/gouniverse/taskstore v1.0.3
+	github.com/gouniverse/userstore v0.2.1
 	github.com/gouniverse/utils v1.43.2
 	github.com/gouniverse/vaultstore v0.16.0
 	github.com/gouniverse/webserver v0.1.0
@@ -48,7 +48,7 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.31.0 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.5 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.34 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.35 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.18 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.18 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.18 // indirect
@@ -59,6 +59,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.63.0 // indirect
 	github.com/aws/smithy-go v1.21.0 // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
+	github.com/doug-martin/goqu/v9 v9.19.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.5 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
@@ -102,7 +103,7 @@ require (
 	github.com/gouniverse/api v1.6.0
 	github.com/gouniverse/cms v1.4.2
 	github.com/gouniverse/customstore v0.5.0
-	github.com/gouniverse/dataobject v0.3.0
+	github.com/gouniverse/dataobject v0.3.0 // indirect
 	github.com/gouniverse/entitystore v0.62.1 // indirect
 	github.com/gouniverse/geostore v0.11.1
 	github.com/gouniverse/maputils v0.7.0

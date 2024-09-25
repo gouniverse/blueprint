@@ -4,22 +4,27 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"project/config"
 	"project/internal/helpers"
 	"project/internal/links"
 	"project/internal/testutils"
-	"project/pkg/userstore"
 	"strings"
 
 	"github.com/gouniverse/auth"
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/strutils"
+	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 )
+
+const msgAccountNotFound = `Your account may have been deactivated or deleted. Please contact our support team for assistance.`
+const msgAccountNotActive = `Your account is not active. Please contact our support team for assistance.`
+const msgUserNotFound = `An unexpected error has occurred trying to find your account. The support team has been notified.`
 
 // == CONTROLLER ==============================================================
 
@@ -70,15 +75,15 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 
 	if errUser != nil {
 		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > User Create Error: ", errUser.Error())
-		return helpers.ToFlashError(w, r, "Error finding user", links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, msgUserNotFound, links.NewWebsiteLinks().Home(), 5)
 	}
 
 	if user == nil {
-		return helpers.ToFlashError(w, r, "User account not found", links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, msgAccountNotFound, links.NewWebsiteLinks().Home(), 5)
 	}
 
 	if !user.IsActive() {
-		return helpers.ToFlashError(w, r, "User account not active. Please contact support", links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, msgAccountNotActive, links.NewWebsiteLinks().Home(), 5)
 	}
 
 	sessionKey := strutils.RandomFromGamma(64, "BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz")
@@ -95,14 +100,14 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 
 	auth.AuthCookieSet(w, r, sessionKey)
 
-	redirectUrl := c.calculateRedirectURL(*user)
+	redirectUrl := c.calculateRedirectURL(user)
 
 	return helpers.ToFlashSuccess(w, r, "Login was successful", redirectUrl, 5)
 }
 
 // == PRIVATE METHODS =========================================================
 
-func (c *authenticationController) userFindByEmailOrCreate(email string, status string) (*userstore.User, error) {
+func (c *authenticationController) userFindByEmailOrCreate(email string, status string) (userstore.UserInterface, error) {
 	userID, err := c.findEmailInBlindIndex(email)
 
 	if err != nil {
@@ -120,13 +125,16 @@ func (c *authenticationController) userFindByEmailOrCreate(email string, status 
 	}
 
 	if user == nil {
+		config.Logger.Error("At Auth Controller > userFindByEmailOrCreate",
+			slog.String("error", "User not found, even though email was found in the blind index, and user ID returned successfully"),
+			"user", userID)
 		return nil, nil
 	}
 
 	return user, nil
 }
 
-func (c *authenticationController) userCreate(email string, status string) (*userstore.User, error) {
+func (c *authenticationController) userCreate(email string, status string) (userstore.UserInterface, error) {
 	user := userstore.NewUser().
 		SetStatus(status).
 		SetEmail(email)
@@ -190,7 +198,7 @@ func (c *authenticationController) emailFromAuthKnightRequest(r *http.Request) (
 
 	response, err := c.callAuthKnight(once)
 	if err != nil {
-		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Call Auth Knight Error: ", err.Error())
+		config.LogStore.ErrorWithContext("At Auth Controller > emailFromAuthKnightRequest > Call Auth Knight Error: ", err.Error())
 		return "", "No response from authentication provider"
 	}
 
@@ -284,7 +292,7 @@ func (*authenticationController) callAuthKnight(once string) (map[string]interfa
 //
 // Returns:
 // - string: The redirect URL.
-func (c *authenticationController) calculateRedirectURL(user userstore.User) string {
+func (c *authenticationController) calculateRedirectURL(user userstore.UserInterface) string {
 	// 1. By default all users redirect to home
 	redirectUrl := links.NewUserLinks().Home(map[string]string{})
 
