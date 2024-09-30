@@ -164,7 +164,7 @@ func (controller *blogController) page(data blogControllerData) string {
 		})
 
 	return hb.NewWrap().Children([]hb.TagInterface{
-		hb.NewHTML(controller.sectionBanner()),
+		hb.Raw(controller.sectionBanner()),
 		section,
 	}).ToHTML()
 }

@@ -326,7 +326,7 @@ func (controller *profileController) selectTimezoneByCountry(country string, sel
 
 	if errZones != nil {
 		config.LogStore.ErrorWithContext("Error listing timezones", errZones.Error())
-		return hb.NewHTML("Error listing timezones")
+		return hb.Text("Error listing timezones")
 	}
 
 	selectTimezones := bs.FormSelect().

@@ -192,7 +192,7 @@ func (w *blogPostWidget) sectionPost(post blogstore.Post) *hb.Tag {
 									Src(post.ImageUrlOrDefault()),
 							}),
 						hb.NewDiv().Class("BlogContent").Children([]hb.TagInterface{
-							hb.NewHTML(w.processContent(post.Content(), post.Editor())),
+							hb.Raw(w.processContent(post.Content(), post.Editor())),
 						}),
 					}),
 				}),

@@ -24,7 +24,7 @@ func adminCrudLayout(_ http.ResponseWriter, r *http.Request, title string, conte
 	// cfmt.Infoln(styleURLs)
 	dashboard := NewAdminLayout(r, Options{
 		Title:      title,
-		Content:    hb.NewHTML(content),
+		Content:    hb.Raw(content),
 		Scripts:    []string{js},
 		ScriptURLs: jsURLs,
 		StyleURLs:  styleURLs,

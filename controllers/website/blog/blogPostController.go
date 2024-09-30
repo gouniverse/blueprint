@@ -117,7 +117,7 @@ func (c blogPostController) page(post blogstore.Post) string {
 	return hb.NewWrap().Children([]hb.TagInterface{
 		// hb.NewStyle(c.cssSectionIntro()),
 		hb.NewStyle(c.css()),
-		hb.NewHTML(sectionBanner),
+		hb.Raw(sectionBanner),
 		// c.sectionIntro(),
 		c.sectionPost(post),
 	}).ToHTML()
@@ -180,12 +180,12 @@ func (c *blogPostController) sectionPost(post blogstore.Post) *hb.Tag {
 						}),
 					}),
 					hb.NewDiv().Class("BlogContent").Children([]hb.TagInterface{
-						hb.NewHTML(c.processContent(post.Content(), post.Editor())),
+						hb.Raw(c.processContent(post.Content(), post.Editor())),
 					}),
 				}),
 				// bs.Column(8).Children([]hb.TagInterface{
 				// 	hb.NewDiv().Class("BlogContent").Children([]hb.TagInterface{
-				// 		hb.NewHTML(post.Content()),
+				// 		hb.Raw(post.Content()),
 				// 	}),
 				// }),
 				// bs.Column(4).Children([]hb.TagInterface{

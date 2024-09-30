@@ -19,7 +19,7 @@ func (controller cmsController) AnyIndex(w http.ResponseWriter, r *http.Request)
 	config.Cms.SetFuncLayout(func(content string) string {
 		return layouts.NewAdminLayout(r, layouts.Options{
 			Title:   "CMS",
-			Content: hb.NewHTML(content),
+			Content: hb.Raw(content),
 		}).ToHTML()
 	})
 

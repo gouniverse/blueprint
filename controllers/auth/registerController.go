@@ -177,7 +177,7 @@ func (controller *registerController) pageHTML(data registerControllerData) *hb.
 		Class(`container container-xs text-center`).
 		Child(hb.NewBR()).
 		Child(hb.NewBR()).
-		Child(hb.NewHTML(layouts.LogoHTML())).
+		Child(hb.Raw(layouts.LogoHTML())).
 		Child(hb.NewBR()).
 		Child(hb.NewBR()).
 		Child(hb.NewHeading1().Text("Complete registration").Style(`font-size:24px;`)).
@@ -473,7 +473,7 @@ func (controller *registerController) selectTimezoneByCountry(country string, se
 
 	if errZones != nil {
 		config.LogStore.ErrorWithContext("Error listing timezones", errZones.Error())
-		return hb.NewHTML("Error listing timezones")
+		return hb.Raw("Error listing timezones")
 	}
 
 	selectTimezones := bs.FormSelect().

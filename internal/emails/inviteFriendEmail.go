@@ -85,7 +85,7 @@ func (e *inviteFriendEmail) template(userName string, userNote string, recipient
 
 	p7 := hb.NewParagraph().
 		Children([]hb.TagInterface{
-			hb.NewHTML(`Thank you for choosing ` + urlHome + `.`),
+			hb.Raw(`Thank you for choosing ` + urlHome + `.`),
 		}).
 		Style(STYLE_PARAGRAPH)
 

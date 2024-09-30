@@ -118,7 +118,7 @@ func (controller *mediaManagerController) init(r *http.Request) string {
 	controller.funcLayout = func(content string) string {
 		return layouts.NewAdminLayout(r, layouts.Options{
 			Title:   "File Manager",
-			Content: hb.NewHTML(content),
+			Content: hb.Raw(content),
 		}).ToHTML()
 	}
 
