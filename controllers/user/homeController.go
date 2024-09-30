@@ -55,7 +55,7 @@ func (controller *homeController) view(data homeControllerData) *hb.Tag {
 		userName = data.userEmail
 	}
 
-	return hb.NewWrap().HTML("Hi, " + userName + ". You are in user dashboard")
+	return hb.Wrap().HTML("Hi, " + userName + ". You are in user dashboard")
 }
 
 func (controller *homeController) prepareData(r *http.Request) (data homeControllerData, errorMessage string) {

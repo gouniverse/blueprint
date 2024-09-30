@@ -84,32 +84,32 @@ func (controller postUpdateController) page(data postUpdateControllerData) hb.Ta
 		},
 	})
 
-	buttonSave := hb.NewButton().
+	buttonSave := hb.Button().
 		Class("btn btn-primary ms-2 float-end").
-		Child(hb.NewI().Class("bi bi-save").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
+		Child(hb.I().Class("bi bi-save").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
 		HTML("Save").
 		HxInclude("#FormPostUpdate").
 		HxPost(links.NewAdminLinks().BlogPostUpdate(map[string]string{"postID": data.postID})).
 		HxTarget("#FormPostUpdate")
 
-	buttonCancel := hb.NewHyperlink().
+	buttonCancel := hb.Hyperlink().
 		Class("btn btn-secondary ms-2 float-end").
-		Child(hb.NewI().Class("bi bi-chevron-left").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
+		Child(hb.I().Class("bi bi-chevron-left").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
 		HTML("Back").
 		Href(links.NewAdminLinks().BlogPostManager(map[string]string{}))
 
-	heading := hb.NewHeading1().
+	heading := hb.Heading1().
 		HTML("Edit Post").
 		Child(buttonSave).
 		Child(buttonCancel)
 
-	card := hb.NewDiv().
+	card := hb.Div().
 		Class("card").
 		Child(
-			hb.NewDiv().
+			hb.Div().
 				Class("card-header").
 				Style(`display:flex;justify-content:space-between;align-items:center;`).
-				Child(hb.NewHeading4().
+				Child(hb.Heading4().
 					HTMLIf(data.view == VIEW_DETAILS, "Post Details").
 					HTMLIf(data.view == VIEW_CONTENT, "Post Contents").
 					HTMLIf(data.view == VIEW_SEO, "Post SEO").
@@ -117,7 +117,7 @@ func (controller postUpdateController) page(data postUpdateControllerData) hb.Ta
 				Child(buttonSave),
 		).
 		Child(
-			hb.NewDiv().
+			hb.Div().
 				Class("card-body").
 				Child(controller.form(data)))
 
@@ -148,12 +148,12 @@ func (controller postUpdateController) page(data postUpdateControllerData) hb.Ta
 				})).
 				HTML("SEO")))
 
-	postTitle := hb.NewHeading2().
+	postTitle := hb.Heading2().
 		Class("mb-3").
 		HTML("Post: ").
 		HTML(data.post.Title())
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("container").
 		Child(heading).
 		Child(breadcrumbs).
@@ -348,7 +348,7 @@ linkTargets: ['_blank'],
 	}
 
 	if editor == blogstore.POST_EDITOR_BLOCKAREA {
-		contentScript := hb.NewScript(`
+		contentScript := hb.Script(`
 setTimeout(() => {
 	const textArea = document.querySelector('textarea[name="post_content"]');
 	// get ID
@@ -372,7 +372,7 @@ setTimeout(() => {
 	}
 
 	if editor == blogstore.POST_EDITOR_MARKDOWN {
-		contentScript := hb.NewScript(`
+		contentScript := hb.Script(`
 setTimeout(() => {
 	const textArea = document.querySelector('textarea[name="post_content"]');
 	textArea.style.height = '300px';
@@ -449,20 +449,20 @@ setTimeout(() => {
 	if data.formErrorMessage != "" {
 		formPostUpdate.AddField(form.Field{
 			Type:  form.FORM_FIELD_TYPE_RAW,
-			Value: hb.NewSwal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
+			Value: hb.Swal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
 		})
 	}
 
 	if data.formSuccessMessage != "" {
 		formPostUpdate.AddField(form.Field{
 			Type:  form.FORM_FIELD_TYPE_RAW,
-			Value: hb.NewSwal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
+			Value: hb.Swal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
 		})
 	}
 
 	return formPostUpdate.Build()
 
-	// required := hb.NewSup().HTML("required").Style("color:red;margin-left:10px;")
+	// required := hb.Sup().HTML("required").Style("color:red;margin-left:10px;")
 
 	// // Status
 	// fomrGroupStatus := bs.FormGroup().
@@ -550,7 +550,7 @@ setTimeout(() => {
 	// 			AttrIf(data.formFeatured == "no", "selected", "selected")),
 	// 	)
 
-	// form := hb.NewForm().
+	// form := hb.Form().
 	// 	ID("FormPostUpdate").
 	// 	Child(formGroupTitle).
 	// 	Child(fomrGroupStatus).
@@ -561,11 +561,11 @@ setTimeout(() => {
 	// 	Child(formGroupPostId)
 
 	// if data.formErrorMessage != "" {
-	// 	form.Child(hb.NewSwal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}))
+	// 	form.Child(hb.Swal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}))
 	// }
 
 	// if data.formSuccessMessage != "" {
-	// 	form.Child(hb.NewSwal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}))
+	// 	form.Child(hb.Swal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}))
 	// }
 
 	// return form

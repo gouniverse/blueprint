@@ -15,7 +15,7 @@ func (controller *queueManagerController) onModalQueuedTaskRequeueSubmitted(r *h
 	taskParameters := strings.TrimSpace(utils.Req(r, "task_parameters", ""))
 
 	if taskID == "" {
-		return hb.NewSwal(hb.SwalOptions{Title: "Error", Text: "Task is required"}).ToHTML()
+		return hb.Swal(hb.SwalOptions{Title: "Error", Text: "Task is required"}).ToHTML()
 	}
 
 	if taskParameters == "" {
@@ -23,19 +23,19 @@ func (controller *queueManagerController) onModalQueuedTaskRequeueSubmitted(r *h
 	}
 
 	if !utils.IsJSON(taskParameters) {
-		return hb.NewSwal(hb.SwalOptions{Icon: "error", Title: "Error", Text: "Task Parameters is not valid JSON"}).ToHTML()
+		return hb.Swal(hb.SwalOptions{Icon: "error", Title: "Error", Text: "Task Parameters is not valid JSON"}).ToHTML()
 	}
 
 	task := config.TaskStore.TaskFindByID(taskID)
 	if task == nil {
-		return hb.NewSwal(hb.SwalOptions{Title: "Error", Text: "Task not found"}).ToHTML()
+		return hb.Swal(hb.SwalOptions{Title: "Error", Text: "Task not found"}).ToHTML()
 	}
 
 	taskParametersAny, err := utils.FromJSON(taskParameters, map[string]interface{}{})
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At adminTasks > onModalTaskEnqueueSubmitted", err.Error())
-		return hb.NewDiv().Class("alert alert-danger").Text("Task failed to be enqueued").ToHTML()
+		return hb.Div().Class("alert alert-danger").Text("Task failed to be enqueued").ToHTML()
 	}
 
 	taskParametersMap := maputils.AnyToMapStringAny(taskParametersAny)
@@ -43,12 +43,12 @@ func (controller *queueManagerController) onModalQueuedTaskRequeueSubmitted(r *h
 	_, err = config.TaskStore.TaskEnqueueByAlias(task.Alias, taskParametersMap)
 	if err != nil {
 		config.LogStore.ErrorWithContext("At adminTasks > onModalTaskEnqueueSubmitted", err.Error())
-		return hb.NewDiv().Class("alert alert-danger").Text("Task failed to be enqueued").ToHTML()
+		return hb.Div().Class("alert alert-danger").Text("Task failed to be enqueued").ToHTML()
 	}
 
-	response := hb.NewSwal(hb.SwalOptions{Icon: "success", Title: "Success", Text: "Task enqueued successfully"}).ToHTML()
+	response := hb.Swal(hb.SwalOptions{Icon: "success", Title: "Success", Text: "Task enqueued successfully"}).ToHTML()
 
-	response += hb.NewScript(`setTimeout(() => {window.location.href = window.location.href;}, 3000);`).ToHTML()
+	response += hb.Script(`setTimeout(() => {window.location.href = window.location.href;}, 3000);`).ToHTML()
 
 	return response
 

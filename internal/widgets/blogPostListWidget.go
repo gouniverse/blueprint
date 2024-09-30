@@ -92,24 +92,23 @@ func (widget *blogPostListWidget) postTiles(data blogPostListWidgetData) *hb.Tag
 
 		postURL := links.NewWebsiteLinks().BlogPost(post.ID(), post.Slug())
 
-		postImage := hb.NewImage().
-			Src(postImageURL).
+		postImage := hb.Image(postImageURL).
 			Class("card-img-top rounded-3").
 			Style("object-fit: cover;").
 			Style("max-height: 180px;").
 			Style("aspect-ratio: 9/6;").
 			Alt("")
 
-		postTitle := hb.NewHeading5().
+		postTitle := hb.Heading5().
 			Class("card-title").
 			Style("font-size: 16px; margin-bottom: 10px; text-align: left; font-weight: 800;").
 			Text(post.Title())
 
-		postPublished := hb.NewParagraph().
+		postPublished := hb.Paragraph().
 			Style("font-size: 12px;	color: #6c757d;	margin-bottom: 20px; text-align: right;").
 			Text(publishedAt)
 
-		postSummary := hb.NewParagraph().
+		postSummary := hb.Paragraph().
 			Class("card-text").
 			Text(post.Summary()).
 			Style(`text-align: left;`).
@@ -121,46 +120,46 @@ func (widget *blogPostListWidget) postTiles(data blogPostListWidgetData) *hb.Tag
 			Style(`-webkit-line-clamp: 2;`).
 			Style(`-webkit-box-orient: vertical;`)
 
-		separator := hb.NewHR().
+		separator := hb.HR().
 			Style(`width: 80%`).
 			Style(`margin: 0 auto`).
 			Style(`border: 0`).
 			Style(`height: 2px`).
 			Style(`background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0))`)
 
-		card := hb.NewDiv().
+		card := hb.Div().
 			Class("card").
 			Style("border: none;").
 			Child(postImage).
-			Child(hb.NewDiv().
+			Child(hb.Div().
 				Class("card-body").
 				Style(`padding: 20px 10px;`).
 				Child(postTitle).
 				Child(postSummary)).
-			Child(hb.NewDiv().
+			Child(hb.Div().
 				Class("card-footer").
 				Style(`background: none;border: none;padding: 0px;`).
 				Child(postPublished).
 				Child(separator))
 
-		link := hb.NewHyperlink().
+		link := hb.Hyperlink().
 			Href(postURL).
 			// Target("_blank").
 			Style("text-decoration: none; color: inherit;").
 			Style("display: flex; height: 100%;").
 			Child(card)
 
-		return hb.NewDiv().
+		return hb.Div().
 			Class("col-md-3 col-sm-6 d-flex align-items-stretch").
 			Child(link)
 	})
 
-	return hb.NewSection().
+	return hb.Section().
 		Style("background:#fff;padding-top:40px; padding-bottom: 40px;").
 		Children([]hb.TagInterface{
 			bs.Container().Children([]hb.TagInterface{
 				bs.Row().Class(`g-4`).Children(columnCards),
-				hb.NewDiv().Class(`d-flex justify-content-center mt-5 pagination-primary-soft rounded mb-0`).HTML(pagination),
+				hb.Div().Class(`d-flex justify-content-center mt-5 pagination-primary-soft rounded mb-0`).HTML(pagination),
 			}),
 		})
 

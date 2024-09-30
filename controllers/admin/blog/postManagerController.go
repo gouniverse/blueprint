@@ -67,19 +67,19 @@ func (controller *blogPostManagerController) page(data blogPostManagerController
 		},
 	})
 
-	buttonPostNew := hb.NewButton().
+	buttonPostNew := hb.Button().
 		Class("btn btn-primary float-end").
-		Child(hb.NewI().Class("bi bi-plus-circle").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
+		Child(hb.I().Class("bi bi-plus-circle").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
 		HTML("New Post").
 		HxGet(links.NewAdminLinks().BlogPostCreate(map[string]string{})).
 		HxTarget("body").
 		HxSwap("beforeend")
 
-	title := hb.NewHeading1().
+	title := hb.Heading1().
 		HTML("Blog. Post Manager").
 		Child(buttonPostNew)
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("container").
 		Child(title).
 		Child(breadcrumbs).
@@ -135,42 +135,42 @@ func (controller *blogPostManagerController) prepareData(r *http.Request) (data 
 }
 
 func (controller *blogPostManagerController) tablePosts(data blogPostManagerControllerData) hb.TagInterface {
-	table := hb.NewTable().
+	table := hb.Table().
 		Class("table table-striped table-hover table-bordered").
 		Children([]hb.TagInterface{
-			hb.NewThead().Children([]hb.TagInterface{
-				hb.NewTR().Children([]hb.TagInterface{
-					hb.NewTH().
+			hb.Thead().Children([]hb.TagInterface{
+				hb.TR().Children([]hb.TagInterface{
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Post", "title")).
 						Text(", ").
 						Child(controller.sortableColumnLabel(data, "Reference", "title")).
 						Style(`cursor: pointer;`),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Status", "status")).
 						Style("width: 200px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Featured", "featured")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Published", "published_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Created", "created_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Modified", "updated_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						HTML("Actions"),
 				}),
 			}),
-			hb.NewTbody().Children(lo.Map(data.blogList, func(blog blogstore.Post, _ int) hb.TagInterface {
-				blogLink := hb.NewHyperlink().
+			hb.Tbody().Children(lo.Map(data.blogList, func(blog blogstore.Post, _ int) hb.TagInterface {
+				blogLink := hb.Hyperlink().
 					HTML(blog.Title()).
 					Href(links.NewWebsiteLinks().BlogPost(blog.ID(), blog.Slug())).
 					Target("_blank")
 
-				status := hb.NewSpan().
+				status := hb.Span().
 					Style(`font-weight: bold;`).
 					StyleIf(blog.IsPublished(), `color:green;`).
 					StyleIf(blog.IsTrashed(), `color:silver;`).
@@ -178,45 +178,45 @@ func (controller *blogPostManagerController) tablePosts(data blogPostManagerCont
 					StyleIf(blog.IsUnpublished(), `color:red;`).
 					HTML(blog.Status())
 
-				buttonEdit := hb.NewHyperlink().
+				buttonEdit := hb.Hyperlink().
 					Class("btn btn-primary me-2").
-					Child(hb.NewI().Class("bi bi-pencil-square")).
+					Child(hb.I().Class("bi bi-pencil-square")).
 					Title("Edit").
 					Href(links.NewAdminLinks().BlogPostUpdate(map[string]string{"post_id": blog.ID()})).
 					Target("_blank")
 
-				buttonDelete := hb.NewHyperlink().
+				buttonDelete := hb.Hyperlink().
 					Class("btn btn-danger").
-					Child(hb.NewI().Class("bi bi-trash")).
+					Child(hb.I().Class("bi bi-trash")).
 					Title("Delete").
 					HxGet(links.NewAdminLinks().BlogPostDelete(map[string]string{"post_id": blog.ID()})).
 					HxTarget("body").
 					HxSwap("beforeend")
 
-				return hb.NewTR().Children([]hb.TagInterface{
-					hb.NewTD().
-						Child(hb.NewDiv().Child(blogLink)).
-						Child(hb.NewDiv().
+				return hb.TR().Children([]hb.TagInterface{
+					hb.TD().
+						Child(hb.Div().Child(blogLink)).
+						Child(hb.Div().
 							Style("font-size: 11px;").
 							HTML("Ref: ").
 							HTML(blog.ID())),
-					hb.NewTD().
+					hb.TD().
 						Child(status),
-					hb.NewTD().
+					hb.TD().
 						HTML(blog.Featured()),
-					hb.NewTD().
-						Child(hb.NewDiv().
+					hb.TD().
+						Child(hb.Div().
 							Style("font-size: 13px;white-space: nowrap;").
 							HTML(blog.PublishedAtCarbon().Format("d M Y"))),
-					hb.NewTD().
-						Child(hb.NewDiv().
+					hb.TD().
+						Child(hb.Div().
 							Style("font-size: 13px;white-space: nowrap;").
 							HTML(blog.CreatedAtCarbon().Format("d M Y"))),
-					hb.NewTD().
-						Child(hb.NewDiv().
+					hb.TD().
+						Child(hb.Div().
 							Style("font-size: 13px;white-space: nowrap;").
 							HTML(blog.UpdatedAtCarbon().Format("d M Y"))),
-					hb.NewTD().
+					hb.TD().
 						Child(buttonEdit).
 						Child(buttonDelete),
 				})
@@ -225,7 +225,7 @@ func (controller *blogPostManagerController) tablePosts(data blogPostManagerCont
 
 	// cfmt.Successln("Table: ", table)
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		controller.tableFilter(data),
 		table,
 		controller.tablePagination(data, int(data.blogCount), data.pageInt, data.perPage),
@@ -251,7 +251,7 @@ func (controller *blogPostManagerController) sortableColumnLabel(data blogPostMa
 		"search":      data.search,
 		"customer_id": data.customerID,
 	})
-	return hb.NewHyperlink().
+	return hb.Hyperlink().
 		HTML(tableLabel).
 		Child(controller.sortingIndicator(columnName, data.sortBy, direction)).
 		Href(link)
@@ -264,7 +264,7 @@ func (controller *blogPostManagerController) sortingIndicator(columnName string,
 		ElseIf(isSelected && sortOrder == "desc", "down").
 		Else("none")
 
-	sortingIndicator := hb.NewSpan().
+	sortingIndicator := hb.Span().
 		Class("sorting").
 		HTMLIf(direction == "up", "&#8595;").
 		HTMLIf(direction == "down", "&#8593;").
@@ -282,26 +282,26 @@ func (controller *blogPostManagerController) tableFilter(data blogPostManagerCon
 		{"id": blogstore.POST_STATUS_TRASH, "name": "Deleted"},
 	}
 
-	searchButton := hb.NewButton().
+	searchButton := hb.Button().
 		Type("submit").
-		Child(hb.NewI().Class("bi bi-search")).
+		Child(hb.I().Class("bi bi-search")).
 		Class("btn btn-primary w-100 h-100")
 
-	period := hb.NewDiv().Class("form-group").Children([]hb.TagInterface{
-		hb.NewLabel().
+	period := hb.Div().Class("form-group").Children([]hb.TagInterface{
+		hb.Label().
 			HTML("Period").
 			Style("margin-bottom: 0px;"),
-		hb.NewDiv().Class("input-group").Children([]hb.TagInterface{
-			hb.NewInput().
+		hb.Div().Class("input-group").Children([]hb.TagInterface{
+			hb.Input().
 				Type(hb.TYPE_DATE).
 				Name("date_from").
 				Value(data.dateFrom).
 				OnChange("FORM_TRANSACTIONS.submit()").
 				Class("form-control"),
-			hb.NewSpan().
+			hb.Span().
 				HTML(" : ").
 				Class("input-group-text"),
-			hb.NewInput().
+			hb.Input().
 				Type(hb.TYPE_DATE).
 				Name("date_to").
 				Value(data.dateTo).
@@ -310,11 +310,11 @@ func (controller *blogPostManagerController) tableFilter(data blogPostManagerCon
 		}),
 	})
 
-	search := hb.NewDiv().Class("form-group").Children([]hb.TagInterface{
-		hb.NewLabel().
+	search := hb.Div().Class("form-group").Children([]hb.TagInterface{
+		hb.Label().
 			HTML("Search").
 			Style("margin-bottom: 0px;"),
-		hb.NewInput().
+		hb.Input().
 			Type("search").
 			Name("search").
 			Value(data.search).
@@ -322,48 +322,48 @@ func (controller *blogPostManagerController) tableFilter(data blogPostManagerCon
 			Placeholder("reference, title, content ..."),
 	})
 
-	status := hb.NewDiv().Class("form-group").Children([]hb.TagInterface{
-		hb.NewLabel().
+	status := hb.Div().Class("form-group").Children([]hb.TagInterface{
+		hb.Label().
 			HTML("Status").
 			Style("margin-bottom: 0px;"),
-		hb.NewSelect().
+		hb.Select().
 			Name("status").
 			Class("form-select").
 			OnChange("FORM_TRANSACTIONS.submit()").
 			Children(lo.Map(statusList, func(status map[string]string, index int) hb.TagInterface {
-				return hb.NewOption().
+				return hb.Option().
 					Value(status["id"]).
 					HTML(status["name"]).
 					AttrIf(data.status == status["id"], "selected", "selected")
 			})),
 	})
 
-	form := hb.NewForm().
+	form := hb.Form().
 		ID("FORM_TRANSACTIONS").
 		Style("display: block").
 		Method(http.MethodGet).
 		Children([]hb.TagInterface{
-			hb.NewDiv().Class("row").Children([]hb.TagInterface{
-				hb.NewDiv().Class("col-md-2").Children([]hb.TagInterface{
+			hb.Div().Class("row").Children([]hb.TagInterface{
+				hb.Div().Class("col-md-2").Children([]hb.TagInterface{
 					search,
 				}),
-				hb.NewDiv().Class("col-md-4").Children([]hb.TagInterface{
+				hb.Div().Class("col-md-4").Children([]hb.TagInterface{
 					period,
 				}),
-				hb.NewDiv().Class("col-md-2").Children([]hb.TagInterface{
+				hb.Div().Class("col-md-2").Children([]hb.TagInterface{
 					status,
 				}),
-				hb.NewDiv().Class("col-md-1").Children([]hb.TagInterface{
+				hb.Div().Class("col-md-1").Children([]hb.TagInterface{
 					searchButton,
 				}),
 			}),
 		})
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("card bg-light mb-3").
 		Style("").
 		Children([]hb.TagInterface{
-			hb.NewDiv().Class("card-body").Children([]hb.TagInterface{
+			hb.Div().Class("card-body").Children([]hb.TagInterface{
 				form,
 			}),
 		})
@@ -389,7 +389,7 @@ func (controller *blogPostManagerController) tablePagination(data blogPostManage
 		URL:               url,
 	})
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class(`d-flex justify-content-left mt-5 pagination-primary-soft rounded mb-0`).
 		HTML(pagination)
 }

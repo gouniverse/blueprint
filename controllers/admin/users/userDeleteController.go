@@ -32,19 +32,19 @@ func (controller userDeleteController) Handler(w http.ResponseWriter, r *http.Re
 	data, errorMessage := controller.prepareDataAndValidate(r)
 
 	if errorMessage != "" {
-		return hb.NewSwal(hb.SwalOptions{
+		return hb.Swal(hb.SwalOptions{
 			Icon: "error",
 			Text: errorMessage,
 		}).ToHTML()
 	}
 
 	if data.successMessage != "" {
-		return hb.NewWrap().
-			Child(hb.NewSwal(hb.SwalOptions{
+		return hb.Wrap().
+			Child(hb.Swal(hb.SwalOptions{
 				Icon: "success",
 				Text: data.successMessage,
 			})).
-			Child(hb.NewScript("setTimeout(() => {window.location.href = window.location.href}, 2000)")).
+			Child(hb.Script("setTimeout(() => {window.location.href = window.location.href}, 2000)")).
 			ToHTML()
 	}
 
@@ -61,12 +61,12 @@ func (controller *userDeleteController) modal(data userDeleteControllerData) hb.
 	modalID := "ModalUserDelete"
 	modalBackdropClass := "ModalBackdrop"
 
-	formGroupUserId := hb.NewInput().
+	formGroupUserId := hb.Input().
 		Type(hb.TYPE_HIDDEN).
 		Name("user_id").
 		Value(data.userID)
 
-	buttonDelete := hb.NewButton().
+	buttonDelete := hb.Button().
 		HTML("Delete").
 		Class("btn btn-primary float-end").
 		HxInclude("#Modal" + modalID).
@@ -77,9 +77,9 @@ func (controller *userDeleteController) modal(data userDeleteControllerData) hb.
 
 	modalCloseScript := `closeModal` + modalID + `();`
 
-	modalHeading := hb.NewHeading5().HTML("Delete User").Style(`margin:0px;`)
+	modalHeading := hb.Heading5().HTML("Delete User").Style(`margin:0px;`)
 
-	modalClose := hb.NewButton().Type("button").
+	modalClose := hb.Button().Type("button").
 		Class("btn-close").
 		Data("bs-dismiss", "modal").
 		OnClick(modalCloseScript)
@@ -90,7 +90,7 @@ func (controller *userDeleteController) modal(data userDeleteControllerData) hb.
 		ID(modalID).
 		Class("fade show").
 		Style(`display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1051;`).
-		Child(hb.NewScript(jsCloseFn)).
+		Child(hb.Script(jsCloseFn)).
 		Child(bs.ModalDialog().
 			Child(bs.ModalContent().
 				Child(
@@ -99,24 +99,24 @@ func (controller *userDeleteController) modal(data userDeleteControllerData) hb.
 						Child(modalClose)).
 				Child(
 					bs.ModalBody().
-						Child(hb.NewParagraph().Text("Are you sure you want to delete this user?").Style(`margin-bottom:20px;color:red;`)).
-						Child(hb.NewParagraph().Text("This action cannot be undone.")).
+						Child(hb.Paragraph().Text("Are you sure you want to delete this user?").Style(`margin-bottom:20px;color:red;`)).
+						Child(hb.Paragraph().Text("This action cannot be undone.")).
 						Child(formGroupUserId)).
 				Child(bs.ModalFooter().
 					Style(`display:flex;justify-content:space-between;`).
 					Child(
-						hb.NewButton().HTML("Close").
+						hb.Button().HTML("Close").
 							Class("btn btn-secondary float-start").
 							Data("bs-dismiss", "modal").
 							OnClick(modalCloseScript)).
 					Child(buttonDelete)),
 			))
 
-	backdrop := hb.NewDiv().Class(modalBackdropClass).
+	backdrop := hb.Div().Class(modalBackdropClass).
 		Class("modal-backdrop fade show").
 		Style("display:block;z-index:1000;")
 
-	return hb.NewWrap().
+	return hb.Wrap().
 		Children([]hb.TagInterface{
 			modal,
 			backdrop,

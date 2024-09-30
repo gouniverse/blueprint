@@ -13,23 +13,23 @@ import (
 func (controller *queueManagerController) modalQueuedTaskFilters(data queueManagerControllerData) *hb.Tag {
 	modalCloseScript := `document.getElementById('ModalMessage').remove();document.getElementById('ModalBackdrop').remove();`
 
-	title := hb.NewHeading5().
+	title := hb.Heading5().
 		Text("Queued Task Filters").
 		Style(`margin:0px;padding:0px;`)
 
-	buttonModalClose := hb.NewButton().Type("button").
+	buttonModalClose := hb.Button().Type("button").
 		Class("btn-close").
 		Data("bs-dismiss", "modal").
 		OnClick(modalCloseScript)
 
-	buttonCancel := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-chevron-left me-2")).
+	buttonCancel := hb.Button().
+		Child(hb.I().Class("bi bi-chevron-left me-2")).
 		HTML("Cancel").
 		Class("btn btn-secondary float-start").
 		OnClick(modalCloseScript)
 
-	buttonOk := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-check me-2")).
+	buttonOk := hb.Button().
+		Child(hb.I().Class("bi bi-check me-2")).
 		HTML("Apply").
 		Class("btn btn-primary float-end").
 		OnClick(`FormFilters.submit();` + modalCloseScript)
@@ -144,12 +144,12 @@ func (controller *queueManagerController) modalQueuedTaskFilters(data queueManag
 			}),
 		})
 
-	backdrop := hb.NewDiv().
+	backdrop := hb.Div().
 		ID("ModalBackdrop").
 		Class("modal-backdrop fade show").
 		Style("display:block;")
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		modal,
 		backdrop,
 	})

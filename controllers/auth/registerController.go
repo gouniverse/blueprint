@@ -173,29 +173,29 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 
 func (controller *registerController) pageHTML(data registerControllerData) *hb.Tag {
 	form := controller.formRegister(data)
-	return hb.NewDiv().
+	return hb.Div().
 		Class(`container container-xs text-center`).
-		Child(hb.NewBR()).
-		Child(hb.NewBR()).
+		Child(hb.BR()).
+		Child(hb.BR()).
 		Child(hb.Raw(layouts.LogoHTML())).
-		Child(hb.NewBR()).
-		Child(hb.NewBR()).
-		Child(hb.NewHeading1().Text("Complete registration").Style(`font-size:24px;`)).
-		Child(hb.NewBR()).
+		Child(hb.BR()).
+		Child(hb.BR()).
+		Child(hb.Heading1().Text("Complete registration").Style(`font-size:24px;`)).
+		Child(hb.BR()).
 		Child(form).
-		Child(hb.NewBR()).
-		Child(hb.NewBR())
+		Child(hb.BR()).
+		Child(hb.BR())
 }
 
 func (controller *registerController) formRegister(data registerControllerData) *hb.Tag {
-	required := hb.NewSup().
+	required := hb.Sup().
 		Text("required").
 		Style("margin-left:5px;color:lightcoral;")
 
 	buttonSave := bs.Button().
 		Class("btn-primary mb-0 w-100").
 		Attr("type", "button").
-		Child(hb.NewI().Class("bi bi-check-circle me-2")).
+		Child(hb.I().Class("bi bi-check-circle me-2")).
 		Text("Save changes").
 		HxInclude("#FormRegister").
 		HxTarget("#CardRegister").
@@ -203,7 +203,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 		HxSwap("outerHTML").
 		HxPost(links.NewAuthLinks().Register(map[string]string{}))
 
-	firstNameGroup := hb.NewDiv().
+	firstNameGroup := hb.Div().
 		Class("form-group").
 		Children([]hb.TagInterface{
 			bs.FormLabel("First name").
@@ -213,7 +213,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 				Value(data.firstName),
 		})
 
-	lastNameGroup := hb.NewDiv().
+	lastNameGroup := hb.Div().
 		Class("form-group").
 		Children([]hb.TagInterface{
 			bs.FormLabel("Last name").
@@ -237,7 +237,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 	// 		Value(data.phone),
 	// })
 
-	emailGroup := hb.NewDiv().
+	emailGroup := hb.Div().
 		Class("form-group").
 		Children([]hb.TagInterface{
 			bs.FormLabel("Email").
@@ -263,7 +263,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 		Hx("target", "#SelectTimezones").
 		Hx("swap", "outerHTML")
 
-	countryGroup := hb.NewDiv().
+	countryGroup := hb.Div().
 		Class("form-group").
 		Children([]hb.TagInterface{
 			bs.FormLabel("Country").
@@ -271,7 +271,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 			selectCountries,
 		})
 
-	timezoneGroup := hb.NewDiv().
+	timezoneGroup := hb.Div().
 		Class("form-group").
 		Children([]hb.TagInterface{
 			bs.FormLabel("Timezone").
@@ -279,7 +279,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 			controller.selectTimezoneByCountry(data.country, data.timezone),
 		})
 
-	formProfile := hb.NewDiv().
+	formProfile := hb.Div().
 		ID("FormRegister").
 		Child(
 			bs.Row().
@@ -315,27 +315,27 @@ func (controller *registerController) formRegister(data registerControllerData) 
 			}),
 		)
 
-	return hb.NewDiv().ID("CardRegister").
+	return hb.Div().ID("CardRegister").
 		Class("card bg-white border rounded-3").
 		Style("text-align:left;").
 		Children([]hb.TagInterface{
-			hb.NewDiv().Class("card-header  bg-transparent").Children([]hb.TagInterface{
-				hb.NewHeading3().
+			hb.Div().Class("card-header  bg-transparent").Children([]hb.TagInterface{
+				hb.Heading3().
 					Text("Your Details").
 					Style("text-align:left;font-size:12px;color:#333;margin:0px;"),
 			}),
-			hb.NewDiv().Class("card-body").Children([]hb.TagInterface{
+			hb.Div().Class("card-body").Children([]hb.TagInterface{
 				formProfile,
 			}),
 		}).
-		ChildIf(data.formErrorMessage != "", hb.NewSwal(hb.SwalOptions{
+		ChildIf(data.formErrorMessage != "", hb.Swal(hb.SwalOptions{
 			Icon:              "error",
 			Title:             "Oops...",
 			Text:              data.formErrorMessage,
 			ShowCancelButton:  false,
 			ConfirmButtonText: "OK",
 		})).
-		ChildIf(data.formSuccessMessage != "", hb.NewSwal(hb.SwalOptions{
+		ChildIf(data.formSuccessMessage != "", hb.Swal(hb.SwalOptions{
 			Icon:              "success",
 			Title:             "Saved",
 			Text:              data.formSuccessMessage,
@@ -343,7 +343,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 			ConfirmButtonText: "OK",
 			ConfirmCallback:   "window.location.href = window.location.href",
 		})).
-		ChildIf(data.formRedirectURL != "", hb.NewScript(`window.location.href = '`+data.formRedirectURL+`'`))
+		ChildIf(data.formRedirectURL != "", hb.Script(`window.location.href = '`+data.formRedirectURL+`'`))
 }
 
 func (controller *registerController) untokenizeData(user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {

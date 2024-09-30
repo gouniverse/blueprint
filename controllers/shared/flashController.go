@@ -35,7 +35,7 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 
 	if authUser != nil && authUser.IsRegistrationCompleted() {
 		return layouts.NewUserLayout(r, layouts.Options{
-			Title: "System Message",
+			Title:      "System Message",
 			Content:    controller.pageHTML(r),
 			ScriptURLs: []string{cdn.BootstrapJs_5_3_0()},
 			Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
@@ -76,7 +76,7 @@ func (c flashController) pageHTML(r *http.Request) *hb.Tag {
 		time = utils.ToString(msgDataAny["time"])
 	}
 
-	alert := hb.NewDiv()
+	alert := hb.Div()
 	alertIcon := ""
 	if msgType == "error" {
 		alert.Class("alert alert-danger")
@@ -100,26 +100,26 @@ func (c flashController) pageHTML(r *http.Request) *hb.Tag {
 
 	icon := strings.ReplaceAll(alertIcon, "height=\"16\"", "height=\"24\"")
 	icon = strings.ReplaceAll(icon, "width=\"16\"", "width=\"24\"")
-	alert.AddChild(hb.NewSpan().Child(hb.NewSpan().HTML(icon).Style("position:absolute;top:-16px;")).Style("position:relative; margin:0px 20px 0px 0px; display:inline-table;width:24px;"))
-	alert.AddChild(hb.NewSpan().HTML(message))
+	alert.AddChild(hb.Span().Child(hb.Span().HTML(icon).Style("position:absolute;top:-16px;")).Style("position:relative; margin:0px 20px 0px 0px; display:inline-table;width:24px;"))
+	alert.AddChild(hb.Span().HTML(message))
 
-	container := hb.NewDiv().Class("container").Style("padding:0px 0px 20px 0px;")
-	container.AddChild(hb.NewStyle(css))
+	container := hb.Div().Class("container").Style("padding:0px 0px 20px 0px;")
+	container.AddChild(hb.Style(css))
 	container.AddChild(alert)
 
 	if url != "" {
-		link := hb.NewHyperlink().Href(url).HTML("Click here to continue")
-		divLink := hb.NewDiv()
+		link := hb.Hyperlink().Href(url).HTML("Click here to continue")
+		divLink := hb.Div()
 		divLink.AddChild(link).Style("padding:20px 0px 20px 0px;")
 		container.AddChild(divLink)
 	}
 
 	if url != "" && time != "" {
-		script := hb.NewScript("setTimeout(()=>{location.href=\"" + url + "\"}, " + time + "*1000)")
+		script := hb.Script("setTimeout(()=>{location.href=\"" + url + "\"}, " + time + "*1000)")
 		container.AddChild(script)
 	}
 
-	return hb.NewSection().
+	return hb.Section().
 		Children([]hb.TagInterface{
 			container,
 		}).

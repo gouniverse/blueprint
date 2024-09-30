@@ -61,23 +61,23 @@ func (controller *userManagerController) Handler(w http.ResponseWriter, r *http.
 func (controller *userManagerController) onModalUserFilterShow(data userManagerControllerData) *hb.Tag {
 	modalCloseScript := `document.getElementById('ModalMessage').remove();document.getElementById('ModalBackdrop').remove();`
 
-	title := hb.NewHeading5().
+	title := hb.Heading5().
 		Text("Filters").
 		Style(`margin:0px;padding:0px;`)
 
-	buttonModalClose := hb.NewButton().Type("button").
+	buttonModalClose := hb.Button().Type("button").
 		Class("btn-close").
 		Data("bs-dismiss", "modal").
 		OnClick(modalCloseScript)
 
-	buttonCancel := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-chevron-left me-2")).
+	buttonCancel := hb.Button().
+		Child(hb.I().Class("bi bi-chevron-left me-2")).
 		HTML("Cancel").
 		Class("btn btn-secondary float-start").
 		OnClick(modalCloseScript)
 
-	buttonOk := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-check me-2")).
+	buttonOk := hb.Button().
+		Child(hb.I().Class("bi bi-check me-2")).
 		HTML("Apply").
 		Class("btn btn-primary float-end").
 		OnClick(`FormFilters.submit();` + modalCloseScript)
@@ -183,12 +183,12 @@ func (controller *userManagerController) onModalUserFilterShow(data userManagerC
 			}),
 		})
 
-	backdrop := hb.NewDiv().
+	backdrop := hb.Div().
 		ID("ModalBackdrop").
 		Class("modal-backdrop fade show").
 		Style("display:block;")
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		modal,
 		backdrop,
 	})
@@ -211,56 +211,56 @@ func (controller *userManagerController) page(data userManagerControllerData) hb
 		},
 	})
 
-	buttonUserNew := hb.NewButton().
+	buttonUserNew := hb.Button().
 		Class("btn btn-primary float-end").
-		Child(hb.NewI().Class("bi bi-plus-circle").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
+		Child(hb.I().Class("bi bi-plus-circle").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
 		HTML("New User").
 		HxGet(links.NewAdminLinks().UsersUserCreate(map[string]string{})).
 		HxTarget("body").
 		HxSwap("beforeend")
 
-	title := hb.NewHeading1().
+	title := hb.Heading1().
 		HTML("Users. User Manager").
 		Child(buttonUserNew)
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("container").
 		Child(breadcrumbs).
-		Child(hb.NewHR()).
+		Child(hb.HR()).
 		Child(title).
 		Child(controller.tableUsers(data))
 }
 
 func (controller *userManagerController) tableUsers(data userManagerControllerData) hb.TagInterface {
-	table := hb.NewTable().
+	table := hb.Table().
 		Class("table table-striped table-hover table-bordered").
 		Children([]hb.TagInterface{
-			hb.NewThead().Children([]hb.TagInterface{
-				hb.NewTR().Children([]hb.TagInterface{
-					hb.NewTH().
+			hb.Thead().Children([]hb.TagInterface{
+				hb.TR().Children([]hb.TagInterface{
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "First Name", "first_name")).
 						Text(", ").
 						Child(controller.sortableColumnLabel(data, "Last Name", "last_name")).
 						Text(", ").
 						Child(controller.sortableColumnLabel(data, "Reference", "id")).
 						Style(`cursor: pointer;`),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Status", "status")).
 						Style("width: 200px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "E-mail", "email")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Created", "created_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Modified", "updated_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						HTML("Actions"),
 				}),
 			}),
-			hb.NewTbody().Children(lo.Map(data.userList, func(user userstore.UserInterface, _ int) hb.TagInterface {
+			hb.Tbody().Children(lo.Map(data.userList, func(user userstore.UserInterface, _ int) hb.TagInterface {
 				firstName, lastName, email, err := helpers.UserUntokenized(user)
 
 				if err != nil {
@@ -270,13 +270,13 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 					email = "n/a"
 				}
 
-				userLink := hb.NewHyperlink().
+				userLink := hb.Hyperlink().
 					Text(firstName).
 					Text(` `).
 					Text(lastName).
 					Href(links.NewAdminLinks().UsersUserUpdate(map[string]string{"user_id": user.ID()}))
 
-				status := hb.NewSpan().
+				status := hb.Span().
 					Style(`font-weight: bold;`).
 					StyleIf(user.IsActive(), `color:green;`).
 					StyleIf(user.IsDeleted(), `color:silver;`).
@@ -284,49 +284,49 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 					StyleIf(user.IsInactive(), `color:red;`).
 					HTML(user.Status())
 
-				buttonEdit := hb.NewHyperlink().
+				buttonEdit := hb.Hyperlink().
 					Class("btn btn-primary me-2").
-					Child(hb.NewI().Class("bi bi-pencil-square")).
+					Child(hb.I().Class("bi bi-pencil-square")).
 					Title("Edit").
 					Href(links.NewAdminLinks().UsersUserUpdate(map[string]string{"user_id": user.ID()})).
 					Target("_blank")
 
-				buttonDelete := hb.NewHyperlink().
+				buttonDelete := hb.Hyperlink().
 					Class("btn btn-danger").
-					Child(hb.NewI().Class("bi bi-trash")).
+					Child(hb.I().Class("bi bi-trash")).
 					Title("Delete").
 					HxGet(links.NewAdminLinks().UsersUserDelete(map[string]string{"user_id": user.ID()})).
 					HxTarget("body").
 					HxSwap("beforeend")
 
-				buttonImpersonate := hb.NewHyperlink().
+				buttonImpersonate := hb.Hyperlink().
 					Class("btn btn-warning me-2").
-					Child(hb.NewI().Class("bi bi-shuffle")).
+					Child(hb.I().Class("bi bi-shuffle")).
 					Title("Impersonate").
 					Href(links.NewAdminLinks().UsersUserImpersonate(map[string]string{"user_id": user.ID()}))
 
-				return hb.NewTR().Children([]hb.TagInterface{
-					hb.NewTD().
-						Child(hb.NewDiv().Child(userLink)).
-						Child(hb.NewDiv().
+				return hb.TR().Children([]hb.TagInterface{
+					hb.TD().
+						Child(hb.Div().Child(userLink)).
+						Child(hb.Div().
 							Style("font-size: 11px;").
 							HTML("Ref: ").
 							HTML(user.ID())),
-					hb.NewTD().
+					hb.TD().
 						Child(status),
-					hb.NewTD().
-						Child(hb.NewDiv().
+					hb.TD().
+						Child(hb.Div().
 							Style("font-size: 13px;white-space: nowrap;").
 							HTML(email)),
-					hb.NewTD().
-						Child(hb.NewDiv().
+					hb.TD().
+						Child(hb.Div().
 							Style("font-size: 13px;white-space: nowrap;").
 							HTML(user.CreatedAtCarbon().Format("d M Y"))),
-					hb.NewTD().
-						Child(hb.NewDiv().
+					hb.TD().
+						Child(hb.Div().
 							Style("font-size: 13px;white-space: nowrap;").
 							HTML(user.UpdatedAtCarbon().Format("d M Y"))),
-					hb.NewTD().
+					hb.TD().
 						Child(buttonEdit).
 						Child(buttonImpersonate).
 						Child(buttonDelete),
@@ -336,7 +336,7 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 
 	// cfmt.Successln("Table: ", table)
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		controller.tableFilter(data),
 		table,
 		controller.tablePagination(data, int(data.userCount), data.pageInt, data.perPage),
@@ -361,7 +361,7 @@ func (controller *userManagerController) sortableColumnLabel(data userManagerCon
 		"status":    data.formStatus,
 		"user_id":   data.formUserID,
 	})
-	return hb.NewHyperlink().
+	return hb.Hyperlink().
 		HTML(tableLabel).
 		Child(controller.sortingIndicator(columnName, data.sortBy, direction)).
 		Href(link)
@@ -374,7 +374,7 @@ func (controller *userManagerController) sortingIndicator(columnName string, sor
 		ElseIf(isSelected && sortOrder == "desc", "down").
 		Else("none")
 
-	sortingIndicator := hb.NewSpan().
+	sortingIndicator := hb.Span().
 		Class("sorting").
 		HTMLIf(direction == "up", "&#8595;").
 		HTMLIf(direction == "down", "&#8593;").
@@ -384,10 +384,10 @@ func (controller *userManagerController) sortingIndicator(columnName string, sor
 }
 
 func (controller *userManagerController) tableFilter(data userManagerControllerData) hb.TagInterface {
-	buttonFilter := hb.NewButton().
+	buttonFilter := hb.Button().
 		Class("btn btn-sm btn-info me-2").
 		Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
-		Child(hb.NewI().Class("bi bi-filter me-2")).
+		Child(hb.I().Class("bi bi-filter me-2")).
 		Text("Filters").
 		HxPost(links.NewAdminLinks().UsersUserManager(map[string]string{
 			"action":       ActionModalUserFilterShow,
@@ -403,46 +403,46 @@ func (controller *userManagerController) tableFilter(data userManagerControllerD
 		HxSwap("beforeend")
 
 	description := []string{
-		hb.NewSpan().HTML("Showing users").Text(" ").ToHTML(),
+		hb.Span().HTML("Showing users").Text(" ").ToHTML(),
 	}
 
 	if data.formStatus != "" {
-		description = append(description, hb.NewSpan().Text("with status: "+data.formStatus).ToHTML())
+		description = append(description, hb.Span().Text("with status: "+data.formStatus).ToHTML())
 	} else {
-		description = append(description, hb.NewSpan().Text("with status: any").ToHTML())
+		description = append(description, hb.Span().Text("with status: any").ToHTML())
 	}
 
 	if data.formEmail != "" {
-		description = append(description, hb.NewSpan().Text("and email: "+data.formEmail).ToHTML())
+		description = append(description, hb.Span().Text("and email: "+data.formEmail).ToHTML())
 	}
 
 	if data.formUserID != "" {
-		description = append(description, hb.NewSpan().Text("and ID: "+data.formUserID).ToHTML())
+		description = append(description, hb.Span().Text("and ID: "+data.formUserID).ToHTML())
 	}
 
 	if data.formFirstName != "" {
-		description = append(description, hb.NewSpan().Text("and first name: "+data.formFirstName).ToHTML())
+		description = append(description, hb.Span().Text("and first name: "+data.formFirstName).ToHTML())
 	}
 
 	if data.formLastName != "" {
-		description = append(description, hb.NewSpan().Text("and last name: "+data.formLastName).ToHTML())
+		description = append(description, hb.Span().Text("and last name: "+data.formLastName).ToHTML())
 	}
 
 	if data.formCreatedFrom != "" && data.formCreatedTo != "" {
-		description = append(description, hb.NewSpan().Text("and created between: "+data.formCreatedFrom+" and "+data.formCreatedTo).ToHTML())
+		description = append(description, hb.Span().Text("and created between: "+data.formCreatedFrom+" and "+data.formCreatedTo).ToHTML())
 	} else if data.formCreatedFrom != "" {
-		description = append(description, hb.NewSpan().Text("and created after: "+data.formCreatedFrom).ToHTML())
+		description = append(description, hb.Span().Text("and created after: "+data.formCreatedFrom).ToHTML())
 	} else if data.formCreatedTo != "" {
-		description = append(description, hb.NewSpan().Text("and created before: "+data.formCreatedTo).ToHTML())
+		description = append(description, hb.Span().Text("and created before: "+data.formCreatedTo).ToHTML())
 	}
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("card bg-light mb-3").
 		Style("").
 		Children([]hb.TagInterface{
-			hb.NewDiv().Class("card-body").
+			hb.Div().Class("card-body").
 				Child(buttonFilter).
-				Child(hb.NewSpan().
+				Child(hb.Span().
 					HTML(strings.Join(description, " "))),
 		})
 }
@@ -469,7 +469,7 @@ func (controller *userManagerController) tablePagination(data userManagerControl
 		URL:               url,
 	})
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class(`d-flex justify-content-left mt-5 pagination-primary-soft rounded mb-0`).
 		HTML(pagination)
 }

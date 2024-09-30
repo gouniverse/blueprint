@@ -64,29 +64,29 @@ func (controller *profileController) Handler(w http.ResponseWriter, r *http.Requ
 		},
 	})
 
-	title := hb.NewHeading1().
+	title := hb.Heading1().
 		Text("My Account").
 		Style("margin:30px 0px 30px 0px;")
 
-	paragraph1 := hb.NewParagraph().
+	paragraph1 := hb.Paragraph().
 		Text("Please keep your details updated so that we can contact you if you need our help.").
 		Style("margin-bottom:20px;")
 
 	formProfile := controller.formProfile(data)
 
-	page := hb.NewSection().
+	page := hb.Section().
 		Child(breadcrumbs).
-		Child(hb.NewHR()).
+		Child(hb.HR()).
 		Child(partials.UserQuickLinks(data.request)).
-		Child(hb.NewHR()).
+		Child(hb.HR()).
 		Child(
-			hb.NewDiv().
+			hb.Div().
 				Class("container").
 				Child(title).
 				Child(paragraph1).
 				Child(formProfile).
-				Child(hb.NewBR()).
-				Child(hb.NewBR()),
+				Child(hb.BR()).
+				Child(hb.BR()),
 		)
 
 	return layouts.NewUserLayout(r, layouts.Options{
@@ -176,7 +176,7 @@ func (controller *profileController) postUpdate(data profileControllerData) stri
 }
 
 func (controller *profileController) formProfile(data profileControllerData) *hb.Tag {
-	required := hb.NewSup().
+	required := hb.Sup().
 		Text("required").
 		Style("margin-left:5px;color:lightcoral;")
 
@@ -229,7 +229,7 @@ func (controller *profileController) formProfile(data profileControllerData) *hb
 		HxTarget("#SelectTimezones").
 		HxSwap("outerHTML")
 
-	countryGroup := hb.NewDiv().
+	countryGroup := hb.Div().
 		Class("form-group").
 		Children([]hb.TagInterface{
 			bs.FormLabel("Country").
@@ -237,7 +237,7 @@ func (controller *profileController) formProfile(data profileControllerData) *hb
 			selectCountries,
 		})
 
-	timezoneGroup := hb.NewDiv().
+	timezoneGroup := hb.Div().
 		Class("form-group").
 		Children([]hb.TagInterface{
 			bs.FormLabel("Timezone").
@@ -255,7 +255,7 @@ func (controller *profileController) formProfile(data profileControllerData) *hb
 		HxSwap("outerHTML").
 		HxPost(links.NewUserLinks().Profile(map[string]string{}))
 
-	formProfile := hb.NewDiv().ID("FormProfile").Children([]hb.TagInterface{
+	formProfile := hb.Div().ID("FormProfile").Children([]hb.TagInterface{
 		bs.Row().
 			Class("g-4").
 			Children([]hb.TagInterface{
@@ -276,27 +276,27 @@ func (controller *profileController) formProfile(data profileControllerData) *hb
 			),
 	})
 
-	return hb.NewDiv().ID("CardUserProfile").
+	return hb.Div().ID("CardUserProfile").
 		Class("card bg-transparent border rounded-3").
 		Style("text-align:left;").
 		Children([]hb.TagInterface{
-			hb.NewDiv().Class("card-header  bg-transparent").Children([]hb.TagInterface{
-				hb.NewHeading3().
+			hb.Div().Class("card-header  bg-transparent").Children([]hb.TagInterface{
+				hb.Heading3().
 					Text("Your Details").
 					Style("text-align:left;font-size:23px;color:#333;"),
 			}),
-			hb.NewDiv().Class("card-body").Children([]hb.TagInterface{
+			hb.Div().Class("card-body").Children([]hb.TagInterface{
 				formProfile,
 			}),
 		}).
-		ChildIf(data.formErrorMessage != "", hb.NewSwal(hb.SwalOptions{
+		ChildIf(data.formErrorMessage != "", hb.Swal(hb.SwalOptions{
 			Icon:              "error",
 			Title:             "Error",
 			Text:              data.formErrorMessage,
 			ShowCancelButton:  false,
 			ConfirmButtonText: "OK",
 		})).
-		ChildIf(data.formSuccessMessage != "", hb.NewSwal(hb.SwalOptions{
+		ChildIf(data.formSuccessMessage != "", hb.Swal(hb.SwalOptions{
 			Icon:              "success",
 			Title:             "Saved",
 			Text:              data.formSuccessMessage,
@@ -304,7 +304,7 @@ func (controller *profileController) formProfile(data profileControllerData) *hb
 			ConfirmButtonText: "OK",
 			ConfirmCallback:   "window.location.href = window.location.href",
 		})).
-		ChildIf(data.formRedirectURL != "", hb.NewScript(`window.location.href = '`+data.formRedirectURL+`'`))
+		ChildIf(data.formRedirectURL != "", hb.Script(`window.location.href = '`+data.formRedirectURL+`'`))
 
 }
 

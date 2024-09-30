@@ -49,47 +49,47 @@ func (e *inviteFriendEmail) Send(sendingUserID string, userNote string, recipien
 
 func (e *inviteFriendEmail) template(userName string, userNote string, recipientName string) string {
 
-	urlHome := hb.NewHyperlink().Text("ProvedExpert").
+	urlHome := hb.Hyperlink().Text("ProvedExpert").
 		Href(links.NewWebsiteLinks().Home()).ToHTML()
 
-	urlJoin := hb.NewHyperlink().Text("Click to Join Me at ProvedExpert").
+	urlJoin := hb.Hyperlink().Text("Click to Join Me at ProvedExpert").
 		Href(links.NewWebsiteLinks().Home()).ToHTML()
 
-	h1 := hb.NewHeading1().
+	h1 := hb.Heading1().
 		HTML(`You have an awesome friend`).
 		Style(STYLE_HEADING)
 
-	p1 := hb.NewParagraph().
+	p1 := hb.Paragraph().
 		HTML(`Hi ` + recipientName + `,`).
 		Style(STYLE_PARAGRAPH)
 
-	p2 := hb.NewParagraph().
+	p2 := hb.Paragraph().
 		HTML(`You have been invited by a friend who thinks you will like ` + config.AppName + `.`).
 		Style(STYLE_PARAGRAPH)
 
-	p3 := hb.NewParagraph().
+	p3 := hb.Paragraph().
 		HTML(`A note from your friend ` + userName + `:`).
 		Style(STYLE_PARAGRAPH)
 
-	p4 := hb.NewParagraph().
+	p4 := hb.Paragraph().
 		HTML(`"` + userNote + `"`).
 		Style(STYLE_PARAGRAPH)
 
-	p5 := hb.NewParagraph().
+	p5 := hb.Paragraph().
 		HTML(urlJoin).
 		Style(STYLE_PARAGRAPH)
 
-	p6 := hb.NewParagraph().
+	p6 := hb.Paragraph().
 		HTML(``). // Add description
 		Style(STYLE_PARAGRAPH)
 
-	p7 := hb.NewParagraph().
+	p7 := hb.Paragraph().
 		Children([]hb.TagInterface{
 			hb.Raw(`Thank you for choosing ` + urlHome + `.`),
 		}).
 		Style(STYLE_PARAGRAPH)
 
-	return hb.NewDiv().Children([]hb.TagInterface{
+	return hb.Div().Children([]hb.TagInterface{
 		h1,
 		p1,
 		p2,
@@ -97,8 +97,8 @@ func (e *inviteFriendEmail) template(userName string, userNote string, recipient
 		p4,
 		p5,
 		p6,
-		hb.NewBR(),
-		hb.NewBR(),
+		hb.BR(),
+		hb.BR(),
 		p7,
 	}).ToHTML()
 }

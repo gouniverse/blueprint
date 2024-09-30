@@ -20,19 +20,19 @@ func (controller *queueManagerController) modalTaskEnqueue(_ *http.Request) *hb.
 
 	if err != nil {
 		config.Logger.Error("At adminTasks > modalTaskEnqueue", "error", err.Error())
-		return hb.NewSwal(hb.SwalOptions{Title: "Error", Text: "Error listing tasks"})
+		return hb.Swal(hb.SwalOptions{Title: "Error", Text: "Error listing tasks"})
 	}
 
 	groupTasks := bs.FormGroup().
 		Class("mb-3").
 		Child(bs.FormLabel("Task").
 			Style(`font-size:18px;color:black;font-weight:bold;`).
-			Child(hb.NewSup().Text("*").Class("text-danger"))).
+			Child(hb.Sup().Text("*").Class("text-danger"))).
 		Child(bs.FormSelect().
 			Name("task_id").
-			Child(hb.NewOption().Value("").Text("- Select Task -")).
+			Child(hb.Option().Value("").Text("- Select Task -")).
 			Children(lo.Map(taskList, func(task taskstore.Task, _ int) hb.TagInterface {
-				return hb.NewOption().
+				return hb.Option().
 					Value(task.ID).
 					Text(task.Title)
 			})))
@@ -41,30 +41,30 @@ func (controller *queueManagerController) modalTaskEnqueue(_ *http.Request) *hb.
 		Class("mb-3").
 		Child(bs.FormLabel("Task Parameters").
 			Style(`font-size:18px;color:black;font-weight:bold;`).
-			Child(hb.NewSup().Text("*").Class("text-danger"))).
+			Child(hb.Sup().Text("*").Class("text-danger"))).
 		Child(bs.FormTextArea().
 			Name("task_parameters").
 			Class("form-control").
 			Style(`height:300px;`).
 			Placeholder("Parameters")).
-		Child(hb.NewDiv().
+		Child(hb.Div().
 			Text("Must be a valid JSON string").
 			Class("form-text text-muted"))
 
 	modalCloseScript := `document.getElementById('ModalMessage').remove();document.getElementById('ModalBackdrop').remove();`
-	butonModalClose := hb.NewButton().Type("button").
+	butonModalClose := hb.Button().Type("button").
 		Class("btn-close").
 		Data("bs-dismiss", "modal").
 		OnClick(modalCloseScript)
 
-	buttonCancel := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-chevron-left me-2")).
+	buttonCancel := hb.Button().
+		Child(hb.I().Class("bi bi-chevron-left me-2")).
 		HTML("Cancel").
 		Class("btn btn-secondary float-start").
 		OnClick(modalCloseScript)
 
-	buttonEnqueue := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-play me-2")).
+	buttonEnqueue := hb.Button().
+		Child(hb.I().Class("bi bi-play me-2")).
 		HTML("Add to queue").
 		Class("btn btn-primary float-end").
 		HxInclude(`#ModalTaskEnqueue`).
@@ -82,7 +82,7 @@ func (controller *queueManagerController) modalTaskEnqueue(_ *http.Request) *hb.
 			bs.ModalDialog().Children([]hb.TagInterface{
 				bs.ModalContent().Children([]hb.TagInterface{
 					bs.ModalHeader().Children([]hb.TagInterface{
-						hb.NewHeading5().
+						hb.Heading5().
 							Text("New Task Enqueue").
 							Style(`padding: 0px; margin: 0px;`),
 						butonModalClose,
@@ -100,12 +100,12 @@ func (controller *queueManagerController) modalTaskEnqueue(_ *http.Request) *hb.
 			}),
 		})
 
-	backdrop := hb.NewDiv().
+	backdrop := hb.Div().
 		ID("ModalBackdrop").
 		Class("modal-backdrop fade show").
 		Style("display:block;")
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		modal,
 		backdrop,
 	})

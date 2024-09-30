@@ -15,50 +15,50 @@ func userLayoutMainMenu(user userstore.UserInterface) []dashboard.MenuItem {
 	logoutLink := links.NewAuthLinks().Logout()
 
 	homeMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-house").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-house").Style("margin-right:10px;").ToHTML(),
 		Title: "Home",
 		URL:   websiteHomeLink,
 	}
 
 	profileMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-person").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-person").Style("margin-right:10px;").ToHTML(),
 		Title: "Profile",
 		URL:   links.NewUserLinks().Profile(map[string]string{}),
 	}
 
 	loginMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
 		Title: "Login",
 		URL:   loginLink,
 	}
 
 	// shopMenuItem := dashboard.MenuItem{
-	// 	Icon:  hb.NewI().Class("bi bi-shop").Style("margin-right:10px;").ToHTML(),
+	// 	Icon:  hb.I().Class("bi bi-shop").Style("margin-right:10px;").ToHTML(),
 	// 	Title: "Your Shop",
 	// 	URL:   links.NewUserLinks().Shop(map[string]string{}),
 	// }
 
 	// inviteFriendMenuItem := dashboard.MenuItem{
-	// 	Icon:  hb.NewI().Class("bi bi-people").Style("margin-right:10px;").ToHTML(),
+	// 	Icon:  hb.I().Class("bi bi-people").Style("margin-right:10px;").ToHTML(),
 	// 	Title: "Invite a Friend",
 	// 	URL:   links.NewUserLinks().InviteFriend(),
 	// }
 
 	websiteMenuItem := dashboard.MenuItem{
-		Icon:   hb.NewI().Class("bi bi-globe").Style("margin-right:10px;").ToHTML(),
+		Icon:   hb.I().Class("bi bi-globe").Style("margin-right:10px;").ToHTML(),
 		Title:  "To Website",
 		URL:    websiteHomeLink,
 		Target: "_blank",
 	}
 
 	logoutMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
 		Title: "Logout",
 		URL:   logoutLink,
 	}
 
 	dashboardMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-speedometer").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-speedometer").Style("margin-right:10px;").ToHTML(),
 		Title: "Dashboard",
 		URL:   dashboardLink,
 	}

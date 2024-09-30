@@ -38,22 +38,22 @@ func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request
 // == PRIVATE METHODS ==========================================================
 
 func (c *homeController) view() *hb.Tag {
-	header := hb.NewHeading1().
+	header := hb.Heading1().
 		HTML("Admin Home").
 		Style("margin-bottom:30px;margin-top:30px;")
 
-	sectionTiles := hb.NewSection().Children([]hb.TagInterface{
+	sectionTiles := hb.Section().Children([]hb.TagInterface{
 		bs.Row().Class("g-4").Children(c.tiles()),
 	})
 
-	return hb.NewWrap().Child(header).Child(sectionTiles)
+	return hb.Wrap().Child(header).Child(sectionTiles)
 }
 
 func (c *homeController) quickSearch(_ *http.Request) []*hb.Tag {
-	heading := hb.NewHeading2().HTML("Quick Search")
+	heading := hb.Heading2().HTML("Quick Search")
 
 	return []*hb.Tag{
-		hb.NewBR(),
+		hb.BR(),
 		heading,
 	}
 }
@@ -112,16 +112,16 @@ func (*homeController) tiles() []hb.TagInterface {
 				bs.CardBody().
 					Class("d-flex flex-column justify-content-evenly").
 					Children([]hb.TagInterface{
-						hb.NewDiv().
+						hb.Div().
 							Child(icons.Icon(tile["icon"], 36, 36, "red")).
 							Style("text-align:center;padding:10px;"),
-						hb.NewHeading5().
+						hb.Heading5().
 							HTML(tile["title"]).
 							Style("text-align:center;padding:10px;"),
 					}),
 			})
 
-		link := hb.NewHyperlink().
+		link := hb.Hyperlink().
 			Href(tile["link"]).
 			AttrIf(target != "", "target", target).
 			Child(card)

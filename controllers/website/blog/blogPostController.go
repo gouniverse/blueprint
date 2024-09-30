@@ -88,7 +88,7 @@ func (c blogPostController) Handler(w http.ResponseWriter, r *http.Request) stri
 		Request:        r,
 		WebsiteSection: "Blog.",
 		Title:          post.Title(),
-		Content:        hb.NewWrap().HTML(c.page(*post)),
+		Content:        hb.Wrap().HTML(c.page(*post)),
 	}).ToHTML()
 }
 
@@ -114,9 +114,9 @@ func (controller blogPostController) accessAllowed(r *http.Request, post blogsto
 
 func (c blogPostController) page(post blogstore.Post) string {
 	sectionBanner := NewBlogController().sectionBanner()
-	return hb.NewWrap().Children([]hb.TagInterface{
-		// hb.NewStyle(c.cssSectionIntro()),
-		hb.NewStyle(c.css()),
+	return hb.Wrap().Children([]hb.TagInterface{
+		// hb.Style(c.cssSectionIntro()),
+		hb.Style(c.css()),
 		hb.Raw(sectionBanner),
 		// c.sectionIntro(),
 		c.sectionPost(post),
@@ -163,34 +163,32 @@ func (controller *blogPostController) processContent(content string, editor stri
 func (c *blogPostController) sectionPost(post blogstore.Post) *hb.Tag {
 	// nextPost, _ := models.NewBlogRepository().PostFindNext(post)
 	// prevPost, _ := models.NewBlogRepository().PostFindPrevious(post)
-	sectionPost := hb.NewSection().ID("SectionNewsItem").Style(`background:#fff;`).Children([]hb.TagInterface{
+	sectionPost := hb.Section().ID("SectionNewsItem").Style(`background:#fff;`).Children([]hb.TagInterface{
 		bs.Container().Children([]hb.TagInterface{
 			bs.Row().Children([]hb.TagInterface{
 				bs.Column(12).Children([]hb.TagInterface{
-					hb.NewDiv().Class("BlogTitle").Children([]hb.TagInterface{
-						hb.NewHeading1().Style("color:#794FC6;").HTML(post.Title()),
+					hb.Div().Class("BlogTitle").Children([]hb.TagInterface{
+						hb.Heading1().Style("color:#794FC6;").HTML(post.Title()),
 					}),
 				}),
 			}),
 			bs.Row().Children([]hb.TagInterface{
 				bs.Column(12).Children([]hb.TagInterface{
-					hb.NewDiv().Class("BlogImage float-end").Style("padding-top:30px; padding-left:30px; padding-bottom:30px; width:600px; max-width:100%;").Children([]hb.TagInterface{
-						hb.NewImage().Class("img img-responsive img-thumbnail").Attrs(map[string]string{
-							"src": post.ImageUrlOrDefault(),
-						}),
+					hb.Div().Class("BlogImage float-end").Style("padding-top:30px; padding-left:30px; padding-bottom:30px; width:600px; max-width:100%;").Children([]hb.TagInterface{
+						hb.Image(post.ImageUrlOrDefault()).Class("img img-responsive img-thumbnail"),
 					}),
-					hb.NewDiv().Class("BlogContent").Children([]hb.TagInterface{
+					hb.Div().Class("BlogContent").Children([]hb.TagInterface{
 						hb.Raw(c.processContent(post.Content(), post.Editor())),
 					}),
 				}),
 				// bs.Column(8).Children([]hb.TagInterface{
-				// 	hb.NewDiv().Class("BlogContent").Children([]hb.TagInterface{
+				// 	hb.Div().Class("BlogContent").Children([]hb.TagInterface{
 				// 		hb.Raw(post.Content()),
 				// 	}),
 				// }),
 				// bs.Column(4).Children([]hb.TagInterface{
-				// 	hb.NewDiv().Class("BlogImage").Children([]hb.TagInterface{
-				// 		hb.NewImage().Class("img img-responsive img-thumbnail").Attrs(map[string]string{
+				// 	hb.Div().Class("BlogImage").Children([]hb.TagInterface{
+				// 		hb.Image().Class("img img-responsive img-thumbnail").Attrs(map[string]string{
 				// 			"src": post.ImageUrlOrDefault(),
 				// 		}),
 				// 	}),
@@ -200,40 +198,40 @@ func (c *blogPostController) sectionPost(post blogstore.Post) *hb.Tag {
 			// 	bs.Column(6).Children([]hb.TagInterface{
 			// 		lo.IfF(prevPost != nil, func() *hb.Tag {
 			// 			link := links.NewWebsiteLinks().BlogPost(prevPost.ID(), prevPost.Title(), map[string]string{})
-			// 			return hb.NewDiv().Children([]hb.TagInterface{
-			// 				hb.NewHyperlink().Children([]hb.TagInterface{
+			// 			return hb.Div().Children([]hb.TagInterface{
+			// 				hb.Hyperlink().Children([]hb.TagInterface{
 			// 					icons.Icon("bi-chevron-left", 20, 20, "#333").Style("margin-right:5px;"),
-			// 					hb.NewSpan().HTML("Previous"),
+			// 					hb.Span().HTML("Previous"),
 			// 				}).Attr("href", link).
 			// 					Style("font-weight:bold; font-size:20px;"),
-			// 				hb.NewDiv().HTML(prevPost.Title()),
+			// 				hb.Div().HTML(prevPost.Title()),
 			// 			})
 			// 		}).ElseF(func() *hb.Tag {
-			// 			return hb.NewSpan().HTML("")
+			// 			return hb.Span().HTML("")
 			// 		}),
 			// 	}),
 			// 	bs.Column(6).Children([]hb.TagInterface{
 			// 		lo.IfF(nextPost != nil, func() *hb.Tag {
 			// 			link := links.NewWebsiteLinks().BlogPost(nextPost.ID(), nextPost.Title(), map[string]string{})
-			// 			return hb.NewDiv().Children([]hb.TagInterface{
-			// 				hb.NewHyperlink().Children([]hb.TagInterface{
-			// 					hb.NewSpan().HTML("Next"),
+			// 			return hb.Div().Children([]hb.TagInterface{
+			// 				hb.Hyperlink().Children([]hb.TagInterface{
+			// 					hb.Span().HTML("Next"),
 			// 					icons.Icon("bi-chevron-right", 20, 20, "#333").Style("margin-right:5px;"),
 			// 				}).Attr("href", link).
 			// 					Style("font-weight:bold; font-size:20px;"),
-			// 				hb.NewDiv().HTML(nextPost.Title()),
+			// 				hb.Div().HTML(nextPost.Title()),
 			// 			}).Style("text-align:right;")
 			// 		}).ElseF(func() *hb.Tag {
-			// 			return hb.NewSpan().HTML("")
+			// 			return hb.Span().HTML("")
 			// 		}),
 			// 	}),
 			// }),
 			bs.Row().Style("margin-top:40px;").Children([]hb.TagInterface{
 				bs.Column(12).Children([]hb.TagInterface{
-					hb.NewDiv().Children([]hb.TagInterface{
-						hb.NewHyperlink().Class("btn text-white text-center").Style(`background:#1ba1b6;color:#fff;width:600px;max-width:100%;`).Children([]hb.TagInterface{
+					hb.Div().Children([]hb.TagInterface{
+						hb.Hyperlink().Class("btn text-white text-center").Style(`background:#1ba1b6;color:#fff;width:600px;max-width:100%;`).Children([]hb.TagInterface{
 							// icons.Icon("bi-arrow-left", 16, 16, "#333").Style("margin-right:5px;"),
-							hb.NewSpan().HTML("View All Posts"),
+							hb.Span().HTML("View All Posts"),
 						}).Attr("href", links.NewWebsiteLinks().Blog(map[string]string{})),
 					}),
 				}),

@@ -32,19 +32,19 @@ func (controller postCreateController) Handler(w http.ResponseWriter, r *http.Re
 	data, errorMessage := controller.prepareDataAndValidate(r)
 
 	if errorMessage != "" {
-		return hb.NewSwal(hb.SwalOptions{
+		return hb.Swal(hb.SwalOptions{
 			Icon: "error",
 			Text: errorMessage,
 		}).ToHTML()
 	}
 
 	if data.successMessage != "" {
-		return hb.NewWrap().
-			Child(hb.NewSwal(hb.SwalOptions{
+		return hb.Wrap().
+			Child(hb.Swal(hb.SwalOptions{
 				Icon: "success",
 				Text: data.successMessage,
 			})).
-			Child(hb.NewScript("setTimeout(() => {window.location.href = window.location.href}, 2000)")).
+			Child(hb.Script("setTimeout(() => {window.location.href = window.location.href}, 2000)")).
 			ToHTML()
 	}
 
@@ -66,17 +66,17 @@ func (controller *postCreateController) modal(data postCreateControllerData) hb.
 
 	modalCloseScript := `closeModal` + modalID + `();`
 
-	modalHeading := hb.NewHeading5().HTML("New Post Create").Style(`margin:0px;`)
+	modalHeading := hb.Heading5().HTML("New Post Create").Style(`margin:0px;`)
 
-	modalClose := hb.NewButton().Type("button").
+	modalClose := hb.Button().Type("button").
 		Class("btn-close").
 		Data("bs-dismiss", "modal").
 		OnClick(modalCloseScript)
 
 	jsCloseFn := `function closeModal` + modalID + `() {document.getElementById('ModalPostCreate').remove();[...document.getElementsByClassName('` + modalBackdropClass + `')].forEach(el => el.remove());}`
 
-	buttonSend := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-check me-2")).
+	buttonSend := hb.Button().
+		Child(hb.I().Class("bi bi-check me-2")).
 		HTML("Create & Edit").
 		Class("btn btn-primary float-end").
 		HxInclude("#" + modalID).
@@ -85,8 +85,8 @@ func (controller *postCreateController) modal(data postCreateControllerData) hb.
 		HxTarget("body").
 		HxSwap("beforeend")
 
-	buttonCancel := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-chevron-left me-2")).
+	buttonCancel := hb.Button().
+		Child(hb.I().Class("bi bi-chevron-left me-2")).
 		HTML("Close").
 		Class("btn btn-secondary float-start").
 		Data("bs-dismiss", "modal").
@@ -96,7 +96,7 @@ func (controller *postCreateController) modal(data postCreateControllerData) hb.
 		ID(modalID).
 		Class("fade show").
 		Style(`display:block;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1051;`).
-		Child(hb.NewScript(jsCloseFn)).
+		Child(hb.Script(jsCloseFn)).
 		Child(bs.ModalDialog().
 			Child(bs.ModalContent().
 				Child(
@@ -112,11 +112,11 @@ func (controller *postCreateController) modal(data postCreateControllerData) hb.
 					Child(buttonSend)),
 			))
 
-	backdrop := hb.NewDiv().Class(modalBackdropClass).
+	backdrop := hb.Div().Class(modalBackdropClass).
 		Class("modal-backdrop fade show").
 		Style("display:block;z-index:1000;")
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		modal,
 		backdrop,
 	})

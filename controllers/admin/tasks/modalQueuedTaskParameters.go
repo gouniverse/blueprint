@@ -8,37 +8,37 @@ import (
 func (controller *queueManagerController) modalQueuedTaskParameters(parameters string) *hb.Tag {
 	modalCloseScript := `document.getElementById('ModalMessage').remove();document.getElementById('ModalBackdrop').remove();`
 
-	title := hb.NewHeading5().
+	title := hb.Heading5().
 		Text("Queued Task Parameters").
 		Style(`margin:0px;padding:0px;`)
 
-	butonModalClose := hb.NewButton().Type("button").
+	butonModalClose := hb.Button().Type("button").
 		Class("btn-close").
 		Data("bs-dismiss", "modal").
 		OnClick(modalCloseScript)
 
 	groupParameters := bs.FormGroup().
 		Child(
-			hb.NewDiv().
+			hb.Div().
 				HTML("Parameters:").
 				Style(`font-size:18px;color:black;font-weight:bold;`),
 		).
 		Child(
-			hb.NewTextArea().
+			hb.TextArea().
 				Class("form-control").
 				Style(`height:300px;`).
 				Name("parameters").
 				HTML(parameters),
 		)
 
-	buttonCancel := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-chevron-left me-2")).
+	buttonCancel := hb.Button().
+		Child(hb.I().Class("bi bi-chevron-left me-2")).
 		HTML("Cancel").
 		Class("btn btn-secondary float-start").
 		OnClick(modalCloseScript)
 
-	buttonOk := hb.NewButton().
-		Child(hb.NewI().Class("bi bi-check me-2")).
+	buttonOk := hb.Button().
+		Child(hb.I().Class("bi bi-check me-2")).
 		HTML("Ok").
 		Class("btn btn-primary float-end").
 		OnClick(modalCloseScript)
@@ -68,12 +68,12 @@ func (controller *queueManagerController) modalQueuedTaskParameters(parameters s
 			}),
 		})
 
-	backdrop := hb.NewDiv().
+	backdrop := hb.Div().
 		ID("ModalBackdrop").
 		Class("modal-backdrop fade show").
 		Style("display:block;")
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		modal,
 		backdrop,
 	})

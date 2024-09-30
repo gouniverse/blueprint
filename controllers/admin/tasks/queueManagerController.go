@@ -111,9 +111,9 @@ func (controller *queueManagerController) page(data queueManagerControllerData) 
 		},
 	})
 
-	buttonQueueNew := hb.NewButton().
+	buttonQueueNew := hb.Button().
 		Class("btn btn-primary float-end").
-		Child(hb.NewI().Class("bi bi-plus-circle").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
+		Child(hb.I().Class("bi bi-plus-circle").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
 		HTML("Enqueue Task").
 		HxGet(links.NewAdminLinks().Tasks(map[string]string{
 			"action": ActionModalQueuedTaskEnqueueShow,
@@ -126,62 +126,62 @@ func (controller *queueManagerController) page(data queueManagerControllerData) 
 		// HxTarget("#QueuedTasksListTable").
 		// HxSwap("outerHTML")
 
-	title := hb.NewHeading1().
+	title := hb.Heading1().
 		HTML("Tasks. Queue Manager").
 		Child(buttonQueueNew)
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("container").
 		Child(breadcrumbs).
-		Child(hb.NewHR()).
+		Child(hb.HR()).
 		Child(title).
 		Child(controller.tableQueue(data))
 }
 
 func (controller *queueManagerController) tableQueue(data queueManagerControllerData) hb.TagInterface {
-	table := hb.NewTable().
+	table := hb.Table().
 		Class("table table-striped table-hover table-bordered").
 		Children([]hb.TagInterface{
-			hb.NewThead().Children([]hb.TagInterface{
-				hb.NewTR().Children([]hb.TagInterface{
-					hb.NewTH().
+			hb.Thead().Children([]hb.TagInterface{
+				hb.TR().Children([]hb.TagInterface{
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Name", "name")).
 						Text(", ").
 						Child(controller.sortableColumnLabel(data, "Alias", "alias")).
 						Text(", ").
 						Child(controller.sortableColumnLabel(data, "Reference", "id")).
 						Style(`cursor: pointer;`),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Status", "status")).
 						Style("width: 200px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Start Time", "started_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "End Time", "completed_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Duration", "duration")).
 						Style("width: 1px;cursor: pointer;"),
 
-					hb.NewTH().
+					hb.TH().
 						Child(controller.sortableColumnLabel(data, "Created", "created_at")).
 						Style("width: 1px;cursor: pointer;"),
-					hb.NewTH().
+					hb.TH().
 						HTML("Actions"),
 				}),
 			}),
-			hb.NewTbody().Children(lo.Map(data.queuedTaskList, func(queuedTask taskstore.Queue, _ int) hb.TagInterface {
+			hb.Tbody().Children(lo.Map(data.queuedTaskList, func(queuedTask taskstore.Queue, _ int) hb.TagInterface {
 				task, taskExists := lo.Find(data.taskList, func(t taskstore.Task) bool {
 					return t.ID == queuedTask.TaskID
 				})
 
 				taskName := lo.IfF(taskExists, func() string { return task.Title }).Else("Unknown")
 
-				buttonDelete := hb.NewButton().
+				buttonDelete := hb.Button().
 					Class("btn btn-sm btn-danger").
 					Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
-					Child(hb.NewI().Class("bi bi-trash")).
+					Child(hb.I().Class("bi bi-trash")).
 					Title("Delete task from queue").
 					HxPost(links.NewAdminLinks().Tasks(map[string]string{
 						"action":   ActionModalQueuedTaskDeleteShow,
@@ -193,10 +193,10 @@ func (controller *queueManagerController) tableQueue(data queueManagerController
 					HxTarget("body").
 					HxSwap("beforeend")
 
-				buttonParameters := hb.NewButton().
+				buttonParameters := hb.Button().
 					Class("btn btn-sm btn-info").
 					Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
-					Child(hb.NewI().Class("bi bi-list-stars")).
+					Child(hb.I().Class("bi bi-list-stars")).
 					Title("See queued task parameters").
 					HxPost(links.NewAdminLinks().Tasks(map[string]string{
 						"action":   ActionModalQueuedTaskParametersShow,
@@ -208,10 +208,10 @@ func (controller *queueManagerController) tableQueue(data queueManagerController
 					HxTarget("body").
 					HxSwap("beforeend")
 
-				buttonDetails := hb.NewButton().
+				buttonDetails := hb.Button().
 					Class("btn btn-sm btn-info").
 					Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
-					Child(hb.NewI().Class("bi bi-info-circle-fill")).
+					Child(hb.I().Class("bi bi-info-circle-fill")).
 					Title("See the details of the job run").
 					HxPost(links.NewAdminLinks().Tasks(map[string]string{
 						"action":   ActionModalQueuedTaskDetailsShow,
@@ -225,10 +225,10 @@ func (controller *queueManagerController) tableQueue(data queueManagerController
 					HxTarget("body").
 					HxSwap("beforeend")
 
-				buttonRequeue := hb.NewButton().
+				buttonRequeue := hb.Button().
 					Class("btn btn-sm btn-info").
 					Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
-					Child(hb.NewI().Class("bi bi-arrow-repeat")).
+					Child(hb.I().Class("bi bi-arrow-repeat")).
 					Title("Re-add task to queue as new job").
 					HxPost(links.NewAdminLinks().Tasks(map[string]string{
 						"action":   ActionModalQueuedTaskRequeueShow,
@@ -240,10 +240,10 @@ func (controller *queueManagerController) tableQueue(data queueManagerController
 					HxTarget("body").
 					HxSwap("beforeend")
 
-				buttonRestart := hb.NewButton().
+				buttonRestart := hb.Button().
 					Class("btn btn-sm btn-info").
 					Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
-					Child(hb.NewI().Class("bi bi-arrow-clockwise")).
+					Child(hb.I().Class("bi bi-arrow-clockwise")).
 					Title("Restart this job").
 					HxPost(links.NewAdminLinks().Tasks(map[string]string{
 						"action":   ActionModalQueuedTaskRestartShow,
@@ -273,7 +273,7 @@ func (controller *queueManagerController) tableQueue(data queueManagerController
 				createdAtDate := carbon.CreateFromStdTime(queuedTask.CreatedAt).Format("d M Y")
 				createdAtTime := carbon.CreateFromStdTime(queuedTask.CreatedAt).ToTimeString()
 
-				status := hb.NewSpan().
+				status := hb.Span().
 					Style(`font-weight: bold;`).
 					StyleIf(queuedTask.Status == taskstore.QueueStatusSuccess, `color:green;`).
 					StyleIf(queuedTask.Status == taskstore.QueueStatusRunning, `color:silver;`).
@@ -281,35 +281,35 @@ func (controller *queueManagerController) tableQueue(data queueManagerController
 					StyleIf(queuedTask.Status == taskstore.QueueStatusFailed, `color:red;`).
 					HTML(queuedTask.Status)
 
-				return hb.NewTR().Children([]hb.TagInterface{
-					hb.NewTD().
-						Child(hb.NewDiv().Text(taskName)).
-						Child(hb.NewDiv().
+				return hb.TR().Children([]hb.TagInterface{
+					hb.TD().
+						Child(hb.Div().Text(taskName)).
+						Child(hb.Div().
 							Style("font-size: 11px;").
 							Text("Alias: ").
 							Text(task.Alias)).
-						Child(hb.NewDiv().
+						Child(hb.Div().
 							Style("font-size: 11px;").
 							Text("Ref: ").
 							Text(queuedTask.ID)),
-					hb.NewTD().
+					hb.TD().
 						Child(status),
-					hb.NewTD().
-						Child(hb.NewDiv().Text(startedAtDate)).
-						Child(hb.NewDiv().Text(startedAtTime)).
+					hb.TD().
+						Child(hb.Div().Text(startedAtDate)).
+						Child(hb.Div().Text(startedAtTime)).
 						Style("white-space: nowrap; font-size: 13px;"),
-					hb.NewTD().
-						Child(hb.NewDiv().Text(completeddAtDate)).
-						Child(hb.NewDiv().Text(completeddAtTime)).
+					hb.TD().
+						Child(hb.Div().Text(completeddAtDate)).
+						Child(hb.Div().Text(completeddAtTime)).
 						Style("white-space: nowrap; font-size: 13px;"),
-					hb.NewTD().
-						Child(hb.NewDiv().Text(elapsedTime)).
+					hb.TD().
+						Child(hb.Div().Text(elapsedTime)).
 						Style("white-space: nowrap;"),
-					hb.NewTD().
-						Child(hb.NewDiv().Text(createdAtDate)).
-						Child(hb.NewDiv().Text(createdAtTime)).
+					hb.TD().
+						Child(hb.Div().Text(createdAtDate)).
+						Child(hb.Div().Text(createdAtTime)).
 						Style("white-space: nowrap; font-size: 13px;"),
-					hb.NewTD().
+					hb.TD().
 						Style("text-align: center;").
 						Child(buttonParameters).
 						Child(buttonDetails).
@@ -322,7 +322,7 @@ func (controller *queueManagerController) tableQueue(data queueManagerController
 
 	// cfmt.Successln("Table: ", table)
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		controller.tableFilter(data),
 		table,
 		controller.tablePagination(data, int(data.queuedTaskCount), data.pageInt, data.perPage),
@@ -348,7 +348,7 @@ func (controller *queueManagerController) sortableColumnLabel(data queueManagerC
 		"filter_task_id":      data.formTaskID,
 		"filter_queue_id":     data.formQueueID,
 	})
-	return hb.NewHyperlink().
+	return hb.Hyperlink().
 		HTML(tableLabel).
 		Child(controller.sortingIndicator(columnName, data.sortBy, direction)).
 		Href(link)
@@ -361,7 +361,7 @@ func (controller *queueManagerController) sortingIndicator(columnName string, so
 		ElseIf(isSelected && sortOrder == "desc", "down").
 		Else("none")
 
-	sortingIndicator := hb.NewSpan().
+	sortingIndicator := hb.Span().
 		Class("sorting").
 		HTMLIf(direction == "up", "&#8595;").
 		HTMLIf(direction == "down", "&#8593;").
@@ -371,10 +371,10 @@ func (controller *queueManagerController) sortingIndicator(columnName string, so
 }
 
 func (controller *queueManagerController) tableFilter(data queueManagerControllerData) hb.TagInterface {
-	buttonFilter := hb.NewButton().
+	buttonFilter := hb.Button().
 		Class("btn btn-sm btn-info me-2").
 		Style("margin-bottom: 2px; margin-left:2px; margin-right:2px;").
-		Child(hb.NewI().Class("bi bi-filter me-2")).
+		Child(hb.I().Class("bi bi-filter me-2")).
 		Text("Filters").
 		HxPost(links.NewAdminLinks().Tasks(map[string]string{
 			"action":              ActionModalQueuedTaskFilterShow,
@@ -388,17 +388,17 @@ func (controller *queueManagerController) tableFilter(data queueManagerControlle
 		HxSwap("beforeend")
 
 	description := []string{
-		hb.NewSpan().HTML("Showing queued tasks").Text(" ").ToHTML(),
+		hb.Span().HTML("Showing queued tasks").Text(" ").ToHTML(),
 	}
 
 	if data.formStatus != "" {
-		description = append(description, hb.NewSpan().Text("with status: "+data.formStatus).ToHTML())
+		description = append(description, hb.Span().Text("with status: "+data.formStatus).ToHTML())
 	} else {
-		description = append(description, hb.NewSpan().Text("with status: any").ToHTML())
+		description = append(description, hb.Span().Text("with status: any").ToHTML())
 	}
 
 	if data.formQueueID != "" {
-		description = append(description, hb.NewSpan().Text("and queue ID: "+data.formQueueID).ToHTML())
+		description = append(description, hb.Span().Text("and queue ID: "+data.formQueueID).ToHTML())
 	}
 
 	if data.formTaskID != "" {
@@ -407,24 +407,24 @@ func (controller *queueManagerController) tableFilter(data queueManagerControlle
 		})
 		taskTitle := lo.Ternary(lo.IsEmpty(task.Title), data.formTaskID, task.Title)
 
-		description = append(description, hb.NewSpan().Text("and task: "+taskTitle).ToHTML())
+		description = append(description, hb.Span().Text("and task: "+taskTitle).ToHTML())
 	}
 
 	if data.formCreatedFrom != "" && data.formCreatedTo != "" {
-		description = append(description, hb.NewSpan().Text("and created between: "+data.formCreatedFrom+" and "+data.formCreatedTo).ToHTML())
+		description = append(description, hb.Span().Text("and created between: "+data.formCreatedFrom+" and "+data.formCreatedTo).ToHTML())
 	} else if data.formCreatedFrom != "" {
-		description = append(description, hb.NewSpan().Text("and created after: "+data.formCreatedFrom).ToHTML())
+		description = append(description, hb.Span().Text("and created after: "+data.formCreatedFrom).ToHTML())
 	} else if data.formCreatedTo != "" {
-		description = append(description, hb.NewSpan().Text("and created before: "+data.formCreatedTo).ToHTML())
+		description = append(description, hb.Span().Text("and created before: "+data.formCreatedTo).ToHTML())
 	}
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("card bg-light mb-3").
 		Style("").
 		Children([]hb.TagInterface{
-			hb.NewDiv().Class("card-body").
+			hb.Div().Class("card-body").
 				Child(buttonFilter).
-				Child(hb.NewSpan().
+				Child(hb.Span().
 					HTML(strings.Join(description, " "))),
 		})
 }
@@ -450,7 +450,7 @@ func (controller *queueManagerController) tablePagination(data queueManagerContr
 		URL:               url,
 	})
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class(`d-flex justify-content-left mt-5 pagination-primary-soft rounded mb-0`).
 		HTML(pagination)
 }

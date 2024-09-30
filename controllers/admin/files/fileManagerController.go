@@ -421,9 +421,9 @@ func (controller *FileManagerController) getMediaManager(r *http.Request) string
 	page := controller.uiManager(currentDirectory, parentDirectory, directoryList, fileList)
 
 	if controller.funcLayout != nil {
-		style := hb.NewStyleURL(cdn.BootstrapIconsCss_1_10_2()).ToHTML()
-		script := hb.NewScriptURL(cdn.Jquery_3_6_4()).ToHTML()
-		script += hb.NewScriptURL(cdn.Notify_0_4_2()).ToHTML()
+		style := hb.StyleURL(cdn.BootstrapIconsCss_1_10_2()).ToHTML()
+		script := hb.ScriptURL(cdn.Jquery_3_6_4()).ToHTML()
+		script += hb.ScriptURL(cdn.Notify_0_4_2()).ToHTML()
 		page = style + script + page
 		return controller.funcLayout(page)
 	}
@@ -793,39 +793,39 @@ func (c *FileManagerController) modalFileView() string {
 }
 
 func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
-	table := hb.NewTable().Class("table table-bordered table-striped").Children([]hb.TagInterface{
-		hb.NewThead().Children([]hb.TagInterface{
-			hb.NewTR().Children([]hb.TagInterface{
-				hb.NewTH().Style("width:1px;").Text(""),
-				hb.NewTH().Text("Directory/File Name"),
-				hb.NewTH().Style("width:100px;").Text("Size"),
-				hb.NewTH().Style("width:100px;").Text("Modified"),
-				hb.NewTH().Style("width:220px;").Text("Actions"),
+	table := hb.Table().Class("table table-bordered table-striped").Children([]hb.TagInterface{
+		hb.Thead().Children([]hb.TagInterface{
+			hb.TR().Children([]hb.TagInterface{
+				hb.TH().Style("width:1px;").Text(""),
+				hb.TH().Text("Directory/File Name"),
+				hb.TH().Style("width:100px;").Text("Size"),
+				hb.TH().Style("width:100px;").Text("Modified"),
+				hb.TH().Style("width:220px;").Text("Actions"),
 			}),
 		}),
-		hb.NewTbody().
+		hb.Tbody().
 			// Parent DIrectory
 			ChildIfF(currentDirectory != "", func() hb.TagInterface {
 				parentDirectoryURL := links.NewAdminLinks().FileManager(map[string]string{"current_dir": parentDirectory})
 
-				return hb.NewTR().Children([]hb.TagInterface{
-					hb.NewTD().Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-folder").Text(""),
+				return hb.TR().Children([]hb.TagInterface{
+					hb.TD().Children([]hb.TagInterface{
+						hb.I().Class("bi bi-folder").Text(""),
 					}),
-					hb.NewTD().Children([]hb.TagInterface{
-						hb.NewHyperlink().Href(parentDirectoryURL).Children([]hb.TagInterface{
-							hb.NewI().Class("bi bi-arrow-90deg-up").Text("").Style("margin-right: 5px;"),
-							hb.NewSpan().Text("parent"),
+					hb.TD().Children([]hb.TagInterface{
+						hb.Hyperlink().Href(parentDirectoryURL).Children([]hb.TagInterface{
+							hb.I().Class("bi bi-arrow-90deg-up").Text("").Style("margin-right: 5px;"),
+							hb.Span().Text("parent"),
 						}),
 					}),
-					hb.NewTD().Children([]hb.TagInterface{}),
-					hb.NewTD().Children([]hb.TagInterface{}),
-					hb.NewTD().Children([]hb.TagInterface{}),
+					hb.TD().Children([]hb.TagInterface{}),
+					hb.TD().Children([]hb.TagInterface{}),
+					hb.TD().Children([]hb.TagInterface{}),
 				})
 			}).
 			// Directory List
 			ChildIfF(len(directoryList) > 0, func() hb.TagInterface {
-				return hb.NewWrap().Children(lo.Map(directoryList, func(dir FileEntry, _ int) hb.TagInterface {
+				return hb.Wrap().Children(lo.Map(directoryList, func(dir FileEntry, _ int) hb.TagInterface {
 					name := dir.Name
 					if dir.Name == "." || dir.Name == ".." {
 						return nil
@@ -834,32 +834,32 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 					pathURL := links.NewAdminLinks().FileManager(map[string]string{"current_dir": path})
 					size := dir.SizeHuman
 
-					buttonDelete := hb.NewButton().Class("btn btn-danger btn-sm").OnClick(`modalDirectoryDeleteShow('` + name + `')`).Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-trash").Text("").Style("margin-right: 5px;"),
-						hb.NewSpan().Text("Delete"),
+					buttonDelete := hb.Button().Class("btn btn-danger btn-sm").OnClick(`modalDirectoryDeleteShow('` + name + `')`).Children([]hb.TagInterface{
+						hb.I().Class("bi bi-trash").Text("").Style("margin-right: 5px;"),
+						hb.Span().Text("Delete"),
 					})
 
-					buttonRename := hb.NewButton().Class("btn btn-primary btn-sm").OnClick(`modalFileRenameShow('` + name + `')`).Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-pencil").Text("").Style("margin-right: 5px;"),
-						hb.NewSpan().Text("Rename"),
+					buttonRename := hb.Button().Class("btn btn-primary btn-sm").OnClick(`modalFileRenameShow('` + name + `')`).Children([]hb.TagInterface{
+						hb.I().Class("bi bi-pencil").Text("").Style("margin-right: 5px;"),
+						hb.Span().Text("Rename"),
 					})
 
-					return hb.NewTR().Children([]hb.TagInterface{
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewI().Class("bi bi-folder").Text(""),
+					return hb.TR().Children([]hb.TagInterface{
+						hb.TD().Children([]hb.TagInterface{
+							hb.I().Class("bi bi-folder").Text(""),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewHyperlink().Href(pathURL).Children([]hb.TagInterface{
-								hb.NewSpan().Text(name).Style("font-weight: bold;"),
+						hb.TD().Children([]hb.TagInterface{
+							hb.Hyperlink().Href(pathURL).Children([]hb.TagInterface{
+								hb.Span().Text(name).Style("font-weight: bold;"),
 							}),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().Text(size).Style("font-size: 12px;"),
+						hb.TD().Children([]hb.TagInterface{
+							hb.Span().Text(size).Style("font-size: 12px;"),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().Text("").Style("font-size: 11px;"),
+						hb.TD().Children([]hb.TagInterface{
+							hb.Span().Text("").Style("font-size: 11px;"),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
+						hb.TD().Children([]hb.TagInterface{
 							buttonRename,
 							buttonDelete,
 						}),
@@ -868,55 +868,55 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 			}).
 			// File List
 			ChildIfF(len(fileList) > 0, func() hb.TagInterface {
-				return hb.NewWrap().Children(lo.Map(fileList, func(file FileEntry, _ int) hb.TagInterface {
-					buttonDelete := hb.NewButton().Class("btn btn-danger btn-sm").OnClick(`modalFileDeleteShow('` + file.Name + `')`).Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-trash").Text("").Style("margin-right: 5px;"),
-						hb.NewSpan().Text("Delete"),
+				return hb.Wrap().Children(lo.Map(fileList, func(file FileEntry, _ int) hb.TagInterface {
+					buttonDelete := hb.Button().Class("btn btn-danger btn-sm").OnClick(`modalFileDeleteShow('` + file.Name + `')`).Children([]hb.TagInterface{
+						hb.I().Class("bi bi-trash").Text("").Style("margin-right: 5px;"),
+						hb.Span().Text("Delete"),
 					})
 
-					buttonRename := hb.NewButton().Class("btn btn-primary btn-sm").OnClick(`modalFileRenameShow('` + file.Name + `')`).Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-pencil").Text("").Style("margin-right: 5px;"),
-						hb.NewSpan().Text("Rename"),
+					buttonRename := hb.Button().Class("btn btn-primary btn-sm").OnClick(`modalFileRenameShow('` + file.Name + `')`).Children([]hb.TagInterface{
+						hb.I().Class("bi bi-pencil").Text("").Style("margin-right: 5px;"),
+						hb.Span().Text("Rename"),
 					})
 
-					buttonView := hb.NewButton().Class("btn btn-info btn-sm").OnClick(`modalFileViewShow('` + file.Name + `')`).Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-eye").Text("").Style("margin-right: 5px;"),
-						hb.NewSpan().Text("View"),
+					buttonView := hb.Button().Class("btn btn-info btn-sm").OnClick(`modalFileViewShow('` + file.Name + `')`).Children([]hb.TagInterface{
+						hb.I().Class("bi bi-eye").Text("").Style("margin-right: 5px;"),
+						hb.Span().Text("View"),
 					})
 
-					buttonSelect := hb.NewButton().Class("btn btn-success btn-sm .btn-select").OnClick(`fileSelectedUrl('` + file.URL + `')`).Children([]hb.TagInterface{
-						hb.NewI().Class("bi bi-chevron-right").Text("").Style("margin-right: 5px;"),
-						hb.NewSpan().Text("Select"),
+					buttonSelect := hb.Button().Class("btn btn-success btn-sm .btn-select").OnClick(`fileSelectedUrl('` + file.URL + `')`).Children([]hb.TagInterface{
+						hb.I().Class("bi bi-chevron-right").Text("").Style("margin-right: 5px;"),
+						hb.Span().Text("Select"),
 					})
 
-					return hb.NewTR().Children([]hb.TagInterface{
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewI().Class("bi bi-file").Text(""),
+					return hb.TR().Children([]hb.TagInterface{
+						hb.TD().Children([]hb.TagInterface{
+							hb.I().Class("bi bi-file").Text(""),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().Text(file.Name).Style("font-weight: bold;"),
-							hb.NewDiv().
+						hb.TD().Children([]hb.TagInterface{
+							hb.Span().Text(file.Name).Style("font-weight: bold;"),
+							hb.Div().
 								Children([]hb.TagInterface{
-									hb.NewSpan().Text("URL: "),
-									hb.NewHyperlink().
+									hb.Span().Text("URL: "),
+									hb.Hyperlink().
 										Href(file.URL).
 										Target("_blank").
 										Children([]hb.TagInterface{
-											hb.NewSpan().Text(file.URL),
+											hb.Span().Text(file.URL),
 										}),
 								}).
 								Style("font-size: 12px;"),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().Text(file.SizeHuman).Style("font-size: 12px;"),
+						hb.TD().Children([]hb.TagInterface{
+							hb.Span().Text(file.SizeHuman).Style("font-size: 12px;"),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
-							hb.NewSpan().
+						hb.TD().Children([]hb.TagInterface{
+							hb.Span().
 								HTML(lo.Substring(file.LastModifiedHuman, 0, 10)).
 								Attr("title", file.LastModifiedHuman).
 								Style("font-size: 11px;"),
 						}),
-						hb.NewTD().Children([]hb.TagInterface{
+						hb.TD().Children([]hb.TagInterface{
 							buttonView,
 							buttonRename,
 							buttonDelete,
@@ -967,28 +967,28 @@ func uiLayout(title string, content string) string {
 }
 
 func (c *FileManagerController) uiManager(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
-	buttonUpload := hb.NewButton().
+	buttonUpload := hb.Button().
 		Class("btn btn-secondary float-end").
 		Data("bs-toggle", "modal").
 		Data("bs-target", "#ModalUploadFile").
 		// OnClick(`modalFileUploadShow()`).
-		Child(hb.NewI().Class("bi bi-upload").Style("margin-right: 5px;")).
+		Child(hb.I().Class("bi bi-upload").Style("margin-right: 5px;")).
 		HTML("Upload file")
 
-	buttonDirectoryCreate := hb.NewButton().
+	buttonDirectoryCreate := hb.Button().
 		Class("btn btn-info float-end me-2").
 		Data("bs-toggle", "modal").
 		Data("bs-target", "#ModalDirectoryCreate").
 		// OnClick(`modalDirectoryCreateShow()`).
-		Child(hb.NewI().Class("bi bi-plus-circle").Style("margin-right: 5px;")).
+		Child(hb.I().Class("bi bi-plus-circle").Style("margin-right: 5px;")).
 		HTML("New directory")
 
-	title := hb.NewHeading3().
+	title := hb.Heading3().
 		HTML("Media Manager").
 		Child(buttonUpload).
 		Child(buttonDirectoryCreate)
 
-	script := hb.NewScript(`
+	script := hb.Script(`
 $('.btn-select').hide();
 	
 var openerArgs = {};

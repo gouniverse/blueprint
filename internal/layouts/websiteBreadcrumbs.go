@@ -25,17 +25,17 @@ func websiteBreadcrumbs(path []bs.Breadcrumb) *hb.Tag {
 }
 
 func NewWebsiteBreadcrumbsSection(path []bs.Breadcrumb) *hb.Tag {
-	return hb.NewSection().
+	return hb.Section().
 		ID("SectionBreadcrumbs").
 		Child(websiteBreadcrumbs(path)).
 		Style("margin-bottom:10px;")
 }
 
 func NewWebsiteBreadcrumbsSectionWithContainer(path []bs.Breadcrumb) *hb.Tag {
-	return hb.NewSection().
+	return hb.Section().
 		ID("SectionBreadcrumbs").
 		Child(
-			hb.NewDiv().
+			hb.Div().
 				Class("container").
 				Child(websiteBreadcrumbs(path)),
 		)

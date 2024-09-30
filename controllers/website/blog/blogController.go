@@ -42,7 +42,7 @@ func (controller *blogController) Handler(w http.ResponseWriter, r *http.Request
 		Request:        r,
 		WebsiteSection: "Blog",
 		Title:          "Recent Posts",
-		Content:        hb.NewWrap().HTML(controller.page(data)),
+		Content:        hb.Wrap().HTML(controller.page(data)),
 	}).ToHTML()
 }
 
@@ -68,8 +68,7 @@ func (controller *blogController) page(data blogControllerData) string {
 
 		postURL := links.NewWebsiteLinks().BlogPost(post.ID(), post.Slug())
 
-		postImage := hb.NewImage().
-			Src(postImageURL).
+		postImage := hb.Image(postImageURL).
 			Class("card-img-top rounded-3").
 			Style("object-fit: cover;").
 			Style("max-height: 180px;").
@@ -77,36 +76,36 @@ func (controller *blogController) page(data blogControllerData) string {
 			Style("border-radius: 0.5rem").
 			Alt("")
 
-		postTitle := hb.NewHeading5().
+		postTitle := hb.Heading5().
 			Class("card-title").
 			Style("font-size: 16px; color: #224b8e; margin-bottom: 10px; text-align: left; font-weight: 800;").
 			Text(post.Title())
 
-		postPublished := hb.NewParagraph().
+		postPublished := hb.Paragraph().
 			Style("font-size: 12px;	color: #6c757d;	margin-bottom: 20px; text-align: right;").
 			Text(publishedAt)
 
-		// postPublished := hb.NewSpan().
+		// postPublished := hb.Span().
 		// 	Class(`small`).
 		// 	Style(`font-size:12px;color:#666;display:inline-block;padding-right:10px;padding-top:10px;`).
 		// 	HTML(publishedAt)
 
-		// postImage := hb.NewDiv().Class(`overflow-hidden rounded-3`).Children([]hb.TagInterface{
-		// 	hb.NewImage().
+		// postImage := hb.Div().Class(`overflow-hidden rounded-3`).Children([]hb.TagInterface{
+		// 	hb.Image().
 		// 		Class(`card-img`).
 		// 		Style(`object-fit:cover;max-height:180px;`).
 		// 		Src(postImageURL).
 		// 		Alt("course image").
 		// 		Attr("loading", "lazy"),
-		// 	hb.NewDiv().
+		// 	hb.Div().
 		// 		Class(`bg-overlay bg-dark opacity-4`),
 		// 	// Badge
 		// 	// bs.CardImageTop().Class(`d-flex align-items-start`).Children([]hb.TagInterface{
-		// 	// 	hb.NewDiv().Class(`badge text-bg-danger`).Style(`position:absolute;top:10px;left:10px;`).HTML("Student life"),
+		// 	// 	hb.Div().Class(`badge text-bg-danger`).Style(`position:absolute;top:10px;left:10px;`).HTML("Student life"),
 		// 	// }),
 		// })
 
-		postSummary := hb.NewParagraph().
+		postSummary := hb.Paragraph().
 			Class("card-text").
 			Text(post.Summary()).
 			Style(`text-align: left;`).
@@ -118,7 +117,7 @@ func (controller *blogController) page(data blogControllerData) string {
 			Style(`-webkit-line-clamp: 2;`).
 			Style(`-webkit-box-orient: vertical;`)
 
-		separator := hb.NewHR().
+		separator := hb.HR().
 			Style(`width: 80%`).
 			Style(`margin: 0 auto`).
 			Style(`border: 0`).
@@ -127,43 +126,43 @@ func (controller *blogController) page(data blogControllerData) string {
 			Style(`opacity: 0.25`).
 			Style(`margin-bottom: 20px`)
 
-		card := hb.NewDiv().
+		card := hb.Div().
 			Class("card").
 			Style("border: none; margin-bottom: 20px;").
 			Child(postImage).
-			Child(hb.NewDiv().
+			Child(hb.Div().
 				Class("card-body").
 				Style(`padding: 20px 10px;`).
 				Child(postTitle).
 				Child(postSummary)).
-			Child(hb.NewDiv().
+			Child(hb.Div().
 				Class("card-footer").
 				Style(`background: none;border: none;padding: 0px;`).
 				Child(postPublished).
 				Child(separator))
 
-		link := hb.NewHyperlink().
+		link := hb.Hyperlink().
 			Href(postURL).
 			Target("_blank").
 			Style("text-decoration: none; color: inherit;").
 			Style("display: flex; height: 100%;").
 			Child(card)
 
-		return hb.NewDiv().
+		return hb.Div().
 			Class("col-md-3 col-sm-6 d-flex align-items-stretch").
 			Child(link)
 	})
 
-	section := hb.NewSection().
+	section := hb.Section().
 		Style("background:#fff;padding-top:40px; padding-bottom: 40px;").
 		Children([]hb.TagInterface{
 			bs.Container().Children([]hb.TagInterface{
 				bs.Row().Class(`g-4`).Children(columnCards),
-				hb.NewDiv().Class(`d-flex justify-content-center mt-5 pagination-primary-soft rounded mb-0`).HTML(pagination),
+				hb.Div().Class(`d-flex justify-content-center mt-5 pagination-primary-soft rounded mb-0`).HTML(pagination),
 			}),
 		})
 
-	return hb.NewWrap().Children([]hb.TagInterface{
+	return hb.Wrap().Children([]hb.TagInterface{
 		hb.Raw(controller.sectionBanner()),
 		section,
 	}).ToHTML()
@@ -237,8 +236,8 @@ func (controller blogController) sectionBanner() string {
 </figure>
 	`
 
-	homeLink := hb.NewHyperlink().HTML("Home").Href(links.NewWebsiteLinks().Home()).ToHTML()
-	blogLink := hb.NewHyperlink().HTML("Blog").Href(links.NewWebsiteLinks().Blog(map[string]string{})).ToHTML()
+	homeLink := hb.Hyperlink().HTML("Home").Href(links.NewWebsiteLinks().Home()).ToHTML()
+	blogLink := hb.Hyperlink().HTML("Blog").Href(links.NewWebsiteLinks().Blog(map[string]string{})).ToHTML()
 
 	return `
 <style>

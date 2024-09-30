@@ -39,7 +39,7 @@ func NewGuestLayout(options Options) *guestLayout {
 // ToHTML generates the HTML for the guest layout
 func (layout *guestLayout) ToHTML() string {
 	layout.styleURLs = append([]string{cdn.BootstrapCss_5_3_3()}, layout.styleURLs...)
-	webpage := hb.NewWebpage().
+	webpage := hb.Webpage().
 		SetTitle(layout.title).
 		SetFavicon(FaviconURL()).
 		AddStyles(layout.styles).

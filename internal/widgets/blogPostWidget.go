@@ -61,7 +61,7 @@ func (w *blogPostWidget) Render(r *http.Request, content string, params map[stri
 	if len(uriParts) < 5 {
 		config.LogStore.ErrorWithContext("At blogPostWidget: URI mismatch", map[string]any{"uri": r.RequestURI})
 		url := helpers.ToFlashWarningURL("The post you are looking for no longer exists. Redirecting to the blog location...", blogsUrl, 5)
-		return hb.NewScript(`window.location.href = "` + url + `"`).ToHTML()
+		return hb.Script(`window.location.href = "` + url + `"`).ToHTML()
 	}
 
 	postID := uriParts[3]
@@ -72,7 +72,7 @@ func (w *blogPostWidget) Render(r *http.Request, content string, params map[stri
 	if postID == "" {
 		config.LogStore.ErrorWithContext("anyPost: post ID is missing", map[string]any{"uri": r.RequestURI})
 		url := helpers.ToFlashWarningURL("The post you are looking for no longer exists. Redirecting to the blog location...", blogsUrl, 5)
-		return hb.NewScript(`window.location.href = "` + url + `"`).ToHTML()
+		return hb.Script(`window.location.href = "` + url + `"`).ToHTML()
 
 	}
 
@@ -81,26 +81,26 @@ func (w *blogPostWidget) Render(r *http.Request, content string, params map[stri
 	if errPost != nil {
 		config.LogStore.ErrorWithContext("Error. At BlogPostController.AnyIndex. Post not found", errPost.Error())
 		url := helpers.ToFlashWarningURL("The post you are looking for no longer exists. Redirecting to the blog location...", blogsUrl, 5)
-		return hb.NewScript(`window.location.href = "` + url + `"`).ToHTML()
+		return hb.Script(`window.location.href = "` + url + `"`).ToHTML()
 	}
 
 	if post == nil {
 		config.LogStore.ErrorWithContext("ERROR: anyPost: post with ID "+postID+" is missing", map[string]any{"postID": postID})
 		url := helpers.ToFlashWarningURL("The post you are looking for no longer exists. Redirecting to the blog location...", blogsUrl, 5)
-		return hb.NewScript(`window.location.href = "` + url + `"`).ToHTML()
+		return hb.Script(`window.location.href = "` + url + `"`).ToHTML()
 	}
 
 	if post.IsUnpublished() {
 		config.LogStore.WarnWithContext("WARNING: anyPost: post with ID "+postID+" is unpublished", map[string]any{"postID": postID})
 		url := helpers.ToFlashWarningURL("The post you are looking for is no longer active. Redirecting to the blog location...", blogsUrl, 5)
-		return hb.NewScript(`window.location.href = "` + url + `"`).ToHTML()
+		return hb.Script(`window.location.href = "` + url + `"`).ToHTML()
 	}
 
 	if postSlug == "" || postSlug != utils.StrSlugify(post.Title(), '-') {
 		blogPostURL := links.NewWebsiteLinks().BlogPost(post.ID(), post.Title())
 		config.LogStore.ErrorWithContext("ERROR: anyPost: post Title is missing for ID "+postID, "Redirecting to correct URL")
 		url := helpers.ToFlashWarningURL("The post location has changed. Redirecting to the new address...", blogPostURL, 5)
-		return hb.NewScript(`window.location.href = "` + url + `"`).ToHTML()
+		return hb.Script(`window.location.href = "` + url + `"`).ToHTML()
 	}
 
 	return w.page(r, *post)
@@ -109,9 +109,9 @@ func (w *blogPostWidget) Render(r *http.Request, content string, params map[stri
 // == PRIVATE METHODS ========================================================
 
 func (w *blogPostWidget) page(r *http.Request, post blogstore.Post) string {
-	return hb.NewWrap().
+	return hb.Wrap().
 		Children([]hb.TagInterface{
-			hb.NewStyle(w.css()),
+			hb.Style(w.css()),
 			w.sectionBreadcrumbs(post),
 			// NewBlogController().sectionHeader(),
 			w.sectionPost(post),
@@ -168,40 +168,39 @@ func (w *blogPostWidget) sectionBreadcrumbs(post blogstore.Post) *hb.Tag {
 }
 
 func (w *blogPostWidget) sectionPost(post blogstore.Post) *hb.Tag {
-	sectionPost := hb.NewSection().
+	sectionPost := hb.Section().
 		ID("SectionNewsItem").
 		Style(`background:#fff;`).
 		Children([]hb.TagInterface{
 			bs.Container().Children([]hb.TagInterface{
 				bs.Row().Children([]hb.TagInterface{
 					bs.Column(12).Children([]hb.TagInterface{
-						hb.NewDiv().Class("BlogTitle").Children([]hb.TagInterface{
-							hb.NewHeading1().Style("color:#794FC6;").HTML(post.Title()),
+						hb.Div().Class("BlogTitle").Children([]hb.TagInterface{
+							hb.Heading1().Style("color:#794FC6;").HTML(post.Title()),
 						}),
 					}),
 				}),
 				bs.Row().Children([]hb.TagInterface{
 					bs.Column(12).Children([]hb.TagInterface{
-						hb.NewDiv().
+						hb.Div().
 							Class("BlogImage float-end d-sm-block d-md-inline float-end pt-md-3 pt-lg-3 pb-md-3 pb-lg-3 ps-md-3 ps-lg-3").
 							// Style("padding-top:30px; padding-left:30px; padding-bottom:30px;").
 							Children([]hb.TagInterface{
-								hb.NewImage().
+								hb.Image(post.ImageUrlOrDefault()).
 									Class("img img-responsive img-thumbnail").
-									Style("max-width:500px;").
-									Src(post.ImageUrlOrDefault()),
+									Style("max-width:500px;"),
 							}),
-						hb.NewDiv().Class("BlogContent").Children([]hb.TagInterface{
+						hb.Div().Class("BlogContent").Children([]hb.TagInterface{
 							hb.Raw(w.processContent(post.Content(), post.Editor())),
 						}),
 					}),
 				}),
 				bs.Row().Style("margin-top:40px;").Children([]hb.TagInterface{
 					bs.Column(12).Children([]hb.TagInterface{
-						hb.NewDiv().Children([]hb.TagInterface{
-							hb.NewHyperlink().Class("btn text-white text-center").Style(`background:#1ba1b6;color:#fff;width:600px;max-width:100%;`).Children([]hb.TagInterface{
+						hb.Div().Children([]hb.TagInterface{
+							hb.Hyperlink().Class("btn text-white text-center").Style(`background:#1ba1b6;color:#fff;width:600px;max-width:100%;`).Children([]hb.TagInterface{
 								// icons.Icon("bi-arrow-left", 16, 16, "#333").Style("margin-right:5px;"),
-								hb.NewSpan().HTML("View All Posts"),
+								hb.Span().HTML("View All Posts"),
 							}).Attr("href", links.NewWebsiteLinks().Blog(map[string]string{})),
 						}),
 					}),

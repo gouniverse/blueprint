@@ -76,52 +76,52 @@ func (controller userUpdateController) page(data userUpdateControllerData) hb.Ta
 		},
 	})
 
-	buttonSave := hb.NewButton().
+	buttonSave := hb.Button().
 		Class("btn btn-primary ms-2 float-end").
-		Child(hb.NewI().Class("bi bi-save").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
+		Child(hb.I().Class("bi bi-save").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
 		HTML("Save").
 		HxInclude("#FormUserUpdate").
 		HxPost(links.NewAdminLinks().UsersUserUpdate(map[string]string{"userID": data.userID})).
 		HxTarget("#FormUserUpdate")
 
-	buttonCancel := hb.NewHyperlink().
+	buttonCancel := hb.Hyperlink().
 		Class("btn btn-secondary ms-2 float-end").
-		Child(hb.NewI().Class("bi bi-chevron-left").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
+		Child(hb.I().Class("bi bi-chevron-left").Style("margin-top:-4px;margin-right:8px;font-size:16px;")).
 		HTML("Back").
 		Href(links.NewAdminLinks().UsersUserManager(map[string]string{}))
 
-	heading := hb.NewHeading1().
+	heading := hb.Heading1().
 		HTML("Edit User").
 		Child(buttonSave).
 		Child(buttonCancel)
 
-	card := hb.NewDiv().
+	card := hb.Div().
 		Class("card").
 		Child(
-			hb.NewDiv().
+			hb.Div().
 				Class("card-header").
 				Style(`display:flex;justify-content:space-between;align-items:center;`).
-				Child(hb.NewHeading4().
+				Child(hb.Heading4().
 					HTML("User Details").
 					Style("margin-bottom:0;display:inline-block;")).
 				Child(buttonSave),
 		).
 		Child(
-			hb.NewDiv().
+			hb.Div().
 				Class("card-body").
 				Child(controller.form(data)))
 
-	userTitle := hb.NewHeading2().
+	userTitle := hb.Heading2().
 		Class("mb-3").
 		Text("User: ").
 		Text(data.user.FirstName()).
 		Text(" ").
 		Text(data.user.LastName())
 
-	return hb.NewDiv().
+	return hb.Div().
 		Class("container").
 		Child(breadcrumbs).
-		Child(hb.NewHR()).
+		Child(hb.HR()).
 		Child(heading).
 		Child(userTitle).
 		Child(card)
@@ -212,14 +212,14 @@ func (controller userUpdateController) form(data userUpdateControllerData) hb.Ta
 	if data.formErrorMessage != "" {
 		formUserUpdate.AddField(form.Field{
 			Type:  form.FORM_FIELD_TYPE_RAW,
-			Value: hb.NewSwal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
+			Value: hb.Swal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
 		})
 	}
 
 	if data.formSuccessMessage != "" {
 		formUserUpdate.AddField(form.Field{
 			Type:  form.FORM_FIELD_TYPE_RAW,
-			Value: hb.NewSwal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
+			Value: hb.Swal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
 		})
 	}
 

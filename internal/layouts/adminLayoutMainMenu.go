@@ -15,32 +15,32 @@ func adminLayoutMainMenu(user userstore.UserInterface) []dashboard.MenuItem {
 	logoutLink := links.NewAuthLinks().Logout()
 
 	homeMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-house").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-house").Style("margin-right:10px;").ToHTML(),
 		Title: "Home",
 		URL:   websiteHomeLink,
 	}
 
 	loginMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
 		Title: "Login",
 		URL:   loginLink,
 	}
 
 	websiteMenuItem := dashboard.MenuItem{
-		Icon:   hb.NewI().Class("bi bi-globe").Style("margin-right:10px;").ToHTML(),
+		Icon:   hb.I().Class("bi bi-globe").Style("margin-right:10px;").ToHTML(),
 		Title:  "To Website",
 		URL:    websiteHomeLink,
 		Target: "_blank",
 	}
 
 	logoutMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-arrow-right").Style("margin-right:10px;").ToHTML(),
 		Title: "Logout",
 		URL:   logoutLink,
 	}
 
 	dashboardMenuItem := dashboard.MenuItem{
-		Icon:  hb.NewI().Class("bi bi-speedometer").Style("margin-right:10px;").ToHTML(),
+		Icon:  hb.I().Class("bi bi-speedometer").Style("margin-right:10px;").ToHTML(),
 		Title: "Dashboard",
 		URL:   dashboardLink,
 	}
