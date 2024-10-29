@@ -9,11 +9,11 @@ func TestInitialize_AppServerHostAndPort(t *testing.T) {
 	TestsConfigureAndInitialize()
 
 	if WebServerHost == "" {
-		t.Fatal("ServerHost SHOULD NOT BE empty")
+		t.Fatal("WebServerHost SHOULD NOT BE empty")
 	}
 
 	if WebServerPort == "" {
-		t.Fatal("ServerPort SHOULD NOT BE empty")
+		t.Fatal("WebServerPort SHOULD NOT BE empty")
 	}
 
 	if AppUrl == "" {

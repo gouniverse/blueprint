@@ -46,7 +46,7 @@ tasks:
     silent: true
 
   # deploy:cloudrun:
-  #   desc: Build and deploys the app to Google Cloud Run, you may need to run "gcloud auth login"
+  #   desc: Builds and deploys the app to Google Cloud Run, you may need to run "gcloud auth login"
   #   cmds:
   #     - gcloud config set account YOUREMAIL
   #     - gcloud config set project YOURPROJECT

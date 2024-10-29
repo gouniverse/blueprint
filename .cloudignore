@@ -22,6 +22,8 @@
 /.vscode
 
 # ignore /documents folder files
+/docs
+/docs/*
 /documents
 /documents/*
 
