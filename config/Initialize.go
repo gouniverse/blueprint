@@ -9,6 +9,7 @@ import (
 	"project/internal/resources"
 	"strings"
 
+	"github.com/faabiosr/cachego/file"
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
@@ -22,6 +23,7 @@ import (
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/shopstore"
+	"github.com/gouniverse/statsstore"
 	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
@@ -30,6 +32,20 @@ import (
 	"github.com/samber/lo"
 )
 
+// Initialize initializes the application
+//
+// Business logic:
+//   - initializes the environment variables
+//   - initializes the database
+//   - migrates the database
+//   - initializes the in-memory cache
+//   - initializes the logger
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func Initialize() {
 	initializeEnvVariables()
 
@@ -52,15 +68,33 @@ func Initialize() {
 	Logger = *slog.New(logstore.NewSlogHandler(&LogStore))
 }
 
+// initializeEnvVariables initializes the env variables
+//
+// Business logic:
+//   - initializes the environment variables from the .env file
+//   - initializes envenc variables based on the app environment
+//   - checks all the required env variables
+//   - panics if any of the required variable is missing
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func initializeEnvVariables() {
 	utils.EnvInitialize(".env")
 
 	AppEnvironment = utils.EnvMust("APP_ENV")
 
-	intializeEnvEncVariables(AppEnvironment)
+	// Enable if you use envenc
+	// intializeEnvEncVariables(AppEnvironment)
 
 	AppName = utils.Env("APP_NAME")
 	AppUrl = utils.Env("APP_URL")
+
+	// Enable if you use CMS template
+	//CmsUserTemplateID = utils.EnvMust("CMS_TEMPLATE_ID")
+
 	DbDriver = utils.EnvMust("DB_DRIVER")
 	DbHost = lo.TernaryF(DbDriver == "sqlite", func() string {
 		return utils.Env("DB_HOST")
@@ -118,10 +152,27 @@ func initializeEnvVariables() {
 	WebServerPort = utils.EnvMust("SERVER_PORT")
 }
 
+// initializeEnvEncVariables initializes the envenc variables
+// based on the app environment
+//
+// Business logic:
+//   - checkd if the app environment is testing, skipped as not needed
+//   - requires the ENV_ENCRYPTION_KEY env variable
+//   - looks for file the file name is .env.<app_environment>.vault
+//     both in the local file system and in the resources folder
+//   - if none found, it will panic
+//   - if it fails for other reasons, it will panic
+//
+// Parameters:
+// - appEnvironment: the app environment
+//
+// Returns:
+// - none
 func intializeEnvEncVariables(appEnvironment string) {
 	if appEnvironment == APP_ENVIRONMENT_TESTING {
 		return
 	}
+
 	appEnvironment = strings.ToLower(appEnvironment)
 	envEncryptionKey := utils.EnvMust("ENV_ENCRYPTION_KEY")
 
@@ -144,6 +195,19 @@ func intializeEnvEncVariables(appEnvironment string) {
 	}
 }
 
+// buildEnvEncKey builds the envenc key
+//
+// Business logic:
+//   - deobfuscates the salt
+//   - creates the temp key based on the salt and key
+//   - hashes the temp key
+//   - returns the hash
+//
+// Parameters:
+// - envEncryptionKey: the env encryption key
+//
+// Returns:
+// - string: the final key
 func buildEnvEncKey(envEncryptionKey string) string {
 	envEncryptionSalt, _ := envenc.Deobfuscate(ENV_ENCRYPTION_SALT)
 	tempKey := envEncryptionSalt + envEncryptionKey
@@ -154,6 +218,17 @@ func buildEnvEncKey(envEncryptionKey string) string {
 	return realKey
 }
 
+// initializeDatabase initializes the database
+//
+// Business logic:
+//   - opens the database
+//   - initializes the required stores
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - error: the error if any
 func initializeDatabase() error {
 	db, err := openDb(DbDriver, DbHost, DbPort, DbName, DbUser, DbPass)
 
@@ -385,7 +460,7 @@ func initializeDatabase() error {
 	sqlFileStorageInstance, err := filesystem.NewStorage(filesystem.Disk{
 		DiskName:  filesystem.DRIVER_SQL,
 		Driver:    filesystem.DRIVER_SQL,
-		Url:       "/file",
+		Url:       "/files",
 		DB:        db,
 		TableName: "snv_media_file",
 	})
@@ -399,6 +474,21 @@ func initializeDatabase() error {
 	}
 
 	SqlFileStorage = sqlFileStorageInstance
+
+	statsStoreInstance, err := statsstore.NewStore(statsstore.NewStoreOptions{
+		VisitorTableName: "snv_stats_visitor",
+		DB:               db,
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("statsstore.NewStore"), err)
+	}
+
+	if statsStoreInstance == nil {
+		panic("StatsStore is nil")
+	}
+
+	StatsStore = *statsStoreInstance
 
 	taskStoreInstance, err := taskstore.NewStore(taskstore.NewStoreOptions{
 		DB:             db,
@@ -449,10 +539,25 @@ func initializeDatabase() error {
 	return nil
 }
 
+// initializeInMemoryCache initializes the in memory cache
 func initializeInMemoryCache() {
-	InMem = ttlcache.New[string, any]()
+	CacheMemory = ttlcache.New[string, any]()
+	// create a new directory
+	_ = os.MkdirAll(".cache", os.ModePerm)
+	CacheFile = file.New(".cache")
 }
 
+// migrateDatabase migrates the database
+//
+// Business logic:
+//   - migrates the database for each store
+//   - a store is only assigned if it is not nil
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - error: the error if any
 func migrateDatabase() (err error) {
 	err = BlindIndexStoreEmail.AutoMigrate()
 

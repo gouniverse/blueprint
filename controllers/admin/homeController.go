@@ -2,13 +2,18 @@ package admin
 
 import (
 	"net/http"
+	"project/config"
 	"project/internal/layouts"
 	"project/internal/links"
 
+	"github.com/golang-module/carbon/v2"
 	"github.com/gouniverse/bs"
+	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/icons"
 	"github.com/gouniverse/router"
+	"github.com/gouniverse/statsstore"
+	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
 )
 
@@ -28,10 +33,13 @@ func NewHomeController() *homeController {
 
 func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) string {
 	return layouts.NewAdminLayout(r, layouts.Options{
-		Title:      "Home",
-		Content:    controller.view(),
-		ScriptURLs: []string{},
-		Styles:     []string{},
+		Title:   "Home",
+		Content: controller.view(),
+		ScriptURLs: []string{
+			cdn.Jquery_3_7_1(),
+			`https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js`,
+		},
+		Styles: []string{},
 	}).ToHTML()
 }
 
@@ -42,20 +50,88 @@ func (c *homeController) view() *hb.Tag {
 		HTML("Admin Home").
 		Style("margin-bottom:30px;margin-top:30px;")
 
-	sectionTiles := hb.Section().Children([]hb.TagInterface{
-		bs.Row().Class("g-4").Children(c.tiles()),
-	})
+	sectionTiles := hb.Section().
+		Child(bs.Row().
+			Class("g-4").
+			Children(c.tiles()))
 
-	return hb.Wrap().Child(header).Child(sectionTiles)
+	sectionDailyVisitors := hb.Section().
+		Style("margin-top:30px;margin-bottom:30px;").
+		Child(bs.Row().
+			Class("g-4").
+			Child(bs.Column(12).
+				Child(c.cardDailyVisitors())))
+
+	return hb.Wrap().
+		Child(header).
+		Child(sectionTiles).
+		Child(sectionDailyVisitors)
 }
 
-func (c *homeController) quickSearch(_ *http.Request) []*hb.Tag {
-	heading := hb.Heading2().HTML("Quick Search")
+func (c *homeController) cardDailyVisitors() *hb.Tag {
+	dates, visits, err := c.visitorsData()
 
-	return []*hb.Tag{
-		hb.BR(),
-		heading,
+	if err != nil {
+		return hb.Div().Class("alert alert-danger").Text(err.Error())
 	}
+
+	labels := dates
+	values := visits
+
+	labelsJSON, err := utils.ToJSON(labels)
+
+	if err != nil {
+		return hb.Div().Class("alert alert-danger").Text(err.Error())
+	}
+
+	valuesJSON, err := utils.ToJSON(values)
+
+	if err != nil {
+		return hb.Div().Class("alert alert-danger").Text(err.Error())
+	}
+
+	script := hb.Script(`
+			setTimeout(function () {
+				generateVisitorsChart();
+			}, 1000);
+			function generateVisitorsChart() {
+				var visitorData = {
+					labels: ` + labelsJSON + `,
+					datasets:
+							[
+								{
+									fillColor: "rgba(172,194,132,0.4)",
+									strokeColor: "#ACC26D",
+									pointColor: "#fff",
+									pointStrokeColor: "#9DB86D",
+									data: ` + valuesJSON + `
+								}
+							]
+				};
+
+				var visitorContext = document.getElementById('VisitorsChart').getContext('2d');
+				new Chart(visitorContext).Line(visitorData);
+			}
+		`)
+
+	dailyReport := hb.Div().
+		ID("DailyVisitorsReport").
+		Class("card").
+		Child(hb.Div().Class("card-header").
+			Child(hb.H5().
+				Text("Daily Visitors Report").
+				Child(hb.Hyperlink().
+					Class("card-link").
+					Href(links.NewAdminLinks().Stats(map[string]string{})).
+					Text("View all").
+					Style("float: right;")))).
+		Child(hb.Div().
+			Class("card-body").
+			Child(hb.Canvas().ID("VisitorsChart").Style("width:100%;height:300px;"))).
+		Style("margin-bottom: 30px;")
+
+	dailyReport = dailyReport.Child(script)
+	return dailyReport
 }
 
 func (*homeController) tiles() []hb.TagInterface {
@@ -75,6 +151,11 @@ func (*homeController) tiles() []hb.TagInterface {
 			"icon":  "bi-people",
 			"link":  links.NewAdminLinks().Users(map[string]string{}),
 		},
+		{
+			"title": "Shop Manager",
+			"icon":  "bi-shop",
+			"link":  links.NewAdminLinks().Shop(map[string]string{}),
+		},
 		// {
 		// 	"title": "FAQ Manager",
 		// 	"icon":  "bi-question-circle",
@@ -91,6 +172,16 @@ func (*homeController) tiles() []hb.TagInterface {
 		// 	"link":   "https://gitlab.com/repo/cdn",
 		// 	"target": "_blank",
 		// },
+		{
+			"title": "Queue Manager",
+			"icon":  "bi-heart-pulse",
+			"link":  links.NewAdminLinks().Tasks(map[string]string{}),
+		},
+		{
+			"title": "Visit Stats",
+			"icon":  "bi-graph-up",
+			"link":  links.NewAdminLinks().Stats(map[string]string{}),
+		},
 	}
 
 	cards := lo.Map(tiles, func(tile map[string]string, index int) hb.TagInterface {
@@ -134,4 +225,42 @@ func (*homeController) tiles() []hb.TagInterface {
 	})
 
 	return cards
+}
+
+func (c *homeController) datesInRange(timeStart, timeEnd carbon.Carbon) []string {
+	rangeDates := []string{}
+
+	if timeStart.Lte(timeEnd) {
+		rangeDates = append(rangeDates, timeStart.ToDateString())
+		for timeStart.Lt(timeEnd) {
+			timeStart = timeStart.AddDays(1) // += 86400 // add 24 hours
+			rangeDates = append(rangeDates, timeStart.ToDateString())
+		}
+	}
+
+	return rangeDates
+}
+
+func (c *homeController) visitorsData() (dates []string, visits []int64, err error) {
+	datesInRange := c.datesInRange(carbon.Now().SubDays(31), carbon.Now())
+
+	dates = []string{}
+	visits = []int64{}
+
+	for _, date := range datesInRange {
+		visitorCount, err := config.StatsStore.VisitorCount(statsstore.VisitorQueryOptions{
+			CreatedAtGte: date + " 00:00:00",
+			CreatedAtLte: date + " 23:59:59",
+			Distinct:     statsstore.COLUMN_IP_ADDRESS,
+		})
+
+		if err != nil {
+			return nil, nil, err
+		}
+
+		dates = append(dates, date)
+		visits = append(visits, visitorCount)
+	}
+
+	return dates, visits, nil
 }

@@ -4,6 +4,8 @@ import (
 	"project/controllers/admin"
 	adminBlog "project/controllers/admin/blog"
 	adminFiles "project/controllers/admin/files"
+	adminShop "project/controllers/admin/shop"
+	adminStats "project/controllers/admin/stats"
 	adminTasks "project/controllers/admin/tasks"
 	adminUsers "project/controllers/admin/users"
 	"project/internal/links"
@@ -57,6 +59,8 @@ func adminRoutes() []router.RouteInterface {
 		},
 	}
 
+	adminRoutes = append(adminRoutes, adminShop.ShopRoutes()...)
+	adminRoutes = append(adminRoutes, adminStats.StatsRoutes()...)
 	adminRoutes = append(adminRoutes, adminTasks.TaskRoutes()...)
 	adminRoutes = append(adminRoutes, adminUsers.UserRoutes()...)
 

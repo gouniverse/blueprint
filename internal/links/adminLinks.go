@@ -38,6 +38,14 @@ func (l *adminLinks) FileManager(params map[string]string) string {
 	return URL(ADMIN_MEDIA, params)
 }
 
+func (l *adminLinks) Shop(params map[string]string) string {
+	return URL(ADMIN_SHOP, params)
+}
+
+func (l *adminLinks) Stats(params map[string]string) string {
+	return URL(ADMIN_STATS, params)
+}
+
 func (l *adminLinks) Tasks(params map[string]string) string {
 	return URL(ADMIN_TASKS, params)
 }

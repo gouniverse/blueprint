@@ -47,7 +47,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	// Prepare styles
 	styles := []string{ // prepend any if required
-		`nav#Toolbar {border-bottom: 4px solid blue;}`,
+		`nav#Toolbar {border-bottom: 8px solid purple;} nav#Toolbar .btn {margin-top: -12px;} nav#Toolbar .dropdown {margin-top: 12px;}`,
 	}
 	styles = append(styles, options.Styles...)
 

@@ -6,6 +6,16 @@ import (
 
 // TestsConfigureAndInitialize configures the test environment
 // variables and initializes the test environment
+//
+// Business logic:
+//   - configures the test environment variables
+//   - initializes the test environment
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func TestsConfigureAndInitialize() {
 	os.Setenv("APP_NAME", "Blueprint")
 	os.Setenv("APP_URL", "http://localhost:8080")

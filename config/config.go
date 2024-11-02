@@ -3,6 +3,7 @@ package config
 import (
 	"log/slog"
 
+	"github.com/faabiosr/cachego"
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
@@ -15,6 +16,7 @@ import (
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/shopstore"
+	"github.com/gouniverse/statsstore"
 	"github.com/gouniverse/taskstore"
 	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/vaultstore"
@@ -72,13 +74,14 @@ var WebServerHost string
 var WebServerPort string
 
 // InMem is an in-memory cache.
-var InMem *ttlcache.Cache[string, any]
+var CacheMemory *ttlcache.Cache[string, any]
+var CacheFile cachego.Cache
 
 // Cms is the CMS instance.
 var Cms cms.Cms
 
 // CmsUserTemplateID is the CMS user template ID.
-var CmsUserTemplateID string = ""
+var CmsUserTemplateID string
 
 // ===================================== //
 var BlindIndexStoreEmail blindindexstore.Store
@@ -94,6 +97,7 @@ var LogStore logstore.Store
 var MetaStore metastore.Store
 var SessionStore sessionstore.Store
 var ShopStore shopstore.Store
+var StatsStore statsstore.Store
 
 // var SubscriptionStore *subscriptionstore.Store
 var TaskStore taskstore.Store

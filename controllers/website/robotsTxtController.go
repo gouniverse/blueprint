@@ -3,7 +3,11 @@ package website
 import (
 	"net/http"
 	"project/internal/links"
+
+	"github.com/gouniverse/router"
 )
+
+type robotsTxtController struct{}
 
 // NewRobotsTxtController creates a new instance of the robotsTxtController struct.
 //
@@ -13,9 +17,9 @@ func NewRobotsTxtController() *robotsTxtController {
 	return &robotsTxtController{}
 }
 
-type robotsTxtController struct{}
+var _ router.HTMLControllerInterface = (*robotsTxtController)(nil)
 
-func (c robotsTxtController) Index(w http.ResponseWriter, r *http.Request) string {
+func (c robotsTxtController) Handler(w http.ResponseWriter, r *http.Request) string {
 
 	// Allow: /contact
 	// Allow: /faq

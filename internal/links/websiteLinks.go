@@ -1,5 +1,7 @@
 package links
 
+import "strings"
+
 type websiteLinks struct{}
 
 func NewWebsiteLinks() *websiteLinks {
@@ -29,6 +31,18 @@ func (l *websiteLinks) Flash(params map[string]string) string {
 	return URL(FLASH, params)
 }
 
+func (l *websiteLinks) PaymentCanceled(paymentKey string) string {
+	params := map[string]string{}
+	params["payment_key"] = paymentKey
+	return URL(PAYMENT_CANCELED, params)
+}
+
+func (l *websiteLinks) PaymentSuccess(paymentKey string) string {
+	params := map[string]string{}
+	params["payment_key"] = paymentKey
+	return URL(PAYMENT_SUCCESS, params)
+}
+
 func (l *websiteLinks) Resource(resourcePath string, params map[string]string) string {
 	if resourcePath == "" {
 		return ""
@@ -42,6 +56,14 @@ func (l *websiteLinks) Resource(resourcePath string, params map[string]string) s
 
 func (l *websiteLinks) Theme(params map[string]string) string {
 	return URL(THEME, params)
+}
+
+func (l *websiteLinks) Thumbnail(extension, width, height, quality, path string) string {
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+		url := strings.ReplaceAll(path, "https://", "https/")
+		path = strings.ReplaceAll(url, "http://", "http/")
+	}
+	return RootURL() + "/th/" + extension + "/" + width + "x" + height + "/" + quality + "/" + path
 }
 
 func (l *websiteLinks) Widget(alias string, params map[string]string) string {

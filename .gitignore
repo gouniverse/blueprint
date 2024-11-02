@@ -32,3 +32,5 @@ database.db-journal
 
 google-cloud-cli-*
 google-cloud-sdk/
+
+.cache/

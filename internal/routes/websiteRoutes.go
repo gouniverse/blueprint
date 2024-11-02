@@ -3,6 +3,7 @@ package routes
 import (
 	"project/controllers/website"
 	"project/internal/links"
+	"project/internal/middlewares"
 
 	"github.com/gouniverse/router"
 
@@ -49,6 +50,31 @@ func websiteRoutes() []router.RouteInterface {
 		// 	Path:    links.CATCHALL,
 		// 	Handler: sharedControllers.NewPageNotFoundControllerController().AnyIndex,
 		// },
+		// &router.Route{
+		// 	Name:        "Website > Payment Canceled Controller > Handle",
+		// 	Path:        links.PAYMENT_CANCELED,
+		// 	HTMLHandler: websitePayment.NewPaymentCanceledController().Handle,
+		// },
+		// &router.Route{
+		// 	Name:        "Website > Payment Success Controller > Handle",
+		// 	Path:        links.PAYMENT_SUCCESS,
+		// 	HTMLHandler: websitePayment.NewPaymentSuccessController().Handle,
+		// },
+		&router.Route{
+			Name:        "Website > RobotsTxt",
+			Path:        "/robots.txt",
+			HTMLHandler: website.NewRobotsTxtController().Handler,
+		},
+		&router.Route{
+			Name:        "Website > SecurityTxt",
+			Path:        "/security.txt",
+			HTMLHandler: website.NewSecurityTxtController().Handler,
+		},
+		&router.Route{
+			Name:        "Website > Sitemap",
+			Path:        "/sitemap.xml",
+			HTMLHandler: website.NewSitemapXmlController().Handler,
+		},
 		&router.Route{
 			Name:        "Website > Widget Controller > Handler",
 			Path:        links.WIDGET,
@@ -56,11 +82,13 @@ func websiteRoutes() []router.RouteInterface {
 		},
 		&router.Route{
 			Name:        "Website > Cms > Home Page",
+			Middlewares: []router.Middleware{middlewares.NewStatsMiddleware()},
 			Path:        links.HOME,
 			HTMLHandler: website.NewCmsController().Handler,
 		},
 		&router.Route{
 			Name:        "Website > Cms > Catch All Pages",
+			Middlewares: []router.Middleware{middlewares.NewStatsMiddleware()},
 			Path:        links.CATCHALL,
 			HTMLHandler: website.NewCmsController().Handler,
 		},

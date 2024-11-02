@@ -18,6 +18,7 @@ func RegisterTasks() {
 		NewBlindIndexRebuildTask(),
 		NewEnvencTask(),
 		NewHelloWorldTask(),
+		NewStatsVisitorEnhanceTask(),
 	}
 
 	for _, task := range tasks {

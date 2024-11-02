@@ -3,12 +3,14 @@ package admin
 import (
 	"net/http"
 	"project/config"
+	"project/internal/blocks"
 	"project/internal/helpers"
 	"project/internal/layouts"
 	"project/internal/links"
 	"strings"
 
 	"github.com/goravel/framework/support/carbon"
+	"github.com/gouniverse/blockeditor"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/cdn"
@@ -23,6 +25,7 @@ import (
 const VIEW_DETAILS = "details"
 const VIEW_CONTENT = "content"
 const VIEW_SEO = "seo"
+const ACTION_BLOCKEDITOR_HANDLE = "blockeditor_handle"
 
 type postUpdateController struct{}
 
@@ -39,6 +42,10 @@ func (controller postUpdateController) Handler(w http.ResponseWriter, r *http.Re
 		return helpers.ToFlashError(w, r, errorMessage, links.NewAdminLinks().BlogPostManager(map[string]string{}), 10)
 	}
 
+	if data.action == ACTION_BLOCKEDITOR_HANDLE {
+		return blockeditor.Handle(w, r, blocks.BlockEditorDefinitions())
+	}
+
 	if r.Method == http.MethodPost {
 		return controller.form(data).ToHTML()
 	}
@@ -51,7 +58,7 @@ func (controller postUpdateController) Handler(w http.ResponseWriter, r *http.Re
 			cdn.TrumbowygJs_2_27_3(),
 			cdn.Sweetalert2_10(),
 			cdn.JqueryUiJs_1_13_1(), // needed for BlockArea
-			links.NewWebsiteLinks().Resource(`/blockarea_v0200.js`, map[string]string{}),
+			links.NewWebsiteLinks().Resource(`/js/blockarea_v0200.js`, map[string]string{}), // needed for BlockArea
 		},
 		Scripts: []string{
 			controller.script(),
@@ -244,6 +251,10 @@ func (controller postUpdateController) form(data postUpdateControllerData) hb.Ta
 					Key:   blogstore.POST_EDITOR_BLOCKAREA,
 				},
 				{
+					Value: "BlockEditor",
+					Key:   blogstore.POST_EDITOR_BLOCKEDITOR,
+				},
+				{
 					Value: "Markdown",
 					Key:   blogstore.POST_EDITOR_MARKDOWN,
 				},
@@ -282,32 +293,73 @@ func (controller postUpdateController) form(data postUpdateControllerData) hb.Ta
 	}
 
 	editor := lo.IfF(data.post != nil, func() string { return data.post.Editor() }).Else("")
-	contentType := lo.Ternary(editor == blogstore.POST_EDITOR_HTMLAREA, form.FORM_FIELD_TYPE_HTMLAREA, form.FORM_FIELD_TYPE_TEXTAREA)
-	htmlAreaFieldOptions := []form.FieldOption{
-		{
-			Key: "config",
-			Value: `{
-btns: [
-	['viewHTML'],
-	['undo', 'redo'],
-	['formatting'],
-	['strong', 'em', 'del'],
-	['superscript', 'subscript'],
-	['link','justifyLeft','justifyRight','justifyCenter','justifyFull'],
-	['unorderedList', 'orderedList'],
-	['insertImage'],
-	['removeformat'],
-	['horizontalRule'],
-	['fullscreen'],
-],
-autogrow: true,
-removeformatPasted: true,
-tagsToRemove: ['script', 'link', 'embed', 'iframe', 'input'],
-tagsToKeep: ['hr', 'img', 'i'],
-autogrowOnEnter: true,
-linkTargets: ['_blank'],
-}`,
-		}}
+
+	fieldContent := form.Field{
+		Label:   "Content",
+		Name:    "post_content",
+		Type:    form.FORM_FIELD_TYPE_TEXTAREA,
+		Value:   data.formContent,
+		Help:    "The content of this blog post to display on the post details page.",
+		Options: []form.FieldOption{},
+	}
+
+	// For HTML Area editor, configure the Trumbowyg editor
+	if editor == blogstore.POST_EDITOR_HTMLAREA {
+		htmlAreaFieldOptions := []form.FieldOption{
+			{
+				Key: "config",
+				Value: `{
+	btns: [
+		['viewHTML'],
+		['undo', 'redo'],
+		['formatting'],
+		['strong', 'em', 'del'],
+		['superscript', 'subscript'],
+		['link','justifyLeft','justifyRight','justifyCenter','justifyFull'],
+		['unorderedList', 'orderedList'],
+		['insertImage'],
+		['removeformat'],
+		['horizontalRule'],
+		['fullscreen'],
+	],
+	autogrow: true,
+	removeformatPasted: true,
+	tagsToRemove: ['script', 'link', 'embed', 'iframe', 'input'],
+	tagsToKeep: ['hr', 'img', 'i'],
+	autogrowOnEnter: true,
+	linkTargets: ['_blank'],
+	}`,
+			}}
+		fieldContent.Type = form.FORM_FIELD_TYPE_HTMLAREA
+		fieldContent.Options = htmlAreaFieldOptions
+	}
+
+	if editor == blogstore.POST_EDITOR_BLOCKEDITOR {
+		value := fieldContent.Value
+
+		if value == "" {
+			value = `[]`
+		}
+
+		editor, err := blockeditor.NewEditor(blockeditor.NewEditorOptions{
+			// ID:    "blockeditor" + uid.HumanUid(),
+			Name:  fieldContent.Name,
+			Value: value,
+			HandleEndpoint: links.NewAdminLinks().BlogPostUpdate(map[string]string{
+				"post_id": data.postID,
+				"action":  ACTION_BLOCKEDITOR_HANDLE,
+			}),
+			BlockDefinitions: blocks.BlockEditorDefinitions(),
+		})
+
+		if err != nil {
+			return hb.Div().Class("alert alert-danger").Text("Error creating blockeditor: ").Text(err.Error())
+		}
+
+		fieldContent.Type = form.FORM_FIELD_TYPE_BLOCKEDITOR
+		fieldContent.CustomInput = editor
+	}
+
 	fieldsContent := []form.Field{
 		{
 			Label: "Title",
@@ -323,14 +375,7 @@ linkTargets: ['_blank'],
 			Value: data.formSummary,
 			Help:  "A short summary of this blog post to display on the post listing page.",
 		},
-		{
-			Label:   "Content",
-			Name:    "post_content",
-			Type:    contentType,
-			Value:   data.formContent,
-			Help:    "The content of this blog post to display on the post details page.",
-			Options: lo.If(editor == blogstore.POST_EDITOR_HTMLAREA, htmlAreaFieldOptions).Else([]form.FieldOption{}),
-		},
+		fieldContent,
 		{
 			Label:    "Post ID",
 			Name:     "post_id",

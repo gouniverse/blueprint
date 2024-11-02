@@ -1,9 +1,11 @@
 package scheduler
 
 import (
+	"project/internal/tasks"
 	"time"
 
 	"github.com/go-co-op/gocron"
+	"github.com/mingrammer/cfmt"
 )
 
 // StartAsync starts the scheduler in the backgroun without blocking the main thread
@@ -36,6 +38,14 @@ func StartAsync() {
 	// 		pool.BuildCache()
 	// 	})
 	// }
+
+	// Schedule Building the Stats Every 2 Minutes
+	scheduler.Every(2).Minutes().Do(func() {
+		_, err := tasks.NewStatsVisitorEnhanceTask().Enqueue()
+		if err != nil {
+			cfmt.Errorln(err.Error())
+		}
+	})
 
 	scheduler.StartAsync()
 }

@@ -2,6 +2,7 @@ package admin
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"log"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 	"time"
 
 	"github.com/gouniverse/filesystem"
+
 	"github.com/mingrammer/cfmt"
 
 	"github.com/golang-module/carbon/v2"
@@ -21,8 +23,6 @@ import (
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/responses"
 	"github.com/gouniverse/utils"
-
-	"github.com/hyperjiang/php"
 
 	"github.com/samber/lo"
 )
@@ -361,7 +361,7 @@ func (controller *FileManagerController) getMediaManager(r *http.Request) string
 
 	parentDirectory := ""
 	if currentDirectory != "" {
-		parentDirectory = php.Dirname(currentDirectory)
+		parentDirectory = filepath.Dir(currentDirectory)
 	}
 
 	parentDirectory = strings.Trim(parentDirectory, "/")
@@ -391,7 +391,7 @@ func (controller *FileManagerController) getMediaManager(r *http.Request) string
 		hModified := lo.If(lo.IsEmpty(modified), "-").Else(carbon.CreateFromStdTime(modified).ToDateTimeString())
 		directoryList = append(directoryList, FileEntry{
 			Path:              dir,
-			Name:              php.Basename(dir),
+			Name:              filepath.Base(dir),
 			Size:              size,
 			SizeHuman:         hSize,
 			LastModified:      modified,
@@ -410,7 +410,7 @@ func (controller *FileManagerController) getMediaManager(r *http.Request) string
 		fileList = append(fileList, FileEntry{
 			Path:              file,
 			URL:               url,
-			Name:              php.Basename(file),
+			Name:              filepath.Base(file),
 			Size:              size,
 			SizeHuman:         hSize,
 			LastModified:      modified,

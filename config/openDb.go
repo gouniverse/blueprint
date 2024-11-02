@@ -7,10 +7,27 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	// _ "github.com/lib/pq"
+	// _ "github.com/lib/pq" // Enable PostgreSQL driver if needed
 	_ "modernc.org/sqlite"
 )
 
+// openDb opens the database
+//
+// Business logic:
+//   - opens the database based on the driver name
+//   - each driver has its own set of parameters
+//
+// Parameters:
+// - driverName: the driver name
+// - dbHost: the database host
+// - dbPort: the database port
+// - dbName: the database name
+// - dbUser: the database user
+// - dbPass: the database password
+//
+// Returns:
+// - *sql.DB: the database connection
+// - error: the error if any
 func openDb(driverName string, dbHost string, dbPort string, dbName string, dbUser string, dbPass string) (*sql.DB, error) {
 	var db *sql.DB
 	var err error

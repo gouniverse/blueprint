@@ -4,6 +4,8 @@ import (
 	"project/internal/links"
 
 	"github.com/gouniverse/router"
+
+	queue "project/controllers/admin/tasks/queue"
 )
 
 func TaskRoutes() []router.RouteInterface {
@@ -36,12 +38,12 @@ func TaskRoutes() []router.RouteInterface {
 		&router.Route{
 			Name:        "Admin > Tasks > Home",
 			Path:        links.ADMIN_TASKS,
-			HTMLHandler: NewQueueManagerController().Handler,
+			HTMLHandler: queue.NewQueueManagerController().Handler,
 		},
 		&router.Route{
 			Name:        "Admin > Tasks > Catchall",
 			Path:        links.ADMIN_TASKS + links.CATCHALL,
-			HTMLHandler: NewQueueManagerController().Handler,
+			HTMLHandler: queue.NewQueueManagerController().Handler,
 		},
 	}
 }

@@ -9,7 +9,6 @@ import (
 
 	"strings"
 
-	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/icons"
 	"github.com/gouniverse/router"
@@ -37,16 +36,15 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 		return layouts.NewUserLayout(r, layouts.Options{
 			Title:      "System Message",
 			Content:    controller.pageHTML(r),
-			ScriptURLs: []string{cdn.BootstrapJs_5_3_0()},
+			ScriptURLs: []string{},
 			Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
 		}).ToHTML()
 	}
 
-	return layouts.NewGuestLayout(layouts.Options{
-		Title: "System Message",
-		// CanonicalURL: links.NewWebsiteLinks().Flash(map[string]string{}),
+	return layouts.NewWebsiteLayout(layouts.Options{
+		Title:      "System Message",
 		Content:    controller.pageHTML(r),
-		ScriptURLs: []string{cdn.BootstrapJs_5_3_0()},
+		ScriptURLs: []string{},
 		Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
 	}).ToHTML()
 }
@@ -100,12 +98,18 @@ func (c flashController) pageHTML(r *http.Request) *hb.Tag {
 
 	icon := strings.ReplaceAll(alertIcon, "height=\"16\"", "height=\"24\"")
 	icon = strings.ReplaceAll(icon, "width=\"16\"", "width=\"24\"")
-	alert.AddChild(hb.Span().Child(hb.Span().HTML(icon).Style("position:absolute;top:-16px;")).Style("position:relative; margin:0px 20px 0px 0px; display:inline-table;width:24px;"))
-	alert.AddChild(hb.Span().HTML(message))
+	alert.Child(hb.Span().
+		Child(hb.Span().
+			HTML(icon).
+			Style("position:absolute;top:-16px;")).
+		Style("position:relative; margin:0px 20px 0px 0px; display:inline-table;width:24px;"))
+	alert.Child(hb.Span().HTML(message))
 
-	container := hb.Div().Class("container").Style("padding:0px 0px 20px 0px;")
-	container.AddChild(hb.Style(css))
-	container.AddChild(alert)
+	container := hb.Div().
+		Class("container").
+		Style("padding:0px 0px 20px 0px;text-align:left;").
+		Child(hb.Style(css)).
+		Child(alert)
 
 	if url != "" {
 		link := hb.Hyperlink().Href(url).HTML("Click here to continue")

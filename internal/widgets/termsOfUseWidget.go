@@ -1,0 +1,244 @@
+package widgets
+
+import (
+	"net/http"
+	"project/internal/helpers"
+)
+
+// Keep it here for now as there is source control. In the future add versioning to the CMS
+
+var termsOfUse = `
+[heading1]
+	Terms of Use
+[/heading1]
+
+[paragraph]
+	This web site, content, web applications and underlying software (collectively referred to as the "Service")
+	are copyrighted by Sinevia Ltd (the "Author").
+[/paragraph]
+
+[paragraph]
+	These "Terms of Use" set forth the terms and conditions that apply to your use
+	of the the "Service". Please, do read them carefully.
+[/paragraph]
+
+[paragraph]
+	By using the Service, you signify that you agree with all of the terms
+	described in these Terms of Use as posted here and also that these Terms
+	of Use and the Privacy Policy of the Service will apply whenever you use
+	the Service.
+[/paragraph]
+
+[paragraph]
+	The right to use the Service is personally granted to you and is not
+	transferable to any other person or entity. If you DO NOT ACCEPT any of
+	these Terms of Use, please DO NOT use the Service.
+[/paragraph]
+
+[heading2]
+	Continuing agreement
+[/heading2]
+
+[paragraph]
+	The Service reserves the right to modify these Terms of Use at any time
+	and after the applied changes may update the publication date.
+	You are responsible for reviewing the Terms of Use each time you use
+	the Service to stay infomed of any changes.
+	By continuing to use the Service, you reaffirm your agreement with
+	the most current version of the Terms of Use.
+[/paragraph]
+
+[paragraph]
+	You must be at least 18 years old to use the Service.
+[/paragraph]
+
+[paragraph]
+	By using the Service, you agree to and understands that:
+[/paragraph]
+
+[list]
+	[item]
+		The Service may collect data and information about you to
+		verify your identity, ensure compliance with our
+		Terms of Use and Privacy Policy, investigate any violations
+		or misconduct, or comply with laws and regulations.
+	[/item]
+
+	[item]
+		The data, text, documents, images, and all associated content
+		that you post or publish on the Service remain the property
+		of the Service.
+	[/item]
+	
+	[item]
+		If you agree to share personal data with any third parties
+		through the Service, these third parties may request and
+		be granted access to this personal data.
+	[/item]
+
+	[item]
+		The Service cannot guarantee that your personal data will not be
+		disclosed to third parties without your consent or the consent
+		of the Service.
+	[/item]
+[/list]
+
+[paragraph]
+	By using the Service you agree and understand that you are obliged to:
+[/paragraph]
+
+[list]
+	[item]
+		Not misuse or interfere with the Service.
+	[/item]
+	[item]
+		Use the Service only through the provided interface.
+	[/item]
+	[item]
+		Act honestly and fairly towards other users of the Service.
+	[/item]
+	[item]
+		Provide true and complete information about yourself.
+	[/item]
+	[item]
+		Promptly update your personal data, documents, or images
+		if they are altered or incomplete.
+	[/item]
+	[item]
+		Not post misleading information about yourself.
+	[/item]
+[/list]
+
+[paragraph]By using the Service you are forbidden from:[/paragraph]
+
+[list]
+	[item]
+		Breaching the confidentiality of other users, including collecting,
+		possessing, and distributing information about other users,
+		or publishing their data, documents, or images without their
+		explicit consent, except when such actions are consistent with the law.
+	[/item]
+	[item]
+	    Publishing data, documents, images, or information that violate
+		applicable laws or the rights of third parties 
+		(especially copyright and other intellectual property rights)
+		or that may be considered contrary to morality.
+	[/item]
+	[item]
+		Posting or transmitting any unlawful, threatening, defamatory,
+		obscene, pornographic, or other information that violates applicable
+		laws.
+	[/item]
+	[item]
+		Sending spam or unsolicited commercial information,
+		and conducting commercial, advertising, or promotional activities
+		not specifically requested by the recipient.
+	[/item]
+[/list]
+
+[paragraph]The Service is not responsible for:[/paragraph]
+
+[list]
+	[item]
+	    The content of the data, documents, or images posted or published by users.
+	[/item]
+	[item]
+		The accuracy of the data, documents, or images published by users.
+	[/item]
+	[item]
+		Any lost profits or damages resulting from the use of information
+		on the Service.
+	[/item]
+	[item]
+		Inaccuracies, misunderstandings, or lost profits arising from errors
+		in the Service.
+	[/item]
+[/list]
+
+[paragraph]
+	The Service administrators have the right to delete any user's profile and
+	data from the system without any warning or legitimate reason.
+[/paragraph]
+
+[heading2]
+	Disclaimer for AI-generated content
+[/heading2]
+
+[paragraph]
+	You understand and agree that the Service utilizes
+	advanced AI technology to assist in the review and
+	analysis of documents. However, the Service does not
+	take any responsibility for the accuracy, completeness,
+	or legality of the content generated by the AI.
+[/paragraph]
+
+[paragraph]
+	By using this Service, you acknowledge that your content
+	will be sent to an AI system for processing, which involves
+	third-party servers.
+	The Service does not take responsibility for how these
+	third-party servers store or handle the documents,
+	nor for any leaks or breaches that may occur.
+	You must anonymize any uploaded content to protect sensitive data.
+	The Service shall not be liable for any damages or losses
+	resulting from the uploading of sensitive data to the AI system.
+[/paragraph]
+	
+[paragraph]
+	Users are advised to consult with qualified
+	legal professionals before making any decisions
+	based on the AI-generated content.
+	The Service shall not be liable for any damages or losses
+	arising from the use of the AI-generated content.
+[/paragraph]
+
+
+[heading2]
+	Limitation of Liability
+[/heading2]
+
+[paragraph]
+	IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS
+	BE LIABLE TO ANY PARTY FOR ANY DIRECT, INDIRECT,
+	SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+	ARISING	OUT OF THE USE OF THIS SERVICE OR SOFTWARE,
+	ITS DOCUMENTATION, OR ANY DERIVATIVES THEREOF,
+	EVEN IF THE AUTHORS OR DISTRIBUTORS HAVE BEEN
+	ADVISED	OF THE POSSIBILITY OF SUCH DAMAGES.
+[/paragraph]
+
+[heading2]
+	Disclaimer of Warranties
+[/heading2]
+
+[paragraph]
+	THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM
+	ANY WARRANTIES,	INCLUDING, BUT NOT LIMITED TO, THE
+	IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR
+	A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+	THIS SOFTWARE IS PROVIDED "AS IS", AND THE AUTHORS
+	AND DISTRIBUTORS HAVE NO OBLIGATION TO PROVIDE
+	MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS,
+	OR MODIFICATIONS.
+[/paragraph]
+`
+
+type termsOfUseWidget struct{}
+
+var _ Widget = (*termsOfUseWidget)(nil)
+
+func NewTermsOfUseWidget() *termsOfUseWidget {
+	return &termsOfUseWidget{}
+}
+
+func (w *termsOfUseWidget) Alias() string {
+	return "x-terms-of-use"
+}
+
+func (w *termsOfUseWidget) Description() string {
+	return "Terms of Use"
+}
+
+func (w *termsOfUseWidget) Render(r *http.Request, content string, params map[string]string) string {
+	return helpers.BbcodeToHtml(termsOfUse)
+}

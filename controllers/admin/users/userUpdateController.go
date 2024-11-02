@@ -16,9 +16,13 @@ import (
 	"github.com/gouniverse/utils"
 )
 
+// == CONTROLLER ==============================================================
+
 type userUpdateController struct{}
 
 var _ router.HTMLControllerInterface = (*userUpdateController)(nil)
+
+// == CONSTRUCTOR =============================================================
 
 func NewUserUpdateController() *userUpdateController {
 	return &userUpdateController{}

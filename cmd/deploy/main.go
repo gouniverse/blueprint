@@ -22,6 +22,11 @@ var sshLogin = sshUser + "@" + sshHost
 var remDeployDir = "/home/{{ USER }}/{{ APP_DIR }}"
 var remTempDeployName = "temp_deploy_" + timestamp
 var pm2ProcessName = "{{ PROCESSNAME }}"
+var otherFilesToDeploy = []struct {
+	LocalPath  string
+	RemotePath string
+}{
+}
 
 func main() {
 	cfmt.Infoln("1. Building executable...")
@@ -33,7 +38,15 @@ func main() {
 		return
 	}
 
-	cfmt.Infoln("2. Uploading executable...")
+	cfmt.Infoln("2. Uploading files...")
+
+	for _, file := range otherFilesToDeploy {
+		cmd := `scp -o stricthostkeychecking=no -i ` + privateKeyPath(sshKey) + ` ` + file.LocalPath + ` ` + sshLogin + `:` + remDeployDir + `/` + file.RemotePath
+		cfmt.Infoln(" - Executing:" + cmd)
+		utils.ExecLine(cmd)
+	}
+
+	cfmt.Infoln("3. Uploading executable...")
 
 	cmd := `scp -o stricthostkeychecking=no -i ` + privateKeyPath(sshKey) + ` ` + buildExecutablePath + ` ` + sshLogin + `:` + remDeployDir + `/` + remTempDeployName
 
@@ -74,6 +87,7 @@ func main() {
 
 	for _, entry := range cmds {
 		cfmt.Infoln(" - Executing:" + entry.cmd)
+
 		output, error := ssh(sshHost, sshUser, sshKey, entry.cmd)
 
 		if error != nil {
@@ -127,7 +141,7 @@ func buildExecutable(pathExec string) error {
 func privateKeyPath(sshKey string) string {
 	user, err := user.Current()
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err.Error())
 	}
 	homeDirectory := user.HomeDir
 	privateKeyPath := homeDirectory + "/.ssh/" + sshKey

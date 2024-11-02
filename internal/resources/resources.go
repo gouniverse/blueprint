@@ -12,6 +12,20 @@ import (
 //go:embed *
 var files embed.FS
 
+func ToBytes(path string) ([]byte, error) {
+	return files.ReadFile(path)
+}
+
+func ToString(path string) (string, error) {
+	bytes, err := ToBytes(path)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(bytes), nil
+}
+
 func ResourceExists(path string) bool {
 	_, err := files.ReadFile(path)
 	return err == nil

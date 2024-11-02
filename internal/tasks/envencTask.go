@@ -5,6 +5,7 @@ import (
 
 	"github.com/gouniverse/envenc"
 	"github.com/gouniverse/taskstore"
+	"github.com/mingrammer/cfmt"
 )
 
 // ===================================================================
@@ -29,7 +30,7 @@ func NewEnvencTask() *envencTask {
 }
 
 func (handler *envencTask) Alias() string {
-	return "envenc"
+	return "EnvEnc"
 }
 
 func (handler *envencTask) Title() string {
@@ -42,9 +43,10 @@ func (handler *envencTask) Description() string {
 
 func (handler *envencTask) Handle() bool {
 	if len(os.Args) < 3 {
+		cfmt.Errorln("Usage: go run main.go task envenc <command> .env.vault")
 		return false
 	}
 
-	envenc.Cli(os.Args[2:])
+	envenc.NewCliV3().Run(os.Args[2:])
 	return true
 }

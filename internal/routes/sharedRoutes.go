@@ -12,7 +12,13 @@ import (
 func sharedRoutes() []router.RouteInterface {
 	sharedRoutes := []router.RouteInterface{
 		&router.Route{
-			Name:        "Shared > Media Controller > Handler",
+			Name:        "Shared > Files Controller",
+			Path:        links.FILES,
+			Methods:     []string{http.MethodGet},
+			HTMLHandler: shared.NewFileController().Handler,
+		},
+		&router.Route{
+			Name:        "Shared > Media Controller",
 			Path:        links.MEDIA,
 			Methods:     []string{http.MethodGet},
 			HTMLHandler: shared.NewMediaController().Handler,
@@ -23,7 +29,7 @@ func sharedRoutes() []router.RouteInterface {
 			HTMLHandler: shared.NewFlashController().Handler,
 		},
 		&router.Route{
-			Name:        "Resources",
+			Name:        "Shared > Resources",
 			Path:        links.RESOURCES + links.CATCHALL,
 			HTMLHandler: shared.NewResourceController().Handler,
 		},
@@ -31,6 +37,11 @@ func sharedRoutes() []router.RouteInterface {
 			Name:    "Shared > Theme",
 			Path:    links.THEME,
 			Handler: dashboard.ThemeHandler,
+		},
+		&router.Route{
+			Name:        "Shared > Thumbnail",
+			Path:        links.THUMB,
+			HTMLHandler: shared.NewThumbController().Handler,
 		},
 	}
 
