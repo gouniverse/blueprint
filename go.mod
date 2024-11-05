@@ -1,8 +1,6 @@
 module project
 
-go 1.23.1
-
-toolchain go1.23.2
+go 1.23.2
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
@@ -15,7 +13,7 @@ require (
 	github.com/goravel/framework v1.14.7
 	github.com/gouniverse/auth v0.22.0
 	github.com/gouniverse/blindindexstore v1.0.0
-	github.com/gouniverse/blockeditor v0.3.0
+	github.com/gouniverse/blockeditor v0.9.0
 	github.com/gouniverse/blogstore v0.8.0
 	github.com/gouniverse/bs v0.13.0
 	github.com/gouniverse/cachestore v0.18.1
@@ -24,7 +22,7 @@ require (
 	github.com/gouniverse/dashboard v1.4.0
 	github.com/gouniverse/envenc v0.7.0
 	github.com/gouniverse/filesystem v0.3.0
-	github.com/gouniverse/form v0.7.0
+	github.com/gouniverse/form v0.9.0
 	github.com/gouniverse/hb v1.78.0
 	github.com/gouniverse/icons v1.3.1
 	github.com/gouniverse/logstore v1.5.0
@@ -41,11 +39,11 @@ require (
 	github.com/gouniverse/utils v1.45.0
 	github.com/gouniverse/vaultstore v0.21.0
 	github.com/gouniverse/webserver v0.1.0
-	github.com/hyperjiang/php v1.0.2
+	github.com/hyperjiang/php v1.0.3
 	github.com/jellydator/ttlcache/v3 v3.3.0
 	github.com/mileusna/useragent v1.3.5
 	github.com/mingrammer/cfmt v1.1.0
-	github.com/robertkrimen/otto v0.4.0
+	github.com/robertkrimen/otto v0.5.1
 	github.com/sfreiberg/simplessh v0.0.0-20220719182921-185eafd40485
 	github.com/spf13/cast v1.7.0
 	github.com/yuin/goldmark v1.7.8
@@ -81,7 +79,7 @@ require (
 	github.com/golang-module/carbon v1.7.3 // indirect
 	github.com/gouniverse/crypto v0.2.0 // indirect
 	github.com/gouniverse/settingstore v0.12.0 // indirect
-	github.com/gouniverse/shortcode v0.1.4 // indirect
+	github.com/gouniverse/shortcode v0.4.0 // indirect
 	github.com/gouniverse/sqlfilestore v0.1.3 // indirect
 	github.com/gouniverse/uncdn v0.7.4 // indirect
 	github.com/gouniverse/validator v0.11.0 // indirect
@@ -119,7 +117,7 @@ require (
 	github.com/golang-module/carbon/v2 v2.4.1
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gouniverse/api v1.6.0
-	github.com/gouniverse/cms v1.5.0
+	github.com/gouniverse/cms v1.6.4
 	github.com/gouniverse/customstore v0.5.0
 	github.com/gouniverse/dataobject v0.3.0
 	github.com/gouniverse/entitystore v0.62.1

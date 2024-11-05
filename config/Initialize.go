@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"os"
 	"project/internal/resources"
+	"project/internal/webblocks"
+	"project/internal/webtheme"
 	"strings"
 
 	"github.com/faabiosr/cachego/file"
@@ -25,6 +27,7 @@ import (
 	"github.com/gouniverse/shopstore"
 	"github.com/gouniverse/statsstore"
 	"github.com/gouniverse/taskstore"
+	"github.com/gouniverse/ui"
 	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 	"github.com/gouniverse/vaultstore"
@@ -327,12 +330,16 @@ func initializeDatabase() error {
 	CacheStore = *cacheStoreInstance
 
 	cmsInstance, err := cms.NewCms(cms.Config{
-		Database:        Database,
-		Prefix:          "cms_",
-		TemplatesEnable: true,
-		PagesEnable:     true,
-		MenusEnable:     true,
-		BlocksEnable:    true,
+		Database:               Database,
+		Prefix:                 "cms_",
+		TemplatesEnable:        true,
+		PagesEnable:            true,
+		MenusEnable:            true,
+		BlocksEnable:           true,
+		BlockEditorDefinitions: webblocks.BlockEditorDefinitions(),
+		BlockEditorRenderer: func(blocks []ui.BlockInterface) string {
+			return webtheme.New(blocks).ToHtml()
+		},
 		//CacheAutomigrate:    true,
 		//CacheEnable:         true,
 		EntitiesAutomigrate: true,
@@ -348,7 +355,7 @@ func initializeDatabase() error {
 		// TranslationsEnable:  true,
 		// TranslationLanguageDefault: TRANSLATION_LANGUAGE_DEFAULT,
 		// TranslationLanguages:       TRANSLATION_LANGUAGE_LIST,
-		// CustomEntityList:    entityList(),
+		CustomEntityList: customEntityList(),
 	})
 
 	if err != nil {
@@ -623,6 +630,12 @@ func migrateDatabase() (err error) {
 
 	if err != nil {
 		return errors.Join(errors.New("shopstore.AutoMigrate"), err)
+	}
+
+	err = StatsStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("statsstore.AutoMigrate"), err)
 	}
 
 	err = TaskStore.AutoMigrate()

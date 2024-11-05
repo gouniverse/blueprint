@@ -7,40 +7,41 @@ import (
 
 	"github.com/gouniverse/router"
 
-	websiteBlogControllers "project/controllers/website/blog"
+	blogControllers "project/controllers/website/blog"
+	cmsControllers "project/controllers/website/cms"
 )
 
 func websiteRoutes() []router.RouteInterface {
-	websiteRoutes := []router.RouteInterface{
+	blogRoutes := []router.RouteInterface{
 		&router.Route{
 			Name:        "Guest > Articles",
 			Path:        "/articles",
-			HTMLHandler: websiteBlogControllers.NewBlogController().Handler,
+			HTMLHandler: blogControllers.NewBlogController().Handler,
 		},
 		&router.Route{
 			Name:        "Guest > Articles > Post with ID > Index",
 			Path:        "/article/{id:[0-9]+}",
-			HTMLHandler: websiteBlogControllers.NewBlogPostController().Handler,
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
 		},
 		&router.Route{
 			Name:        "Guest > Articles > Post with ID && Title > Index",
 			Path:        "/article/{id:[0-9]+}/{title}",
-			HTMLHandler: websiteBlogControllers.NewBlogPostController().Handler,
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
 		},
 		&router.Route{
 			Name:        "Guest > Blog",
 			Path:        links.BLOG,
-			HTMLHandler: websiteBlogControllers.NewBlogController().Handler,
+			HTMLHandler: blogControllers.NewBlogController().Handler,
 		},
 		&router.Route{
 			Name:        "Guest > Blog > Post with ID > Index",
 			Path:        links.BLOG_POST_WITH_REGEX,
-			HTMLHandler: websiteBlogControllers.NewBlogPostController().Handler,
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
 		},
 		&router.Route{
 			Name:        "Guest > Blog > Post with ID && Title > Index",
 			Path:        links.BLOG_POST_WITH_REGEX2,
-			HTMLHandler: websiteBlogControllers.NewBlogPostController().Handler,
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
 		},
 		// {
 		// 	Path:    links.HOME,
@@ -60,6 +61,10 @@ func websiteRoutes() []router.RouteInterface {
 		// 	Path:        links.PAYMENT_SUCCESS,
 		// 	HTMLHandler: websitePayment.NewPaymentSuccessController().Handle,
 		// },
+
+	}
+
+	seoRoutes := []router.RouteInterface{
 		&router.Route{
 			Name:        "Website > RobotsTxt",
 			Path:        "/robots.txt",
@@ -75,24 +80,32 @@ func websiteRoutes() []router.RouteInterface {
 			Path:        "/sitemap.xml",
 			HTMLHandler: website.NewSitemapXmlController().Handler,
 		},
+	}
+
+	cmsRoutes := []router.RouteInterface{
 		&router.Route{
 			Name:        "Website > Widget Controller > Handler",
 			Path:        links.WIDGET,
-			HTMLHandler: website.NewWidgetController().Handler,
+			HTMLHandler: cmsControllers.NewWidgetController().Handler,
 		},
 		&router.Route{
 			Name:        "Website > Cms > Home Page",
 			Middlewares: []router.Middleware{middlewares.NewStatsMiddleware()},
 			Path:        links.HOME,
-			HTMLHandler: website.NewCmsController().Handler,
+			HTMLHandler: cmsControllers.NewCmsController().Handler,
 		},
 		&router.Route{
 			Name:        "Website > Cms > Catch All Pages",
 			Middlewares: []router.Middleware{middlewares.NewStatsMiddleware()},
 			Path:        links.CATCHALL,
-			HTMLHandler: website.NewCmsController().Handler,
+			HTMLHandler: cmsControllers.NewCmsController().Handler,
 		},
 	}
+
+	websiteRoutes := []router.RouteInterface{}
+	websiteRoutes = append(websiteRoutes, blogRoutes...)
+	websiteRoutes = append(websiteRoutes, seoRoutes...)
+	websiteRoutes = append(websiteRoutes, cmsRoutes...)
 
 	return websiteRoutes
 }

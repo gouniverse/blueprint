@@ -1,10 +1,11 @@
-package blocks
+package blogblocks
 
 import (
 	"github.com/gouniverse/blockeditor"
 	"github.com/gouniverse/form"
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/ui"
+	"github.com/gouniverse/utils"
 )
 
 func BlockEditorDefinitions() []blockeditor.BlockDefinition {
@@ -21,10 +22,11 @@ func BlockEditorDefinitions() []blockeditor.BlockDefinition {
 
 func blockUnorderedListDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
-		Icon:   hb.I().Class("bi bi-list-ul"),
-		Type:   "unordered_list",
-		Fields: []form.Field{},
-		AllowedChildren: []string{
+		Icon:          hb.I().Class("bi bi-list-ul"),
+		Type:          "unordered_list",
+		Fields:        []form.Field{},
+		AllowChildren: true,
+		AllowedChildTypes: []string{
 			"list_item",
 		},
 	}
@@ -32,10 +34,11 @@ func blockUnorderedListDefinition() blockeditor.BlockDefinition {
 
 func blockOrderedListDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
-		Icon:   hb.I().Class("bi bi-list-ol"),
-		Type:   "ordered_list",
-		Fields: []form.Field{},
-		AllowedChildren: []string{
+		Icon:          hb.I().Class("bi bi-list-ol"),
+		Type:          "ordered_list",
+		Fields:        []form.Field{},
+		AllowChildren: true,
+		AllowedChildTypes: []string{
 			"list_item",
 		},
 	}
@@ -52,14 +55,14 @@ func blockListItemDefinition() blockeditor.BlockDefinition {
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			},
 		},
-		ToHTML: func(block ui.BlockInterface) string {
+		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			content := block.Parameter("content")
-
+			
 			if content == "" {
-				return "Add list item text"
+				content = "Add list item text"
 			}
 
-			return hb.Raw(content).ToHTML()
+			return hb.LI().HTML(content)
 		},
 	}
 }
@@ -106,21 +109,17 @@ func blockHeadingDefinition() blockeditor.BlockDefinition {
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			},
 		},
-		ToHTML: func(block ui.BlockInterface) string {
+		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			level := block.Parameter("level")
 			content := block.Parameter("content")
-
-			if content == "" {
-				return "Add heading text"
-			}
 
 			if level == "" {
 				level = "1"
 			}
 
-			return hb.NewTag("h" + level).
-				HTML(content).
-				ToHTML()
+			return hb.NewTag("h"+level).
+				HTMLIf(content != "", `Add heading text`).
+				HTML(content)
 		},
 	}
 }
@@ -136,16 +135,12 @@ func blockParagraphDefinition() blockeditor.BlockDefinition {
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			},
 		},
-		ToHTML: func(block ui.BlockInterface) string {
+		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			content := block.Parameter("content")
 
-			if content == "" {
-				return "Add paragraph text"
-			}
-
 			return hb.P().
-				HTML(content).
-				ToHTML()
+				HTMLIf(content == "", `Add paragraph text`).
+				HTML(content)
 		},
 	}
 }
@@ -189,18 +184,23 @@ func blockHyperlinkDefinition() blockeditor.BlockDefinition {
 				},
 			},
 		},
-		ToHTML: func(block ui.BlockInterface) string {
+		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			content := block.Parameter("content")
+			url := block.Parameter("url")
+			target := block.Parameter("target")
 
-			if content == "" {
-				return "Add link text"
+			if url == "" {
+				url = "#"
+			}
+
+			if target == "" {
+				target = "_self"
 			}
 
 			return hb.A().
-				Href(block.Parameter("url")).
-				HTML(block.Parameter("content")).
-				Target(block.Parameter("target")).
-				ToHTML()
+				Href(url).
+				HTMLIf(content != "", content).
+				Target(target)
 		},
 	}
 }
@@ -216,14 +216,17 @@ func blockImageDefinition() blockeditor.BlockDefinition {
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			},
 		},
-		ToHTML: func(block ui.BlockInterface) string {
+		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			imageUrl := block.Parameter("image_url")
 
 			if imageUrl == "" {
-				return "Add image URL"
+				imageUrl = utils.PicsumURL(100, 100, utils.PicsumURLOptions{
+					Grayscale: true,
+					Seed:      "no image",
+				})
 			}
 
-			return hb.Img(imageUrl).ToHTML()
+			return hb.Img(imageUrl)
 		},
 	}
 }

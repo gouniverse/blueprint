@@ -47,7 +47,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	// Prepare styles
 	styles := []string{ // prepend any if required
-		`nav#Toolbar {border-bottom: 8px solid purple;} nav#Toolbar .btn {margin-top: -12px;} nav#Toolbar .dropdown {margin-top: 12px;}`,
+		`nav#Toolbar {border-bottom: 8px solid blue;}`,
 	}
 	styles = append(styles, options.Styles...)
 
@@ -60,6 +60,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		LoginURL:        links.NewAuthLinks().Login(homeLink),
 		Menu:            userLayoutMainMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",
+		NavbarBackgroundColorMode: "primary",
 		LogoRawHtml:     userLogoHtml(),
 		LogoRedirectURL: homeLink,
 		User:            dashboardUser,

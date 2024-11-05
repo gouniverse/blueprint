@@ -26,12 +26,7 @@ func (controller *widgetController) Handler(w http.ResponseWriter, r *http.Reque
 		return "Widget type not specified"
 	}
 
-	widgetList := []widgets.Widget{
-		// widgets.NewAuthenticatedWidget(),
-		// widgets.NewPrintWidget(),
-		// widgets.NewVisibleWidget(),
-		// widgets.NewUnauthenticatedWidget(),
-	}
+	widgetList := widgets.WidgetRegistry()
 
 	for _, widget := range widgetList {
 		if widget.Alias() == alias {

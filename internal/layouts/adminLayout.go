@@ -47,7 +47,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	// Prepare styles
 	styles := []string{ // prepend any if required
-		`nav#Toolbar {border-bottom: 8px solid red;}  nav#Toolbar .btn {margin-top: -12px;} nav#Toolbar .dropdown {margin-top: 12px;}`,
+		`nav#Toolbar {border-bottom: 8px solid red;}`,
 	}
 	styles = append(styles, options.Styles...)
 

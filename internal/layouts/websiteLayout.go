@@ -49,7 +49,7 @@ func (layout *websiteLayout) ToHTML() string {
 	})
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("At WebsiteLayout", err.Error())
+		config.Logger.Error("At WebsiteLayout", "error", err.Error())
 		return "Template error. Please try again later"
 	}
 

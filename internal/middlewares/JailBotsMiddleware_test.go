@@ -168,7 +168,8 @@ func TestJailBotsMiddlewareIsJailable(t *testing.T) {
 
 	// Assert
 	for i := 0; i < len(data); i++ {
-		if m.isJailable(data[i].uri) != data[i].jailable {
+		jailable, _ := m.isJailable(data[i].uri)
+		if jailable != data[i].jailable {
 			t.Fatal("JailBotsMiddleware.isJailable(", data[i].uri, ") must be ", data[i].jailable)
 		}
 	}

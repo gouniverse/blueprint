@@ -34,6 +34,7 @@ func ResourceExists(path string) bool {
 func Resource(path string) string {
 	str, err := files.ReadFile(path)
 	if err != nil {
+		log.Println("Resource: " + path + " NOT FOUND")
 		return ""
 	}
 	return string(str)

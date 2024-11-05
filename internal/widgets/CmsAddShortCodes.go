@@ -7,10 +7,12 @@ import (
 )
 
 func CmsAddShortcodes() {
-	shortcodes := []cms.ShortcodeInterface{
-		NewAuthenticatedWidget(),
-		NewUnauthenticatedWidget(),
-		NewVisibleWidget(),
+	shortcodes := []cms.ShortcodeInterface{}
+
+	list := WidgetRegistry()
+
+	for _, widget := range list {
+		shortcodes = append(shortcodes, widget)
 	}
 
 	config.Cms.ShortcodesAdd(shortcodes)

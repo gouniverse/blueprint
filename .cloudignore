@@ -19,7 +19,20 @@
 *.md
 
 # ignore .vscode folder
+/.github
+/.github/*
+
+# ignore .vscode folder
 /.vscode
+
+
+# ignore /bin folder files
+/bin
+/bin/*
+
+# ignore /cordova folder files
+/cordova
+/cordova/*
 
 # ignore /documents folder files
 /docs

@@ -40,10 +40,13 @@ func (m *jailBotsMiddleware) Handler(next http.Handler) http.Handler {
 			return
 		}
 
-		if m.isJailable(uri) {
+		jailable, reason := m.isJailable(uri)
+
+		if jailable {
 			m.jail(ip)
 
 			config.Logger.Info("Jailed bot from "+ip+" for 5 minutes",
+				slog.String("reason", reason),
 				slog.String("uri", uri),
 				slog.String("ip", ip),
 				slog.String("useragent", r.UserAgent()),
@@ -66,11 +69,12 @@ func (j jailBotsMiddleware) jail(ip string) {
 	config.CacheMemory.Set("jail:"+ip, ip, 5*time.Minute)
 }
 
-func (m jailBotsMiddleware) isJailable(uri string) bool {
+func (m jailBotsMiddleware) isJailable(uri string) (jailable bool, reason string) {
 	startsWithList := m.startsWithBlacklistedUriList()
+
 	for i := 0; i < len(startsWithList); i++ {
 		if strings.HasPrefix(uri, startsWithList[i]) {
-			return true
+			return true, "starts with " + startsWithList[i]
 		}
 	}
 
@@ -78,11 +82,11 @@ func (m jailBotsMiddleware) isJailable(uri string) bool {
 
 	for i := 0; i < len(containsList); i++ {
 		if strings.Contains(uri, containsList[i]) {
-			return true
+			return true, "contains " + containsList[i]
 		}
 	}
 
-	return false
+	return false, ""
 }
 
 // containsBlacklistedUriList returns a list of strings

@@ -32,8 +32,10 @@ func userLayoutUserMenu(authUser userstore.UserInterface) []dashboard.MenuItem {
 
 	items := []dashboard.MenuItem{profileMenuItem}
 
-	if authUser != nil && authUser.IsAdministrator() {
-		items = append(items, adminDashboardMenuItem)
+	if authUser != nil {
+		if authUser.IsAdministrator() || authUser.IsSuperuser() {
+			items = append(items, adminDashboardMenuItem)
+		}
 	}
 
 	items = append(items, logoutMenuItem)

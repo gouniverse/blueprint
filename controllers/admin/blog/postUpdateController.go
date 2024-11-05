@@ -3,7 +3,7 @@ package admin
 import (
 	"net/http"
 	"project/config"
-	"project/internal/blocks"
+	"project/internal/blogblocks"
 	"project/internal/helpers"
 	"project/internal/layouts"
 	"project/internal/links"
@@ -43,7 +43,7 @@ func (controller postUpdateController) Handler(w http.ResponseWriter, r *http.Re
 	}
 
 	if data.action == ACTION_BLOCKEDITOR_HANDLE {
-		return blockeditor.Handle(w, r, blocks.BlockEditorDefinitions())
+		return blockeditor.Handle(w, r, blogblocks.BlockEditorDefinitions())
 	}
 
 	if r.Method == http.MethodPost {
@@ -349,7 +349,7 @@ func (controller postUpdateController) form(data postUpdateControllerData) hb.Ta
 				"post_id": data.postID,
 				"action":  ACTION_BLOCKEDITOR_HANDLE,
 			}),
-			BlockDefinitions: blocks.BlockEditorDefinitions(),
+			BlockDefinitions: blogblocks.BlockEditorDefinitions(),
 		})
 
 		if err != nil {
