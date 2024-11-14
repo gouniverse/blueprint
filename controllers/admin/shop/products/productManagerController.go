@@ -85,8 +85,8 @@ func (controller *productManagerController) onModalProductFilterShow(data produc
 	filterForm := form.NewForm(form.FormOptions{
 		ID:     "FormFilters",
 		Method: http.MethodGet,
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Label: "Status",
 				Name:  "filter_status",
 				Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -110,49 +110,49 @@ func (controller *productManagerController) onModalProductFilterShow(data produc
 						Key:   shopstore.PRODUCT_STATUS_DRAFT,
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Title",
 				Name:  "filter_title",
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: data.formTitle,
 				Help:  `Filter by title.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Created From",
 				Name:  "filter_created_from",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formCreatedFrom,
 				Help:  `Filter by creation date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Created To",
 				Name:  "filter_created_to",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formCreatedTo,
 				Help:  `Filter by creation date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Updated From",
 				Name:  "filter_updated_from",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formUpdatedFrom,
 				Help:  `Filter by update date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Updated To",
 				Name:  "filter_updated_to",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formUpdatedTo,
 				Help:  `Filter by update date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Product ID",
 				Name:  "filter_product_id",
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: data.formProductID,
 				Help:  `Find product by reference number (ID).`,
-			},
+			}),
 		},
 	}).Build()
 

@@ -164,8 +164,8 @@ func (controller *productUpdateController) page(data productUpdateControllerData
 }
 
 func (controller *productUpdateController) formDetails(data productUpdateControllerData) hb.TagInterface {
-	fieldsDetails := []form.Field{
-		{
+	fieldsDetails := []form.FieldInterface{
+		form.NewField(form.FieldOptions{
 			Label: "Status",
 			Name:  "product_status",
 			Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -189,50 +189,50 @@ func (controller *productUpdateController) formDetails(data productUpdateControl
 					Key:   shopstore.PRODUCT_STATUS_DRAFT,
 				},
 			},
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Title",
 			Name:  "product_title",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formTitle,
 			Help:  `The title of the product.`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Description",
 			Name:  "product_description",
 			Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			Value: data.formDescription,
 			Help:  `The description of the product.`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Price",
 			Name:  "product_price",
 			Type:  form.FORM_FIELD_TYPE_NUMBER,
 			Value: data.formPrice,
 			Help:  `The price of the product.`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Quantity",
 			Name:  "product_quantity",
 			Type:  form.FORM_FIELD_TYPE_NUMBER,
 			Value: data.formQuantity,
 			Help:  `The quantity of the product that is available to purchase.`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Admin Notes",
 			Name:  "product_memo",
 			Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			Value: data.formMemo,
 			Help:  "Admin notes for this product. These notes will not be visible to the public.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "Product ID",
 			Name:     "product_id",
 			Type:     form.FORM_FIELD_TYPE_STRING,
 			Value:    data.productID,
 			Readonly: true,
 			Help:     "The reference number (ID) of the product.",
-		},
+		}),
 	}
 
 	formUserUpdate := form.NewForm(form.FormOptions{
@@ -242,32 +242,32 @@ func (controller *productUpdateController) formDetails(data productUpdateControl
 	formUserUpdate.SetFields(fieldsDetails)
 
 	if data.formErrorMessage != "" {
-		formUserUpdate.AddField(form.Field{
+		formUserUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	if data.formSuccessMessage != "" {
-		formUserUpdate.AddField(form.Field{
+		formUserUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	return formUserUpdate.Build()
 }
 
 func (controller *productUpdateController) formMetadata(data productUpdateControllerData) hb.TagInterface {
-	fieldsDetails := []form.Field{
-		{
+	fieldsDetails := []form.FieldInterface{
+		form.NewField(form.FieldOptions{
 			Label:    "Product ID",
 			Name:     "product_id",
 			Type:     form.FORM_FIELD_TYPE_HIDDEN,
 			Value:    data.productID,
 			Readonly: true,
 			//Help:     "The reference number (ID) of the product.",
-		},
+		}),
 	}
 
 	metas := data.formMetas
@@ -278,69 +278,66 @@ func (controller *productUpdateController) formMetadata(data productUpdateContro
 	for _, key := range keys {
 		value := metas[key]
 		background := lo.Ternary(index%2 == 0, "bg-light", "bg-white")
-		fieldsMeta := []form.Field{
-			{
+		fieldsMeta := []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Opening row`,
 				Value: `<div id="Row` + cast.ToString(index) + `" class="row ` + background + ` py-2">`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Opening column 1`,
 				Value: `<div class="col-3">`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: `Key`,
 				Name:  `product_meta[` + cast.ToString(index) + `][key]`,
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: key,
 				// Help:  "The metadata value.",
-			},
-
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Closing column 1`,
 				Value: `</div>`,
-			},
-
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Opening column 2`,
 				Value: `<div class="col-8">`,
-			},
-
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: `Value`,
 				Name:  `product_meta[` + cast.ToString(index) + `][value]`,
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 				Value: value,
 				// Help:  "The metadata value.",
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Closing column 2`,
 				Value: `</div>`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Opening column 3`,
 				Value: `<div class="col-1">`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Value: `<button onclick="document.getElementById('Row` + cast.ToString(index) + `').innerHTML='';" type="button" class="btn btn-sm btn-danger">x</button>`,
 				Help:  "Delete...",
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Closing column 3`,
 				Value: `</div>`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Type:  form.FORM_FIELD_TYPE_RAW,
 				Help:  `Closing the row.`,
 				Value: `</div>`,
-			},
+			}),
 		}
 
 		fieldsDetails = append(fieldsDetails, fieldsMeta...)
@@ -348,59 +345,59 @@ func (controller *productUpdateController) formMetadata(data productUpdateContro
 		index++
 	}
 
-	fieldsNewMeta := []form.Field{
-		{
+	fieldsNewMeta := []form.FieldInterface{
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `<hr />`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `<div class="row bg-info py-2">`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `<h3>New Meta</h3>`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `<div class="col-6">`,
-		},
+		}),
 
-		{
+		form.NewField(form.FieldOptions{
 			Label: `Key`,
 			Name:  `product_meta[` + cast.ToString(index) + `][key]`,
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: "",
 			// Help:  "The metadata value.",
-		},
+		}),
 
-		{
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `</div>`,
-		},
+		}),
 
-		{
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `<div class="col-6">`,
-		},
+		}),
 
-		{
+		form.NewField(form.FieldOptions{
 			Label: `Value`,
 			Name:  `product_meta[` + cast.ToString(index) + `][value]`,
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: "",
 			// Help:  "The metadata value.",
-		},
+		}),
 
-		{
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `</div>`,
-		},
+		}),
 
-		{
+		form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: `</div>`,
-		},
+		}),
 	}
 
 	fieldsDetails = append(fieldsDetails, fieldsNewMeta...)
@@ -411,17 +408,17 @@ func (controller *productUpdateController) formMetadata(data productUpdateContro
 	})
 
 	if data.formErrorMessage != "" {
-		formMetadataUpdate.AddField(form.Field{
+		formMetadataUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	if data.formSuccessMessage != "" {
-		formMetadataUpdate.AddField(form.Field{
+		formMetadataUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	return formMetadataUpdate.Build()

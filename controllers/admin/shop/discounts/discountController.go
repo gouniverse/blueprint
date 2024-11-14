@@ -39,20 +39,20 @@ func (discountController *discountController) AnyIndex(w http.ResponseWriter, r 
 			"Discount Code",
 			"Created",
 		},
-		CreateFields: []form.Field{
-			{
+		CreateFields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Label: "Title",
 				Name:  "title",
 				Type:  crud.FORM_FIELD_TYPE_STRING,
-			},
+			}),
 		},
-		ReadFields: []form.Field{
-			{
+		ReadFields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Label: "Title",
 				Name:  "title",
 				Type:  crud.FORM_FIELD_TYPE_STRING,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Status",
 				Name:  "status",
 				Type:  crud.FORM_FIELD_TYPE_SELECT,
@@ -74,8 +74,8 @@ func (discountController *discountController) AnyIndex(w http.ResponseWriter, r 
 						Value: shopstore.DISCOUNT_STATUS_ACTIVE,
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Type",
 				Name:  "type",
 				Type:  crud.FORM_FIELD_TYPE_SELECT,
@@ -93,40 +93,40 @@ func (discountController *discountController) AnyIndex(w http.ResponseWriter, r 
 						Value: shopstore.DISCOUNT_TYPE_PERCENT,
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Code",
 				Name:  "code",
 				Type:  crud.FORM_FIELD_TYPE_STRING,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Starts",
 				Name:  "starts_at",
 				Type:  crud.FORM_FIELD_TYPE_DATETIME,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Ends",
 				Name:  "ends_at",
 				Type:  crud.FORM_FIELD_TYPE_DATETIME,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Created",
 				Name:  "created_at",
 				Type:  crud.FORM_FIELD_TYPE_DATETIME,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Updated",
 				Name:  "updated_at",
 				Type:  crud.FORM_FIELD_TYPE_DATETIME,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Description",
 				Name:  "description",
 				Type:  crud.FORM_FIELD_TYPE_HTMLAREA,
-			},
+			}),
 		},
-		UpdateFields: []form.Field{
-			{
+		UpdateFields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Label: "Status",
 				Name:  "status",
 				Type:  crud.FORM_FIELD_TYPE_SELECT,
@@ -148,13 +148,13 @@ func (discountController *discountController) AnyIndex(w http.ResponseWriter, r 
 						Value: shopstore.DISCOUNT_STATUS_ACTIVE,
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Title",
 				Name:  "title",
 				Type:  crud.FORM_FIELD_TYPE_STRING,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Type",
 				Name:  "type",
 				Type:  crud.FORM_FIELD_TYPE_SELECT,
@@ -172,32 +172,32 @@ func (discountController *discountController) AnyIndex(w http.ResponseWriter, r 
 						Value: shopstore.DISCOUNT_TYPE_PERCENT,
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Amount",
 				Name:  "amount",
 				Type:  crud.FORM_FIELD_TYPE_NUMBER,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Discount Code",
 				Name:  "code",
 				Type:  crud.FORM_FIELD_TYPE_STRING,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Starts",
 				Name:  "starts_at",
 				Type:  crud.FORM_FIELD_TYPE_DATETIME,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Ends",
 				Name:  "ends_at",
 				Type:  crud.FORM_FIELD_TYPE_DATETIME,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Description",
 				Name:  "description",
 				Type:  crud.FORM_FIELD_TYPE_HTMLAREA,
-			},
+			}),
 		},
 		FuncRows:            discountController.FuncRows,
 		FuncCreate:          discountController.FuncCreate,

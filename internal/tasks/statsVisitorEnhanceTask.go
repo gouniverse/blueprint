@@ -47,7 +47,7 @@ func (t *statsVisitorEnhanceTask) Enqueue() (*taskstore.Queue, error) {
 }
 
 func (t *statsVisitorEnhanceTask) Alias() string {
-	return "stats-visitor-enhance"
+	return "StatsVisitorEnhance"
 }
 
 func (t *statsVisitorEnhanceTask) Title() string {

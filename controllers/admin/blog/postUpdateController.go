@@ -170,8 +170,8 @@ func (controller postUpdateController) page(data postUpdateControllerData) hb.Ta
 }
 
 func (controller postUpdateController) form(data postUpdateControllerData) hb.TagInterface {
-	fieldsDetails := []form.Field{
-		{
+	fieldsDetails := []form.FieldInterface{
+		form.NewField(form.FieldOptions{
 			Label: "Status",
 			Name:  "post_status",
 			Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -199,15 +199,15 @@ func (controller postUpdateController) form(data postUpdateControllerData) hb.Ta
 					Key:   blogstore.POST_STATUS_TRASH,
 				},
 			},
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Image URL",
 			Name:  "post_image_url",
 			Type:  form.FORM_FIELD_TYPE_IMAGE,
 			Value: data.formImageUrl,
 			Help:  "The image that will be displayed on the blog post. If left empty, the default image will be used.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Featured",
 			Name:  "post_featured",
 			Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -227,15 +227,15 @@ func (controller postUpdateController) form(data postUpdateControllerData) hb.Ta
 					Key:   "yes",
 				},
 			},
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Published At",
 			Name:  "post_published_at",
 			Type:  form.FORM_FIELD_TYPE_DATETIME,
 			Value: data.formPublishedAt,
 			Help:  "The date this blog post was published.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Editor",
 			Name:  "post_editor",
 			Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -267,41 +267,41 @@ func (controller postUpdateController) form(data postUpdateControllerData) hb.Ta
 					Key:   blogstore.POST_EDITOR_TEXTAREA,
 				},
 			},
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Admin Notes",
 			Name:  "post_memo",
 			Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			Value: data.formMemo,
 			Help:  "Admin notes for this blogpost. These notes will not be visible to the public.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "Post ID",
 			Name:     "post_id",
 			Type:     form.FORM_FIELD_TYPE_STRING,
 			Value:    data.postID,
 			Readonly: true,
 			Help:     "The reference number (ID) of the post.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "View",
 			Name:     "view",
 			Type:     form.FORM_FIELD_TYPE_HIDDEN,
 			Value:    data.view,
 			Readonly: true,
-		},
+		}),
 	}
 
 	editor := lo.IfF(data.post != nil, func() string { return data.post.Editor() }).Else("")
 
-	fieldContent := form.Field{
+	fieldContent := form.NewField(form.FieldOptions{
 		Label:   "Content",
 		Name:    "post_content",
 		Type:    form.FORM_FIELD_TYPE_TEXTAREA,
 		Value:   data.formContent,
 		Help:    "The content of this blog post to display on the post details page.",
 		Options: []form.FieldOption{},
-	}
+	})
 
 	// For HTML Area editor, configure the Trumbowyg editor
 	if editor == blogstore.POST_EDITOR_HTMLAREA {
@@ -360,36 +360,36 @@ func (controller postUpdateController) form(data postUpdateControllerData) hb.Ta
 		fieldContent.CustomInput = editor
 	}
 
-	fieldsContent := []form.Field{
-		{
+	fieldsContent := []form.FieldInterface{
+		form.NewField(form.FieldOptions{
 			Label: "Title",
 			Name:  "post_title",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formTitle,
 			Help:  "The title of this blog as will be seen everywhere",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Summary",
 			Name:  "post_summary",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formSummary,
 			Help:  "A short summary of this blog post to display on the post listing page.",
-		},
+		}),
 		fieldContent,
-		{
+		form.NewField(form.FieldOptions{
 			Label:    "Post ID",
 			Name:     "post_id",
 			Type:     form.FORM_FIELD_TYPE_HIDDEN,
 			Value:    data.postID,
 			Readonly: true,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "View",
 			Name:     "view",
 			Type:     form.FORM_FIELD_TYPE_HIDDEN,
 			Value:    VIEW_CONTENT,
 			Readonly: true,
-		},
+		}),
 	}
 
 	if editor == blogstore.POST_EDITOR_BLOCKAREA {
@@ -410,10 +410,10 @@ setTimeout(() => {
 			`).
 			ToHTML()
 
-		fieldsContent = append(fieldsContent, form.Field{
+		fieldsContent = append(fieldsContent, form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: contentScript,
-		})
+		}))
 	}
 
 	if editor == blogstore.POST_EDITOR_MARKDOWN {
@@ -425,28 +425,28 @@ setTimeout(() => {
 			`).
 			ToHTML()
 
-		fieldsContent = append(fieldsContent, form.Field{
+		fieldsContent = append(fieldsContent, form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: contentScript,
-		})
+		}))
 	}
 
-	fieldsSEO := []form.Field{
-		{
+	fieldsSEO := []form.FieldInterface{
+		form.NewField(form.FieldOptions{
 			Label: "Meta Description",
 			Name:  "post_meta_description",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formMetaDescription,
 			Help:  "The description of this blog as will be seen in search engines.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Meta Keywords",
 			Name:  "post_meta_keywords",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formMetaKeywords,
 			Help:  "Specifies the keywords that will be used by the search engines to find this blog. Separate keywords with commas.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Meta Robots",
 			Name:  "post_meta_robots",
 			Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -458,21 +458,21 @@ setTimeout(() => {
 				{Value: "INDEX, NOFOLLOW"},
 				{Value: "NOINDEX, NOFOLLOW"},
 			},
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "Post ID",
 			Name:     "post_id",
 			Type:     form.FORM_FIELD_TYPE_STRING,
 			Value:    data.postID,
 			Readonly: true,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "View",
 			Name:     "view",
 			Type:     form.FORM_FIELD_TYPE_HIDDEN,
 			Value:    VIEW_SEO,
 			Readonly: true,
-		},
+		}),
 	}
 
 	formPostUpdate := form.NewForm(form.FormOptions{
@@ -492,17 +492,17 @@ setTimeout(() => {
 	}
 
 	if data.formErrorMessage != "" {
-		formPostUpdate.AddField(form.Field{
+		formPostUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	if data.formSuccessMessage != "" {
-		formPostUpdate.AddField(form.Field{
+		formPostUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	return formPostUpdate.Build()

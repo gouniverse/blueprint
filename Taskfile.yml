@@ -69,6 +69,17 @@ tasks:
     cmds:
       - air
 
+  errcheck:install:
+    desc: Install errcheck or update to latest
+    cmds:
+      - go install github.com/kisielk/errcheck@latest
+
+  errcheck:
+    desc: Tests for errors
+    cmds:
+      - echo "testing for errors..."
+      - errcheck ./...
+
   nilaway:install:
     desc: Install nilaway or update to latest
     cmds:

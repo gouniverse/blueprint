@@ -85,8 +85,8 @@ func (controller *userManagerController) onModalUserFilterShow(data userManagerC
 	filterForm := form.NewForm(form.FormOptions{
 		ID:     "FormFilters",
 		Method: http.MethodGet,
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Label: "Status",
 				Name:  "status",
 				Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -114,49 +114,49 @@ func (controller *userManagerController) onModalUserFilterShow(data userManagerC
 						Key:   userstore.USER_STATUS_DELETED,
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "First Name",
 				Name:  "first_name",
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: data.formFirstName,
 				Help:  `Filter by first name.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Last Name",
 				Name:  "last_name",
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: data.formLastName,
 				Help:  `Filter by last name.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Email",
 				Name:  "email",
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: data.formEmail,
 				Help:  `Filter by email.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Created From",
 				Name:  "created_from",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formCreatedFrom,
 				Help:  `Filter by creation date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Created To",
 				Name:  "created_to",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formCreatedTo,
 				Help:  `Filter by creation date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "User ID",
 				Name:  "user_id",
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: data.formUserID,
 				Help:  `Find user by reference number (ID).`,
-			},
+			}),
 		},
 	}).Build()
 
@@ -551,21 +551,77 @@ func (controller *userManagerController) fetchUserList(data userManagerControlle
 		userIDs = append(userIDs, emailUserIDs...)
 	}
 
-	query := userstore.UserQueryOptions{
-		IDIn:      userIDs,
-		Offset:    data.pageInt * data.perPage,
-		Limit:     data.perPage,
-		Status:    data.formStatus,
-		SortOrder: data.sortOrder,
-		OrderBy:   data.sortBy,
+	// query := userstore.UserQueryOptions{
+	// 	IDIn:      userIDs,
+	// 	Offset:    data.pageInt * data.perPage,
+	// 	Limit:     data.perPage,
+	// 	Status:    data.formStatus,
+	// 	SortOrder: data.sortOrder,
+	// 	OrderBy:   data.sortBy,
+	// }
+
+	query := userstore.NewUserQuery()
+
+	query, err := query.SetIDIn(userIDs)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.UserInterface{}, 0, err
+	}
+
+	query, err = query.SetStatus(data.formStatus)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.UserInterface{}, 0, err
+	}
+
+	query, err = query.SetSortOrder(data.sortOrder)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.UserInterface{}, 0, err
+	}
+
+	query, err = query.SetOrderBy(data.sortBy)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.UserInterface{}, 0, err
+	}
+
+	query, err = query.SetOffset(data.pageInt * data.perPage)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.UserInterface{}, 0, err
+	}
+
+	query, err = query.SetLimit(data.perPage)
+
+	if err != nil {
+		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+		return []userstore.UserInterface{}, 0, err
 	}
 
 	if data.formCreatedFrom != "" {
-		query.CreatedAtGte = data.formCreatedFrom + " 00:00:00"
+		// query.CreatedAtGte = data.formCreatedFrom + " 00:00:00"
+		query, err = query.SetCreatedAtGte(data.formCreatedFrom + " 00:00:00")
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+			return []userstore.UserInterface{}, 0, err
+		}
 	}
 
 	if data.formCreatedTo != "" {
-		query.CreatedAtLte = data.formCreatedTo + " 23:59:59"
+		// query.CreatedAtLte = data.formCreatedTo + " 23:59:59"
+		query, err = query.SetCreatedAtLte(data.formCreatedTo + " 23:59:59")
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
+			return []userstore.UserInterface{}, 0, err
+		}
 	}
 
 	userList, err := config.UserStore.UserList(query)

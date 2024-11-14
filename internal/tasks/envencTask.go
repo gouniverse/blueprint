@@ -47,6 +47,6 @@ func (handler *envencTask) Handle() bool {
 		return false
 	}
 
-	envenc.NewCliV3().Run(os.Args[2:])
+	envenc.NewCli().Run(os.Args[2:])
 	return true
 }

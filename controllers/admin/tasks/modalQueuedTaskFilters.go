@@ -51,8 +51,8 @@ func (controller *queueManagerController) modalQueuedTaskFilters(data queueManag
 	filterForm := form.NewForm(form.FormOptions{
 		ID:     "FormFilters",
 		Method: http.MethodGet,
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Label: "Status",
 				Name:  "filter_status",
 				Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -88,36 +88,36 @@ func (controller *queueManagerController) modalQueuedTaskFilters(data queueManag
 						Key:   taskstore.QueueStatusDeleted,
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label:   "Task",
 				Name:    "filter_task_id",
 				Type:    form.FORM_FIELD_TYPE_SELECT,
 				Value:   data.formTaskID,
 				Help:    `Filter by task.`,
 				Options: aliasOptions,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Created From",
 				Name:  "filter_created_from",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formCreatedFrom,
 				Help:  `Filter by creation date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Created To",
 				Name:  "filter_created_to",
 				Type:  form.FORM_FIELD_TYPE_DATE,
 				Value: data.formCreatedTo,
 				Help:  `Filter by creation date.`,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Label: "Queued Task ID",
 				Name:  "filter_queue_id",
 				Type:  form.FORM_FIELD_TYPE_STRING,
 				Value: data.formQueueID,
 				Help:  `Find user by reference number (ID).`,
-			},
+			}),
 		},
 	}).Build()
 

@@ -7,7 +7,6 @@ import (
 	"log/slog"
 	"os"
 	"project/internal/resources"
-	"project/internal/webblocks"
 	"project/internal/webtheme"
 	"strings"
 
@@ -336,7 +335,7 @@ func initializeDatabase() error {
 		PagesEnable:            true,
 		MenusEnable:            true,
 		BlocksEnable:           true,
-		BlockEditorDefinitions: webblocks.BlockEditorDefinitions(),
+		BlockEditorDefinitions: webtheme.BlockEditorDefinitions(),
 		BlockEditorRenderer: func(blocks []ui.BlockInterface) string {
 			return webtheme.New(blocks).ToHtml()
 		},
@@ -353,8 +352,8 @@ func initializeDatabase() error {
 		//TasksEnable:         true,
 		//TasksAutomigrate:    true,
 		// TranslationsEnable:  true,
-		// TranslationLanguageDefault: TRANSLATION_LANGUAGE_DEFAULT,
-		// TranslationLanguages:       TRANSLATION_LANGUAGE_LIST,
+		// TranslationLanguageDefault: TranslationLanguageDefault,
+		// TranslationLanguages:       TranslationLanguageList,
 		CustomEntityList: customEntityList(),
 	})
 
@@ -526,7 +525,7 @@ func initializeDatabase() error {
 		panic("UserStore is nil")
 	}
 
-	UserStore = *userStoreInstance
+	UserStore = userStoreInstance
 
 	vaultStoreInstance, err := vaultstore.NewStore(vaultstore.NewStoreOptions{
 		DB:             db,

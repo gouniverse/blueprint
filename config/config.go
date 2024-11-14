@@ -101,7 +101,7 @@ var StatsStore statsstore.Store
 
 // var SubscriptionStore *subscriptionstore.Store
 var TaskStore taskstore.Store
-var UserStore userstore.Store
+var UserStore userstore.StoreInterface
 var VaultStore vaultstore.Store
 
 var SqlFileStorage filesystem.StorageInterface

@@ -7,13 +7,6 @@ import (
 )
 
 func (t *theme) breadcrumbsToHtml(block ui.BlockInterface) *hb.Tag {
-	// 	<nav aria-label="breadcrumb">
-	//   <ol class="breadcrumb">
-	//     <li class="breadcrumb-item"><a href="#">Home</a></li>
-	//     <li class="breadcrumb-item active" aria-current="page">Library</li>
-	//   </ol>
-	// </nav>
-
 	breadcrumb1Text := block.Parameter("breadcrumb1_text")
 	breadcrumb1Url := block.Parameter("breadcrumb1_url")
 

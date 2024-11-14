@@ -24,7 +24,7 @@ func blockUnorderedListDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
 		Icon:          hb.I().Class("bi bi-list-ul"),
 		Type:          "unordered_list",
-		Fields:        []form.Field{},
+		Fields:        []form.FieldInterface{},
 		AllowChildren: true,
 		AllowedChildTypes: []string{
 			"list_item",
@@ -36,7 +36,7 @@ func blockOrderedListDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
 		Icon:          hb.I().Class("bi bi-list-ol"),
 		Type:          "ordered_list",
-		Fields:        []form.Field{},
+		Fields:        []form.FieldInterface{},
 		AllowChildren: true,
 		AllowedChildTypes: []string{
 			"list_item",
@@ -48,16 +48,16 @@ func blockListItemDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
 		Icon: hb.I().Class("bi bi-list"),
 		Type: "list_item",
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Name:  "content",
 				Label: "Content (HTML)",
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			},
+			}),
 		},
 		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			content := block.Parameter("content")
-			
+
 			if content == "" {
 				content = "Add list item text"
 			}
@@ -71,8 +71,8 @@ func blockHeadingDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
 		Icon: hb.I().Class("bi bi-type-h1"),
 		Type: "heading",
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Name:  "level",
 				Label: "Level",
 				Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -102,12 +102,12 @@ func blockHeadingDefinition() blockeditor.BlockDefinition {
 						Key:   "6",
 					},
 				},
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Name:  "content",
 				Label: "Content (HTML)",
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			},
+			}),
 		},
 		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			level := block.Parameter("level")
@@ -128,12 +128,12 @@ func blockParagraphDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
 		Icon: hb.I().Class("bi bi-paragraph"),
 		Type: "paragraph",
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Name:  "content",
 				Label: "Content (HTML)",
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			},
+			}),
 		},
 		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			content := block.Parameter("content")
@@ -149,18 +149,18 @@ func blockHyperlinkDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
 		Icon: hb.I().Class("bi bi-link-45deg"),
 		Type: "hyperlink",
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Name:  "url",
 				Label: "URL",
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Name:  "content",
 				Label: "Text (HTML)",
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			},
-			{
+			}),
+			form.NewField(form.FieldOptions{
 				Name:  "target",
 				Label: "Target",
 				Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -182,7 +182,7 @@ func blockHyperlinkDefinition() blockeditor.BlockDefinition {
 						Key:   "_top",
 					},
 				},
-			},
+			}),
 		},
 		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			content := block.Parameter("content")
@@ -209,12 +209,12 @@ func blockImageDefinition() blockeditor.BlockDefinition {
 	return blockeditor.BlockDefinition{
 		Icon: hb.I().Class("bi bi-image"),
 		Type: "image",
-		Fields: []form.Field{
-			{
+		Fields: []form.FieldInterface{
+			form.NewField(form.FieldOptions{
 				Name:  "image_url",
 				Label: "Image URL (may be base64)",
 				Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			},
+			}),
 		},
 		ToTag: func(block ui.BlockInterface) *hb.Tag {
 			imageUrl := block.Parameter("image_url")

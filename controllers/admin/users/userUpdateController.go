@@ -132,8 +132,8 @@ func (controller userUpdateController) page(data userUpdateControllerData) hb.Ta
 }
 
 func (controller userUpdateController) form(data userUpdateControllerData) hb.TagInterface {
-	fieldsDetails := []form.Field{
-		{
+	fieldsDetails := []form.FieldInterface{
+		form.NewField(form.FieldOptions{
 			Label: "Status",
 			Name:  "user_status",
 			Type:  form.FORM_FIELD_TYPE_SELECT,
@@ -161,50 +161,50 @@ func (controller userUpdateController) form(data userUpdateControllerData) hb.Ta
 					Key:   userstore.USER_STATUS_DELETED,
 				},
 			},
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "First Name",
 			Name:  "user_first_name",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formFirstName,
 			Help:  `The first name of the user.`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Last Name",
 			Name:  "user_last_name",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formLastName,
 			Help:  `The last name of the user.`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Email",
 			Name:  "user_email",
 			Type:  form.FORM_FIELD_TYPE_STRING,
 			Value: data.formEmail,
 			Help:  `The email address of the user.`,
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label: "Admin Notes",
 			Name:  "user_memo",
 			Type:  form.FORM_FIELD_TYPE_TEXTAREA,
 			Value: data.formMemo,
 			Help:  "Admin notes for this bloguser. These notes will not be visible to the public.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "User ID",
 			Name:     "user_id",
 			Type:     form.FORM_FIELD_TYPE_STRING,
 			Value:    data.userID,
 			Readonly: true,
 			Help:     "The reference number (ID) of the user.",
-		},
-		{
+		}),
+		form.NewField(form.FieldOptions{
 			Label:    "User ID",
 			Name:     "user_id",
 			Type:     form.FORM_FIELD_TYPE_HIDDEN,
 			Value:    data.userID,
 			Readonly: true,
-		},
+		}),
 	}
 
 	formUserUpdate := form.NewForm(form.FormOptions{
@@ -214,17 +214,17 @@ func (controller userUpdateController) form(data userUpdateControllerData) hb.Ta
 	formUserUpdate.SetFields(fieldsDetails)
 
 	if data.formErrorMessage != "" {
-		formUserUpdate.AddField(form.Field{
+		formUserUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "error", Text: data.formErrorMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	if data.formSuccessMessage != "" {
-		formUserUpdate.AddField(form.Field{
+		formUserUpdate.AddField(form.NewField(form.FieldOptions{
 			Type:  form.FORM_FIELD_TYPE_RAW,
 			Value: hb.Swal(hb.SwalOptions{Icon: "success", Text: data.formSuccessMessage}).ToHTML(),
-		})
+		}))
 	}
 
 	return formUserUpdate.Build()

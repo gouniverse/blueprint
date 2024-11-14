@@ -120,7 +120,7 @@ func (task *blindIndexRebuildTask) rebuildEmailIndex() bool {
 	}
 
 	task.LogInfo(" - Fetching users list...")
-	users, err := config.UserStore.UserList(userstore.UserQueryOptions{})
+	users, err := config.UserStore.UserList(userstore.NewUserQuery())
 
 	if err != nil {
 		task.LogError("Error retrieving users: " + err.Error())
@@ -153,7 +153,7 @@ func (task *blindIndexRebuildTask) rebuildFirstNameIndex() bool {
 	}
 
 	task.LogInfo(" - Fetching users list")
-	users, err := config.UserStore.UserList(userstore.UserQueryOptions{})
+	users, err := config.UserStore.UserList(userstore.NewUserQuery())
 
 	if err != nil {
 		task.LogError("Error retrieving users: " + err.Error())
@@ -186,7 +186,7 @@ func (task *blindIndexRebuildTask) rebuildLastNameIndex() bool {
 	}
 
 	task.LogInfo(" - Fetching users list")
-	users, err := config.UserStore.UserList(userstore.UserQueryOptions{})
+	users, err := config.UserStore.UserList(userstore.NewUserQuery())
 
 	if err != nil {
 		task.LogError("Error retrieving users: " + err.Error())

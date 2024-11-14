@@ -18,6 +18,6 @@ func GetAuthUser(r *http.Request) userstore.UserInterface {
 		return nil
 	}
 
-	user := value.(*userstore.User)
+	user := value.(userstore.UserInterface)
 	return user
 }

@@ -81,7 +81,7 @@ func AppendUserHandler(next http.Handler) http.Handler {
 		user, err := config.UserStore.UserFindByID(userID)
 
 		if err != nil {
-			log.Println(err.Error())
+			config.LogStore.ErrorWithContext("At appendUserHandler", err.Error())
 			next.ServeHTTP(w, r)
 			return
 		}
