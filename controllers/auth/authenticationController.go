@@ -65,25 +65,26 @@ func NewAuthenticationController() *authenticationController {
 // Return:
 // - string: the result of the authentication request.
 func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Request) string {
+	homeURL := links.NewWebsiteLinks().Home()
 	email, errorMessage := c.emailFromAuthKnightRequest(r)
 
 	if errorMessage != "" {
-		return helpers.ToFlashError(w, r, "Authentication Provider Error. "+errorMessage, links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, "Authentication Provider Error. "+errorMessage, homeURL, 5)
 	}
 
 	user, errUser := c.userFindByEmailOrCreate(email, userstore.USER_STATUS_ACTIVE)
 
 	if errUser != nil {
 		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > User Create Error: ", errUser.Error())
-		return helpers.ToFlashError(w, r, msgUserNotFound, links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, msgUserNotFound, homeURL, 5)
 	}
 
 	if user == nil {
-		return helpers.ToFlashError(w, r, msgAccountNotFound, links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, msgAccountNotFound, homeURL, 5)
 	}
 
 	if !user.IsActive() {
-		return helpers.ToFlashError(w, r, msgAccountNotActive, links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, msgAccountNotActive, homeURL, 5)
 	}
 
 	sessionKey := strutils.RandomFromGamma(64, "BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz")
@@ -95,7 +96,7 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 
 	if errSession != nil {
 		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Session Store Error: ", errSession.Error())
-		return helpers.ToFlashError(w, r, "Error creating session", links.NewWebsiteLinks().Home(), 5)
+		return helpers.ToFlashError(w, r, "Error creating session", homeURL, 5)
 	}
 
 	auth.AuthCookieSet(w, r, sessionKey)

@@ -53,6 +53,7 @@ func SeedProduct(productID string, price float64) (shopstore.ProductInterface, e
 	return product, nil
 }
 
+// SeedUser find existing or generates a new user with the given ID
 func SeedUser(userID string) (userstore.UserInterface, error) {
 	user, err := config.UserStore.UserFindByID(userID)
 

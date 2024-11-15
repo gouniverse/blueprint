@@ -38,7 +38,7 @@ func ToFlash(w http.ResponseWriter, r *http.Request, messageType string, message
 	flashUrl := ToFlashURL(messageType, message, url, seconds)
 
 	http.Redirect(w, r, flashUrl, http.StatusSeeOther)
-	return ""
+	return `<a href="` + flashUrl + `">See Other</a>`
 }
 
 func ToFlashError(w http.ResponseWriter, r *http.Request, message string, url string, seconds int) string {

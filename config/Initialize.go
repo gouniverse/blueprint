@@ -2,6 +2,7 @@ package config
 
 import (
 	"crypto/sha256"
+	"database/sql"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -15,6 +16,7 @@ import (
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
+	"github.com/gouniverse/cmsstore"
 	"github.com/gouniverse/customstore"
 	"github.com/gouniverse/envenc"
 	"github.com/gouniverse/filesystem"
@@ -65,7 +67,7 @@ func Initialize() {
 		panic(err.Error())
 	}
 
-	initializeInMemoryCache()
+	initializeCache()
 
 	Logger = *slog.New(logstore.NewSlogHandler(&LogStore))
 }
@@ -220,6 +222,14 @@ func buildEnvEncKey(envEncryptionKey string) string {
 	return realKey
 }
 
+// initializeCache initializes the cache
+func initializeCache() {
+	CacheMemory = ttlcache.New[string, any]()
+	// create a new directory
+	_ = os.MkdirAll(".cache", os.ModePerm)
+	CacheFile = file.New(".cache")
+}
+
 // initializeDatabase initializes the database
 //
 // Business logic:
@@ -249,6 +259,82 @@ func initializeDatabase() error {
 	}
 
 	Database = dbInstance
+
+	inits := []func(*sql.DB) error{
+		BlindIndexStoreInitialize,
+		BlogStoreInitialize,
+		CacheStoreInitialize,
+		CmsInitialize,
+		CmsStoreInitialize,
+		CustomStoreInitialize,
+		GeoStoreInitialize,
+		LogStoreInitialize,
+		MetaStoreInitialize,
+		SessionStoreInitialize,
+		ShopStoreInitialize,
+		SqlFileStoreInitialize,
+		StatsStoreInitialize,
+		TaskStoreInitialize,
+		UserStoreInitialize,
+	}
+
+	for _, init := range inits {
+		err = init(db)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// migrateDatabase migrates the database
+//
+// Business logic:
+//   - migrates the database for each store
+//   - a store is only assigned if it is not nil
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - error: the error if any
+func migrateDatabase() (err error) {
+	migrations := []func() error{
+		BlindIndexStoreAutoMigrate,
+		BlogStoreAutoMigrate,
+		CacheStoreAutoMigrate,
+		CmsAutoMigrate,
+		CmsStoreAutoMigrate,
+		CustomStoreAutoMigrate,
+		GeoStoreAutoMigrate,
+		LogStoreAutoMigrate,
+		MetaStoreAutoMigrate,
+		SessionStoreAutoMigrate,
+		ShopStoreAutoMigrate,
+		SqlFileStoreAutoMigrate,
+		StatsStoreAutoMigrate,
+		TaskStoreAutoMigrate,
+		UserStoreAutoMigrate,
+		VaultStoreAutoMigrate,
+	}
+
+	for _, migrate := range migrations {
+		err = migrate()
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func BlindIndexStoreInitialize(db *sql.DB) error {
+	if !BlindIndexStoreUsed {
+		return nil
+	}
 
 	blindIndexStoreEmailInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
 		DB:          Database.DB(),
@@ -298,6 +384,40 @@ func initializeDatabase() error {
 
 	BlindIndexStoreLastName = *blindIndexStoreLastNameInstance
 
+	return nil
+}
+
+func BlindIndexStoreAutoMigrate() error {
+	if !BlindIndexStoreUsed {
+		return nil
+	}
+
+	err := BlindIndexStoreEmail.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstore.AutoMigrate"), err)
+	}
+
+	err = BlindIndexStoreFirstName.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstore.AutoMigrate"), err)
+	}
+
+	err = BlindIndexStoreLastName.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blindindexstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func BlogStoreInitialize(db *sql.DB) error {
+	if !BlogStoreUsed {
+		return nil
+	}
+
 	blogStoreInstance, err := blogstore.NewStore(blogstore.NewStoreOptions{
 		DB:            Database.DB(),
 		PostTableName: "snv_blogs_post",
@@ -313,6 +433,28 @@ func initializeDatabase() error {
 
 	BlogStore = *blogStoreInstance
 
+	return nil
+}
+
+func BlogStoreAutoMigrate() error {
+	if !BlogStoreUsed {
+		return nil
+	}
+
+	err := BlogStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("blogstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func CacheStoreInitialize(db *sql.DB) error {
+	if !CacheStoreUsed {
+		return nil
+	}
+
 	cacheStoreInstance, err := cachestore.NewStore(cachestore.NewStoreOptions{
 		DB:             db,
 		CacheTableName: "snv_caches_cache",
@@ -327,6 +469,28 @@ func initializeDatabase() error {
 	}
 
 	CacheStore = *cacheStoreInstance
+
+	return nil
+}
+
+func CacheStoreAutoMigrate() error {
+	if !CacheStoreUsed {
+		return nil
+	}
+
+	err := CacheStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("cachestore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func CmsInitialize(db *sql.DB) error {
+	if !CmsUsed {
+		return nil
+	}
 
 	cmsInstance, err := cms.NewCms(cms.Config{
 		Database:               Database,
@@ -367,6 +531,79 @@ func initializeDatabase() error {
 
 	Cms = *cmsInstance
 
+	return nil
+}
+
+func CmsAutoMigrate() error {
+	if !CmsStoreUsed {
+		return nil
+	}
+
+	// !!! No need. Migrated during initialize
+	// err := Cms.AutoMigrate()
+
+	// if err != nil {
+	// 	return errors.Join(errors.New("cms.AutoMigrate"), err)
+	// }
+
+	return nil
+}
+
+func CmsStoreInitialize(db *sql.DB) error {
+	if !CmsStoreUsed {
+		return nil
+	}
+
+	cmsStoreInstance, err := cmsstore.NewStore(cmsstore.NewStoreOptions{
+		DB: db,
+
+		BlockTableName:    "snv_cms_block",
+		PageTableName:     "snv_cms_page",
+		TemplateTableName: "snv_cms_template",
+		SiteTableName:     "snv_cms_site",
+
+		MenusEnabled:      true,
+		MenuItemTableName: "snv_cms_menu_item",
+		MenuTableName:     "snv_cms_menu",
+
+		TranslationsEnabled:        true,
+		TranslationTableName:       "snv_cms_translation",
+		TranslationLanguageDefault: "en",
+		TranslationLanguages:       map[string]string{"en": "English"},
+	})
+
+	if err != nil {
+		return errors.Join(errors.New("cmsstore.NewStore"), err)
+	}
+
+	if cmsStoreInstance == nil {
+		return errors.New("cmsstore.NewStore: cmsStoreInstance is nil")
+	}
+
+	CmsStore = cmsStoreInstance
+
+	return nil
+}
+
+func CmsStoreAutoMigrate() error {
+	if !CmsStoreUsed {
+		return nil
+	}
+
+	err := CmsStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("cmsstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func CustomStoreInitialize(db *sql.DB) error {
+	if !CustomStoreUsed {
+		return nil
+	}
+
 	customStoreInstance, err := customstore.NewStore(customstore.NewStoreOptions{
 		DB:        db,
 		TableName: "snv_custom_record",
@@ -377,10 +614,32 @@ func initializeDatabase() error {
 	}
 
 	if customStoreInstance == nil {
-		panic("customStoreInstance is nil")
+		return errors.Join(errors.New("customStoreInstance is nil"))
 	}
 
 	CustomStore = *customStoreInstance
+
+	return nil
+}
+
+func CustomStoreAutoMigrate() error {
+	if !CustomStoreUsed {
+		return nil
+	}
+
+	err := CustomStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("customstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func GeoStoreInitialize(db *sql.DB) error {
+	if !GeoStoreUsed {
+		return nil
+	}
 
 	geoStoreInstance, err := geostore.NewStore(geostore.NewStoreOptions{
 		DB:                db,
@@ -394,10 +653,32 @@ func initializeDatabase() error {
 	}
 
 	if geoStoreInstance == nil {
-		panic("GeoStore is nil")
+		return errors.Join(errors.New("geoStoreInstance is nil"))
 	}
 
 	GeoStore = *geoStoreInstance
+
+	return nil
+}
+
+func GeoStoreAutoMigrate() error {
+	if !GeoStoreUsed {
+		return nil
+	}
+
+	err := GeoStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("geostore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func LogStoreInitialize(db *sql.DB) error {
+	if !LogStoreUsed {
+		return nil
+	}
 
 	logStoreInstance, err := logstore.NewStore(logstore.NewStoreOptions{
 		DB:           db,
@@ -409,10 +690,32 @@ func initializeDatabase() error {
 	}
 
 	if logStoreInstance == nil {
-		panic("logStoreInstance is nil")
+		return errors.Join(errors.New("logStoreInstance is nil"))
 	}
 
 	LogStore = *logStoreInstance
+
+	return nil
+}
+
+func LogStoreAutoMigrate() error {
+	if !LogStoreUsed {
+		return nil
+	}
+
+	err := LogStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("logstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func MetaStoreInitialize(db *sql.DB) error {
+	if !MetaStoreUsed {
+		return nil
+	}
 
 	metaStoreInstance, err := metastore.NewStore(metastore.NewStoreOptions{
 		DB:            db,
@@ -424,10 +727,32 @@ func initializeDatabase() error {
 	}
 
 	if metaStoreInstance == nil {
-		panic("MetaStore is nil")
+		return errors.Join(errors.New("metaStoreInstance is nil"))
 	}
 
 	MetaStore = *metaStoreInstance
+
+	return nil
+}
+
+func MetaStoreAutoMigrate() error {
+	if !MetaStoreUsed {
+		return nil
+	}
+
+	err := MetaStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("metastore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func SessionStoreInitialize(db *sql.DB) error {
+	if !SessionStoreUsed {
+		return nil
+	}
 
 	sessionStoreInstance, err := sessionstore.NewStore(sessionstore.NewStoreOptions{
 		DB:               db,
@@ -440,10 +765,32 @@ func initializeDatabase() error {
 	}
 
 	if sessionStoreInstance == nil {
-		panic("sessionStoreInstance is nil")
+		return errors.Join(errors.New("sessionStoreInstance is nil"))
 	}
 
 	SessionStore = *sessionStoreInstance
+
+	return nil
+}
+
+func SessionStoreAutoMigrate() error {
+	if !SessionStoreUsed {
+		return nil
+	}
+
+	err := SessionStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("sessionstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func ShopStoreInitialize(db *sql.DB) error {
+	if !ShopStoreUsed {
+		return nil
+	}
 
 	shopStoreInstance, err := shopstore.NewStore(shopstore.NewStoreOptions{
 		DB:                     Database.DB(),
@@ -458,17 +805,39 @@ func initializeDatabase() error {
 	}
 
 	if shopStoreInstance == nil {
-		panic("ShopStore is nil")
+		return errors.Join(errors.New("shopStoreInstance is nil"))
 	}
 
 	ShopStore = *shopStoreInstance
+
+	return nil
+}
+
+func ShopStoreAutoMigrate() error {
+	if !ShopStoreUsed {
+		return nil
+	}
+
+	err := ShopStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("shopstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func SqlFileStoreInitialize(db *sql.DB) error {
+	if !SqlFileStoreUsed {
+		return nil
+	}
 
 	sqlFileStorageInstance, err := filesystem.NewStorage(filesystem.Disk{
 		DiskName:  filesystem.DRIVER_SQL,
 		Driver:    filesystem.DRIVER_SQL,
 		Url:       "/files",
 		DB:        db,
-		TableName: "snv_media_file",
+		TableName: "snv_files_file",
 	})
 
 	if err != nil {
@@ -476,10 +845,33 @@ func initializeDatabase() error {
 	}
 
 	if sqlFileStorageInstance == nil {
-		panic("sqlFileStorageInstance is nil")
+		return errors.Join(errors.New("sqlFileStorageInstance is nil"))
 	}
 
 	SqlFileStorage = sqlFileStorageInstance
+
+	return nil
+}
+
+func SqlFileStoreAutoMigrate() error {
+	if !SqlFileStoreUsed {
+		return nil
+	}
+
+	// !!! No need. Migrated during initialize
+	// err := SqlFileStorage.AutoMigrate()
+
+	// if err != nil {
+	// 	return errors.Join(errors.New("filesystem.AutoMigrate"), err)
+	// }
+
+	return nil
+}
+
+func StatsStoreInitialize(db *sql.DB) error {
+	if !StatsStoreUsed {
+		return nil
+	}
 
 	statsStoreInstance, err := statsstore.NewStore(statsstore.NewStoreOptions{
 		VisitorTableName: "snv_stats_visitor",
@@ -491,10 +883,32 @@ func initializeDatabase() error {
 	}
 
 	if statsStoreInstance == nil {
-		panic("StatsStore is nil")
+		return errors.Join(errors.New("statsStoreInstance is nil"))
 	}
 
 	StatsStore = *statsStoreInstance
+
+	return nil
+}
+
+func StatsStoreAutoMigrate() error {
+	if !StatsStoreUsed {
+		return nil
+	}
+
+	err := StatsStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("statsstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func TaskStoreInitialize(db *sql.DB) error {
+	if !TaskStoreUsed {
+		return nil
+	}
 
 	taskStoreInstance, err := taskstore.NewStore(taskstore.NewStoreOptions{
 		DB:             db,
@@ -507,10 +921,32 @@ func initializeDatabase() error {
 	}
 
 	if taskStoreInstance == nil {
-		panic("TaskStore is nil")
+		return errors.Join(errors.New("taskStoreInstance is nil"))
 	}
 
 	TaskStore = *taskStoreInstance
+
+	return nil
+}
+
+func TaskStoreAutoMigrate() error {
+	if !TaskStoreUsed {
+		return nil
+	}
+
+	err := TaskStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("taskstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func UserStoreInitialize(db *sql.DB) error {
+	if !UserStoreUsed {
+		return nil
+	}
 
 	userStoreInstance, err := userstore.NewStore(userstore.NewStoreOptions{
 		DB:            db,
@@ -526,6 +962,28 @@ func initializeDatabase() error {
 	}
 
 	UserStore = userStoreInstance
+
+	return nil
+}
+
+func UserStoreAutoMigrate() error {
+	if !UserStoreUsed {
+		return nil
+	}
+
+	err := UserStore.AutoMigrate()
+
+	if err != nil {
+		return errors.Join(errors.New("userstore.AutoMigrate"), err)
+	}
+
+	return nil
+}
+
+func VaultStoreInitialize(db *sql.DB) error {
+	if !VaultStoreUsed {
+		return nil
+	}
 
 	vaultStoreInstance, err := vaultstore.NewStore(vaultstore.NewStoreOptions{
 		DB:             db,
@@ -545,111 +1003,12 @@ func initializeDatabase() error {
 	return nil
 }
 
-// initializeInMemoryCache initializes the in memory cache
-func initializeInMemoryCache() {
-	CacheMemory = ttlcache.New[string, any]()
-	// create a new directory
-	_ = os.MkdirAll(".cache", os.ModePerm)
-	CacheFile = file.New(".cache")
-}
-
-// migrateDatabase migrates the database
-//
-// Business logic:
-//   - migrates the database for each store
-//   - a store is only assigned if it is not nil
-//
-// Parameters:
-// - none
-//
-// Returns:
-// - error: the error if any
-func migrateDatabase() (err error) {
-	err = BlindIndexStoreEmail.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("blindindexstoreemail.AutoMigrate"), err)
+func VaultStoreAutoMigrate() error {
+	if !VaultStoreUsed {
+		return nil
 	}
 
-	err = BlindIndexStoreFirstName.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("blindindexstorefirstname.AutoMigrate"), err)
-	}
-
-	err = BlindIndexStoreLastName.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("blindindexstorelastname.AutoMigrate"), err)
-	}
-
-	err = BlogStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("blogstore.AutoMigrate"), err)
-	}
-
-	err = CacheStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("cachestore.AutoMigrate"), err)
-	}
-
-	err = CustomStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("customstore.AutoMigrate"), err)
-	}
-
-	err = GeoStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("geostore.AutoMigrate"), err)
-	}
-
-	err = LogStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("logstore.AutoMigrate"), err)
-	}
-
-	err = MetaStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("metastore.AutoMigrate"), err)
-	}
-
-	err = SessionStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("sessionstore.AutoMigrate"), err)
-	}
-
-	err = ShopStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("shopstore.AutoMigrate"), err)
-	}
-
-	err = StatsStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("statsstore.AutoMigrate"), err)
-	}
-
-	err = TaskStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("taskstore.AutoMigrate"), err)
-	}
-
-	err = UserStore.AutoMigrate()
-
-	if err != nil {
-		return errors.Join(errors.New("userstore.AutoMigrate"), err)
-	}
-
-	err = VaultStore.AutoMigrate()
+	err := VaultStore.AutoMigrate()
 
 	if err != nil {
 		return errors.Join(errors.New("vaultstore.AutoMigrate"), err)

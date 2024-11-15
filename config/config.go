@@ -8,6 +8,7 @@ import (
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
+	"github.com/gouniverse/cmsstore"
 	"github.com/gouniverse/customstore"
 	"github.com/gouniverse/filesystem"
 	"github.com/gouniverse/geostore"
@@ -73,38 +74,67 @@ var WebServer *webserver.Server
 var WebServerHost string
 var WebServerPort string
 
-// InMem is an in-memory cache.
 var CacheMemory *ttlcache.Cache[string, any]
 var CacheFile cachego.Cache
 
-// Cms is the CMS instance.
+// Cms is the old CMS package (replaced by CmsStore).
+var CmsUsed = true
 var Cms cms.Cms
 
 // CmsUserTemplateID is the CMS user template ID.
 var CmsUserTemplateID string
 
 // ===================================== //
+var BlindIndexStoreUsed = true
 var BlindIndexStoreEmail blindindexstore.Store
 var BlindIndexStoreFirstName blindindexstore.Store
 var BlindIndexStoreLastName blindindexstore.Store
+
+var BlogStoreUsed = true
 var BlogStore blogstore.Store
+
+var CmsStoreUsed = true
+var CmsStore cmsstore.StoreInterface
+
+var CacheStoreUsed = true
 var CacheStore cachestore.Store
 
 // var CommentStore *commentstore.Store
+
+var CustomStoreUsed = false
 var CustomStore customstore.Store
+
+var GeoStoreUsed = true
 var GeoStore geostore.Store
+
+var LogStoreUsed = true
 var LogStore logstore.Store
+
+var MetaStoreUsed = false
 var MetaStore metastore.Store
+
+var SessionStoreUsed = true
 var SessionStore sessionstore.Store
+
+var ShopStoreUsed = false
 var ShopStore shopstore.Store
+
+var SqlFileStoreUsed = false
+var SqlFileStorage filesystem.StorageInterface
+
+var StatsStoreUsed = true
 var StatsStore statsstore.Store
 
 // var SubscriptionStore *subscriptionstore.Store
-var TaskStore taskstore.Store
-var UserStore userstore.StoreInterface
-var VaultStore vaultstore.Store
 
-var SqlFileStorage filesystem.StorageInterface
+var TaskStoreUsed = true
+var TaskStore taskstore.Store
+
+var UserStoreUsed = false
+var UserStore userstore.StoreInterface
+
+var VaultStoreUsed = false
+var VaultStore vaultstore.Store
 
 var Logger slog.Logger
 
