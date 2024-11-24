@@ -1,11 +1,13 @@
 package routes
 
 import (
+	"net/http"
+	"project/controllers/shared"
 	"project/controllers/website"
-paypalControllers "project/controllers/website/paypal"
 	"project/internal/links"
 	"project/internal/middlewares"
 
+	"github.com/gouniverse/responses"
 	"github.com/gouniverse/router"
 
 	blogControllers "project/controllers/website/blog"
@@ -13,6 +15,39 @@ paypalControllers "project/controllers/website/paypal"
 )
 
 func websiteRoutes() []router.RouteInterface {
+	blogRoutes := []router.RouteInterface{
+		&router.Route{
+			Name:        "Guest > Articles",
+			Path:        "/articles",
+			HTMLHandler: blogControllers.NewBlogController().Handler,
+		},
+		&router.Route{
+			Name:        "Guest > Articles > Post with ID > Index",
+			Path:        "/article/{id:[0-9]+}",
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
+		},
+		&router.Route{
+			Name:        "Guest > Articles > Post with ID && Title > Index",
+			Path:        "/article/{id:[0-9]+}/{title}",
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
+		},
+		&router.Route{
+			Name:        "Guest > Blog",
+			Path:        links.BLOG,
+			HTMLHandler: blogControllers.NewBlogController().Handler,
+		},
+		&router.Route{
+			Name:        "Guest > Blog > Post with ID > Index",
+			Path:        links.BLOG_POST_WITH_REGEX,
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
+		},
+		&router.Route{
+			Name:        "Guest > Blog > Post with ID && Title > Index",
+			Path:        links.BLOG_POST_WITH_REGEX2,
+			HTMLHandler: blogControllers.NewBlogPostController().Handler,
+		},
+	}
+
 	seoRoutes := []router.RouteInterface{
 		&router.Route{
 			Name: "Website > ads.txt",
@@ -59,34 +94,34 @@ func websiteRoutes() []router.RouteInterface {
 			HTMLHandler: cmsControllers.NewCmsController().Handler,
 		},
 	}
-	
-	paymentRoutes := []router.RouteInterface{
-		&router.Route{
-		 	Name:        "Website > Payment Canceled Controller > Handle",
-		 	Path:        links.PAYMENT_CANCELED,
-		 	HTMLHandler: website.NewPaymentCanceledController().Handle,
-		},
-		&router.Route{
-		 	Name:        "Website > Payment Success Controller > Handle",
-		 	Path:        links.PAYMENT_SUCCESS,
-		 	HTMLHandler: website.NewPaymentSuccessController().Handle,
-		},
-		&router.Route{
-			Name:        "Guest > Paypal Success Controller > Index",
-			Path:        links.PAYPAL_SUCCESS,
-			HTMLHandler: paypalControllers.NewPaypalSuccessController().AnyIndex,
-		},
-		&router.Route{
-			Name:        "Guest > Paypal Cancel Controller > Index",
-			Path:        links.PAYPAL_CANCEL,
-			HTMLHandler: paypalControllers.NewPaypalCancelController().AnyIndex,
-		},
-		&router.Route{
-			Name:        "Guest > Paypal Notify Controller > Index",
-			Path:        links.PAYPAL_NOTIFY,
-			HTMLHandler: paypalControllers.NewPaypalNotifyController().AnyIndex,
-		},
-	}
+
+	// paymentRoutes := []router.RouteInterface{
+	// 	&router.Route{
+	// 		Name:        "Website > Payment Canceled Controller > Handle",
+	// 		Path:        links.PAYMENT_CANCELED,
+	// 		HTMLHandler: website.NewPaymentCanceledController().Handle,
+	// 	},
+	// 	&router.Route{
+	// 		Name:        "Website > Payment Success Controller > Handle",
+	// 		Path:        links.PAYMENT_SUCCESS,
+	// 		HTMLHandler: website.NewPaymentSuccessController().Handle,
+	// 	},
+	// 	&router.Route{
+	// 		Name:        "Guest > Paypal Success Controller > Index",
+	// 		Path:        links.PAYPAL_SUCCESS,
+	// 		HTMLHandler: paypalControllers.NewPaypalSuccessController().AnyIndex,
+	// 	},
+	// 	&router.Route{
+	// 		Name:        "Guest > Paypal Cancel Controller > Index",
+	// 		Path:        links.PAYPAL_CANCEL,
+	// 		HTMLHandler: paypalControllers.NewPaypalCancelController().AnyIndex,
+	// 	},
+	// 	&router.Route{
+	// 		Name:        "Guest > Paypal Notify Controller > Index",
+	// 		Path:        links.PAYPAL_NOTIFY,
+	// 		HTMLHandler: paypalControllers.NewPaypalNotifyController().AnyIndex,
+	// 	},
+	// }
 
 	// !!! Comment these if you use the CMS routes, as they clash
 	globalRoutes := []router.RouteInterface{

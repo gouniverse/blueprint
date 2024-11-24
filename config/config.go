@@ -125,7 +125,7 @@ var SqlFileStoreUsed = false
 var SqlFileStorage filesystem.StorageInterface
 
 var StatsStoreUsed = true
-var StatsStore statsstore.Store
+var StatsStore statsstore.StoreInterface
 
 // var SubscriptionStore *subscriptionstore.Store
 

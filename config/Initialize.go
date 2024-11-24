@@ -230,7 +230,7 @@ func initializeCache() {
 // - error: the error if any
 func initializeDatabase() error {
 	db, err := database.Open(database.Options().
-		SetDriverName(DbDriver).
+		SetDatabaseType(DbDriver).
 		SetDatabaseHost(DbHost).
 		SetDatabasePort(DbPort).
 		SetDatabaseName(DbName).
