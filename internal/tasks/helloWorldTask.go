@@ -28,7 +28,7 @@ func (handler *helloWorldTask) Description() string {
 	return "Say hello world"
 }
 
-func (handler *helloWorldTask) Enqueue() (task *taskstore.Queue, err error) {
+func (handler *helloWorldTask) Enqueue() (task taskstore.QueueInterface, err error) {
 	return config.TaskStore.TaskEnqueueByAlias(handler.Alias(), map[string]any{})
 }
 

@@ -3,15 +3,23 @@ package website
 import (
 	"net/http"
 	"project/config"
+	"project/internal/webtheme"
+	"project/internal/widgets"
+	"sync"
 
+	"github.com/gouniverse/cmsstore"
+	cmsFrontend "github.com/gouniverse/cmsstore/frontend"
 	"github.com/gouniverse/router"
+	"github.com/gouniverse/ui"
 )
 
 const CMS_ENABLE_CACHE = false
 
 // == CONTROLLER ===============================================================
 
-type cmsController struct{}
+type cmsController struct {
+	frontend cmsFrontend.FrontendInterface
+}
 
 var _ router.HTMLControllerInterface = (*cmsController)(nil)
 
@@ -24,5 +32,56 @@ func NewCmsController() *cmsController {
 // == PUBLIC METHODS ===========================================================
 
 func (controller cmsController) Handler(w http.ResponseWriter, r *http.Request) string {
-	return config.Cms.FrontendHandlerRenderAsString(w, r)
+	//return config.Cms.FrontendHandlerRenderAsString(w, r)
+
+	// list := widgets.WidgetRegistry()
+
+	// shortcodes := []cmsstore.ShortcodeInterface{}
+	// for _, widget := range list {
+	// 	shortcodes = append(shortcodes, widget)
+	// }
+
+	// frontend := cmsFrontend.New(cmsFrontend.Config{
+	// 	// BlockEditorDefinitions: webtheme.BlockEditorDefinitions(),
+	// 	BlockEditorRenderer: func(blocks []ui.BlockInterface) string {
+	// 		return webtheme.New(blocks).ToHtml()
+	// 	},
+	// 	Shortcodes:         shortcodes,
+	// 	Store:              config.CmsStore,
+	// 	Logger:             &config.Logger,
+	// 	CacheEnabled:       true,
+	// 	CacheExpireSeconds: 10 * 60, // 10 mins
+	// })
+
+	instance := GetInstance()
+	return instance.StringHandler(w, r)
+}
+
+var instance cmsFrontend.FrontendInterface
+var once sync.Once
+
+func GetInstance() cmsFrontend.FrontendInterface {
+	once.Do(func() {
+		list := widgets.WidgetRegistry()
+
+		shortcodes := []cmsstore.ShortcodeInterface{}
+		for _, widget := range list {
+			shortcodes = append(shortcodes, widget)
+		}
+
+		frontend := cmsFrontend.New(cmsFrontend.Config{
+			// BlockEditorDefinitions: webtheme.BlockEditorDefinitions(),
+			BlockEditorRenderer: func(blocks []ui.BlockInterface) string {
+				return webtheme.New(blocks).ToHtml()
+			},
+			Shortcodes:         shortcodes,
+			Store:              config.CmsStore,
+			Logger:             &config.Logger,
+			CacheEnabled:       true,
+			CacheExpireSeconds: 10 * 60, // 10 mins
+		})
+
+		instance = frontend
+	})
+	return instance
 }

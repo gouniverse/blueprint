@@ -46,17 +46,22 @@ func ExecuteJob(args []string) {
 		return
 	}
 
-	if queuedTask.Status == taskstore.QueueStatusRunning {
+	if queuedTask.Status() == taskstore.QueueStatusRunning {
 		cfmt.Errorln("Task is currently running: ", queuedTaskID, "Aborted")
 		return
 	}
 
-	if force != "yes" && queuedTask.Status != taskstore.QueueStatusQueued {
+	if force != "yes" && queuedTask.Status() != taskstore.QueueStatusQueued {
 		cfmt.Errorln("Task is not queued: ", queuedTaskID, " . You can use the --force=yes option to force the execution of the job. Aborted")
 		return
 	}
 
-	isOK := config.TaskStore.QueuedTaskProcess(*queuedTask)
+	isOK, err := config.TaskStore.QueuedTaskProcess(queuedTask)
+
+	if err != nil {
+		cfmt.Errorln("Error processing task: ", queuedTaskID, " ", err.Error())
+		return
+	}
 
 	if isOK {
 		cfmt.Infoln("Job: ", queuedTaskID, " run OK")

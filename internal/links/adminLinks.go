@@ -34,7 +34,15 @@ func (l *adminLinks) Cms() string {
 	return URL(ADMIN_CMS, nil)
 }
 
+func (l *adminLinks) CmsNew() string {
+	return URL(ADMIN_CMS_NEW, nil)
+}
+
 func (l *adminLinks) FileManager(params map[string]string) string {
+	return URL(ADMIN_FILE_MANAGER, params)
+}
+
+func (l *adminLinks) MediaManager(params map[string]string) string {
 	return URL(ADMIN_MEDIA, params)
 }
 

@@ -66,6 +66,8 @@ var MediaUrl string = "/files"
 var OpenAiApiKey string
 var StripeKeyPrivate string
 var StripeKeyPublic string
+var TranslationLanguageDefault string = "en"
+var TranslationLanguageList map[string]string = map[string]string{"en": "English", "bg": "Bulgarian", "de": "German"}
 var VaultKey string
 var VertexModelID string
 var VertexProjectID string
@@ -128,7 +130,7 @@ var StatsStore statsstore.Store
 // var SubscriptionStore *subscriptionstore.Store
 
 var TaskStoreUsed = true
-var TaskStore taskstore.Store
+var TaskStore taskstore.StoreInterface
 
 var UserStoreUsed = false
 var UserStore userstore.StoreInterface

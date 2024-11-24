@@ -70,7 +70,7 @@ func Send(options SendOptions) error {
 	err := e.Send(addr, auth)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error at Send", err.Error())
+		config.Logger.Error("Error at Send", "error", err.Error())
 		return err
 	}
 

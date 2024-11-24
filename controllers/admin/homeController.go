@@ -135,54 +135,91 @@ func (c *homeController) cardDailyVisitors() *hb.Tag {
 }
 
 func (*homeController) tiles() []hb.TagInterface {
-	tiles := []map[string]string{
-		{
-			"title": "Website Manager",
-			"icon":  "bi-globe",
-			"link":  links.NewAdminLinks().Cms(),
-		},
-		{
-			"title": "Blog Manager",
-			"icon":  "bi-newspaper",
-			"link":  links.NewAdminLinks().Blog(map[string]string{}),
-		},
-		{
-			"title": "User Manager",
-			"icon":  "bi-people",
-			"link":  links.NewAdminLinks().Users(map[string]string{}),
-		},
-		{
-			"title": "Shop Manager",
-			"icon":  "bi-shop",
-			"link":  links.NewAdminLinks().Shop(map[string]string{}),
-		},
-		// {
-		// 	"title": "FAQ Manager",
-		// 	"icon":  "bi-question-circle",
-		// 	"link":  links.NewAdminLinks().Faq(map[string]string{}),
-		// },
-		{
-			"title": "File Manager",
-			"icon":  "bi-box",
-			"link":  links.NewAdminLinks().FileManager(map[string]string{}),
-		},
-		// {
-		// 	"title":  "CDN Manager",
-		// 	"icon":   "bi-folder-symlink",
-		// 	"link":   "https://gitlab.com/repo/cdn",
-		// 	"target": "_blank",
-		// },
-		{
-			"title": "Queue Manager",
-			"icon":  "bi-heart-pulse",
-			"link":  links.NewAdminLinks().Tasks(map[string]string{}),
-		},
-		{
-			"title": "Visit Stats",
-			"icon":  "bi-graph-up",
-			"link":  links.NewAdminLinks().Stats(map[string]string{}),
-		},
+	cmsTileOld := map[string]string{
+		"title": "Website Manager (Old)",
+		"icon":  "bi-globe",
+		"link":  links.NewAdminLinks().Cms(),
 	}
+
+	cmsTileNew := map[string]string{
+		"title": "Website Manager (New)",
+		"icon":  "bi-globe",
+		"link":  links.NewAdminLinks().CmsNew(),
+	}
+
+	blogTile := map[string]string{
+		"title": "Blog Manager",
+		"icon":  "bi-newspaper",
+		"link":  links.NewAdminLinks().Blog(map[string]string{}),
+	}
+
+	userTile := map[string]string{
+		"title": "User Manager",
+		"icon":  "bi-people",
+		"link":  links.NewAdminLinks().Users(map[string]string{}),
+	}
+
+	shopTile := map[string]string{
+		"title": "Shop Manager",
+		"icon":  "bi-shop",
+		"link":  links.NewAdminLinks().Shop(map[string]string{}),
+	}
+
+	// faqTile := map[string]string{
+	// 	"title": "FAQ Manager",
+	// 	"icon":  "bi-question-circle",
+	// 	"link":  links.NewAdminLinks().Faq(map[string]string{}),
+	// }
+
+	fileManagerTile := map[string]string{
+		"title": "File Manager (New, DB)",
+		"icon":  "bi-box",
+		"link":  links.NewAdminLinks().FileManager(map[string]string{}),
+	}
+
+	mediaManagerTile := map[string]string{
+		"title": "Media Manager (Old, S3)",
+		"icon":  "bi-box",
+		"link":  links.NewAdminLinks().MediaManager(map[string]string{}),
+	}
+
+	// cdnManagerTile := map[string]string{
+	// 	"title": "CDN Manager",
+	// 	"icon":  "bi-folder-symlink",
+	// 	"link":  "https://gitlab.com/lesichkov/media",
+	// }
+
+	queueTile := map[string]string{
+		"title": "Queue Manager",
+		"icon":  "bi-heart-pulse",
+		"link":  links.NewAdminLinks().Tasks(map[string]string{}),
+	}
+
+	visitStatsTile := map[string]string{
+		"title": "Visit Stats",
+		"icon":  "bi-graph-up",
+		"link":  links.NewAdminLinks().Stats(map[string]string{}),
+	}
+
+	tiles := []map[string]string{}
+
+	if config.CmsUsed {
+		tiles = append(tiles, cmsTileOld)
+	}
+
+	if config.CmsStoreUsed {
+		tiles = append(tiles, cmsTileNew)
+	}
+
+	tiles = append(tiles,
+		blogTile,
+		userTile,
+		shopTile,
+		fileManagerTile,
+		mediaManagerTile,
+		queueTile,
+		visitStatsTile,
+	)
 
 	cards := lo.Map(tiles, func(tile map[string]string, index int) hb.TagInterface {
 		target := lo.ValueOr(tile, "target", "")

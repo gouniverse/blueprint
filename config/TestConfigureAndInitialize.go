@@ -45,6 +45,8 @@ func TestsConfigureAndInitialize() {
 	// os.Setenv("EMAIL_FROM_ADDRESS", "")
 	// os.Setenv("EMAIL_FROM_NAME", "")
 
+	os.Setenv("CMS_TEMPLATE_ID", "default")
+
 	os.Setenv("VAULT_KEY", "abcdefghijklmnopqrstuvwxyz1234567890")
 
 	os.Setenv("OPENAI_API_KEY", "openai_api_key")

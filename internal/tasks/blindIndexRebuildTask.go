@@ -61,7 +61,7 @@ func (task *blindIndexRebuildTask) Description() string {
 	return "Truncates a blind index table, and repopulates it with the current data"
 }
 
-func (task *blindIndexRebuildTask) Enqueue(index string) (queuedTask *taskstore.Queue, err error) {
+func (task *blindIndexRebuildTask) Enqueue(index string) (queuedTask taskstore.QueueInterface, err error) {
 	return config.TaskStore.TaskEnqueueByAlias(task.Alias(), map[string]any{
 		"index": index,
 	})

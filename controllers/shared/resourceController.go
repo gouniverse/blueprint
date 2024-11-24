@@ -34,7 +34,7 @@ func (controller resourceController) Handler(w http.ResponseWriter, r *http.Requ
 	// Is resource private?
 	if strings.HasPrefix(uri, ".") {
 		w.WriteHeader(http.StatusNotFound)
-		return NewPageNotFoundController().Handler(w, r)
+		return PageNotFoundController().Handler(w, r)
 	}
 
 	contentType := lo.If(strings.HasSuffix(uri, ".css"), "text/css").
@@ -55,7 +55,7 @@ func (controller resourceController) Handler(w http.ResponseWriter, r *http.Requ
 	resourceContent := resources.Resource(uri)
 
 	if resourceContent == "" {
-		return NewPageNotFoundController().Handler(w, r)
+		return PageNotFoundController().Handler(w, r)
 	}
 
 	w.Header().Set("Content-Type", contentType)

@@ -6,17 +6,15 @@ import (
 	"github.com/gouniverse/router"
 )
 
+// == CONSTRUCTOR =============================================================
+
+func PageNotFoundController() router.HTMLControllerInterface {
+	return &pageNotFoundController{}
+}
+
 // == CONTROLLER ==============================================================
 
 type pageNotFoundController struct{}
-
-var _ router.HTMLControllerInterface = (*pageNotFoundController)(nil)
-
-// == CONSTRUCTOR =============================================================
-
-func NewPageNotFoundController() *pageNotFoundController {
-	return &pageNotFoundController{}
-}
 
 // PUBLIC METHODS =============================================================
 

@@ -5,6 +5,7 @@ import (
 	adminBlog "project/controllers/admin/blog"
 	adminCms "project/controllers/admin/cms"
 	adminFiles "project/controllers/admin/files"
+	adminMedia "project/controllers/admin/media"
 	adminShop "project/controllers/admin/shop"
 	adminStats "project/controllers/admin/stats"
 	adminTasks "project/controllers/admin/tasks"
@@ -54,6 +55,11 @@ func adminRoutes() []router.RouteInterface {
 			HTMLHandler: adminCms.NewCmsController().Handler,
 		},
 		&router.Route{
+			Name:    "Admin > Cms New Manager",
+			Path:    links.ADMIN_CMS_NEW,
+			Handler: adminCms.NewCmsNewController().Handler,
+		},
+		&router.Route{
 			Name:        "Admin > File Manager",
 			Path:        links.ADMIN_FILE_MANAGER,
 			HTMLHandler: adminFiles.NewFileManagerController().AnyIndex,
@@ -61,7 +67,7 @@ func adminRoutes() []router.RouteInterface {
 		&router.Route{
 			Name:        "Admin > Media Manager",
 			Path:        links.ADMIN_MEDIA,
-			HTMLHandler: adminFiles.NewFileManagerController().AnyIndex,
+			HTMLHandler: adminMedia.NewMediaManagerController().AnyIndex,
 		},
 	}
 

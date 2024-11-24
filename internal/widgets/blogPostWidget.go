@@ -108,7 +108,7 @@ func (w *blogPostWidget) Render(r *http.Request, content string, params map[stri
 
 // == PRIVATE METHODS ========================================================
 
-func (w *blogPostWidget) page(r *http.Request, post blogstore.Post) string {
+func (w *blogPostWidget) page(_ *http.Request, post blogstore.Post) string {
 	return hb.Wrap().
 		Children([]hb.TagInterface{
 			hb.Style(w.css()),

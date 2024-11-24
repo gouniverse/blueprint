@@ -1,6 +1,6 @@
 module project
 
-go 1.23.2
+go 1.23.3
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
@@ -12,19 +12,20 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/goravel/framework v1.14.7
 	github.com/gouniverse/auth v0.22.0
+	github.com/gouniverse/base v0.0.5
 	github.com/gouniverse/blindindexstore v1.0.0
-	github.com/gouniverse/blockeditor v0.19.0
+	github.com/gouniverse/blockeditor v0.20.0
 	github.com/gouniverse/blogstore v0.8.0
 	github.com/gouniverse/bs v0.13.0
 	github.com/gouniverse/cachestore v0.18.1
 	github.com/gouniverse/cdn v1.5.0
-	github.com/gouniverse/cmsstore v0.13.0
+	github.com/gouniverse/cmsstore v0.13.1
 	github.com/gouniverse/crud/v2 v2.0.0-20241105205902-6a295ae50112
 	github.com/gouniverse/dashboard v1.5.1
 	github.com/gouniverse/envenc v0.8.0
 	github.com/gouniverse/filesystem v0.3.0
 	github.com/gouniverse/form v0.15.1
-	github.com/gouniverse/hb v1.78.1
+	github.com/gouniverse/hb v1.78.2
 	github.com/gouniverse/icons v1.3.1
 	github.com/gouniverse/logstore v1.5.0
 	github.com/gouniverse/metastore v1.1.0
@@ -32,23 +33,23 @@ require (
 	github.com/gouniverse/router v1.4.0
 	github.com/gouniverse/sessionstore v0.26.0
 	github.com/gouniverse/shopstore v0.7.0
-	github.com/gouniverse/statsstore v0.1.1
+	github.com/gouniverse/statsstore v0.2.0
 	github.com/gouniverse/strutils v0.6.0
-	github.com/gouniverse/taskstore v1.0.3
-	github.com/gouniverse/ui v0.10.0
+	github.com/gouniverse/taskstore v1.2.1
+	github.com/gouniverse/ui v0.12.0
 	github.com/gouniverse/userstore v0.4.0
 	github.com/gouniverse/utils v1.45.3
 	github.com/gouniverse/vaultstore v0.21.0
 	github.com/gouniverse/webserver v0.1.0
-	github.com/hyperjiang/php v1.0.3
 	github.com/jellydator/ttlcache/v3 v3.3.0
 	github.com/mileusna/useragent v1.3.5
 	github.com/mingrammer/cfmt v1.1.0
+	github.com/pkg/errors v0.9.1
 	github.com/robertkrimen/otto v0.5.1
 	github.com/sfreiberg/simplessh v0.0.0-20220719182921-185eafd40485
 	github.com/spf13/cast v1.7.0
 	github.com/yuin/goldmark v1.7.8
-	modernc.org/sqlite v1.33.1
+	modernc.org/sqlite v1.34.1
 )
 
 require (
@@ -107,7 +108,7 @@ require (
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/gc/v3 v3.0.0-20241004144649-1aea3fae8852 // indirect
-	modernc.org/libc v1.61.0 // indirect
+	modernc.org/libc v1.61.2 // indirect
 )
 
 require (

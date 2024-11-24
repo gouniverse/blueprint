@@ -30,7 +30,12 @@ type websiteLayout struct {
 }
 
 func (layout *websiteLayout) ToHTML() string {
-	html, err := config.Cms.TemplateRenderHtmlByID(layout.request, config.CmsUserTemplateID, struct {
+	fe := frontend.New(frontend.Config{
+		Store:  config.CmsStore,
+		Logger: &config.Logger,
+	})
+
+	html, err := fe.TemplateRenderHtmlByID(layout.request, config.CmsUserTemplateID, struct {
 		PageContent         string
 		PageCanonicalURL    string
 		PageMetaDescription string

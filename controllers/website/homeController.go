@@ -2,18 +2,18 @@ package website
 
 import "net/http"
 
+// == CONSTRUCTOR ==============================================================
+
+func HomeController() router.HTMLControllerInterface {
+	return &homeController{}
+}
+
 // == CONTROLLER ===============================================================
 
 type homeController struct{}
 
-// == CONSTRUCTOR ==============================================================
-
-func NewHomeController() *homeController {
-	return &homeController{}
-}
-
 // == PUBLIC METHODS ===========================================================
 
-func (controller *homeController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) string {
 	return "You are at the website home page"
 }
