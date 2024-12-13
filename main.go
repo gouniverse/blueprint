@@ -54,6 +54,10 @@ func main() {
 }
 
 func closeResources() {
+	if config.Database == nil {
+		return
+	}
+
 	if err := config.Database.DB().Close(); err != nil {
 		cfmt.Errorf("Failed to close database connection: %v", err)
 	}
@@ -64,10 +68,12 @@ func isCliMode() bool {
 }
 
 func startBackgroundProcesses() {
-	go config.TaskStore.QueueRunGoroutine(10, 2)    // 6. Initialize the task queue
+	if config.TaskStore != nil {
+		go config.TaskStore.QueueRunGoroutine(10, 2) // 6. Initialize the task queue
+	}
 	scheduler.StartAsync()                          // 7. Initialize the scheduler
 	go config.CacheStore.ExpireCacheGoroutine()     // 8. Initialize the cache expiration goroutine
-	go config.SessionStore.ExpireSessionGoroutine() // 9. Initialize the session expiration goroutine
+	go config.SessionStore.SessionExpiryGoroutine() // 9. Initialize the session expiration goroutine
 	widgets.CmsAddShortcodes()                      // 10. Add CMS shortcodes
 }
 
@@ -104,6 +110,10 @@ func executeCliCommand(args []string) {
 
 	// Is it a task?
 	if firstArg == "task" {
+		if config.TaskStore == nil {
+			cfmt.Errorln("TaskStore is nil")
+			return
+		}
 		config.TaskStore.TaskExecuteCli(secondArg, args[2:])
 		return
 	}

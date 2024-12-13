@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 
@@ -261,7 +262,7 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 				}),
 			}),
 			hb.Tbody().Children(lo.Map(data.userList, func(user userstore.UserInterface, _ int) hb.TagInterface {
-				firstName, lastName, email, err := helpers.UserUntokenized(user)
+				firstName, lastName, email, err := helpers.UserUntokenized(context.Background(), user)
 
 				if err != nil {
 					config.LogStore.ErrorWithContext("At userManagerController > tableUsers", err.Error())
@@ -279,7 +280,7 @@ func (controller *userManagerController) tableUsers(data userManagerControllerDa
 				status := hb.Span().
 					Style(`font-weight: bold;`).
 					StyleIf(user.IsActive(), `color:green;`).
-					StyleIf(user.IsDeleted(), `color:silver;`).
+					StyleIf(user.IsSoftDeleted(), `color:silver;`).
 					StyleIf(user.IsUnverified(), `color:blue;`).
 					StyleIf(user.IsInactive(), `color:red;`).
 					HTML(user.Status())
@@ -551,87 +552,30 @@ func (controller *userManagerController) fetchUserList(data userManagerControlle
 		userIDs = append(userIDs, emailUserIDs...)
 	}
 
-	// query := userstore.UserQueryOptions{
-	// 	IDIn:      userIDs,
-	// 	Offset:    data.pageInt * data.perPage,
-	// 	Limit:     data.perPage,
-	// 	Status:    data.formStatus,
-	// 	SortOrder: data.sortOrder,
-	// 	OrderBy:   data.sortBy,
-	// }
-
-	query := userstore.NewUserQuery()
-
-	query, err := query.SetIDIn(userIDs)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.UserInterface{}, 0, err
-	}
-
-	query, err = query.SetStatus(data.formStatus)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.UserInterface{}, 0, err
-	}
-
-	query, err = query.SetSortOrder(data.sortOrder)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.UserInterface{}, 0, err
-	}
-
-	query, err = query.SetOrderBy(data.sortBy)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.UserInterface{}, 0, err
-	}
-
-	query, err = query.SetOffset(data.pageInt * data.perPage)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.UserInterface{}, 0, err
-	}
-
-	query, err = query.SetLimit(data.perPage)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-		return []userstore.UserInterface{}, 0, err
-	}
+	query := userstore.NewUserQuery().
+		SetIDIn(userIDs).
+		SetStatus(data.formStatus).
+		SetSortDirection(data.sortOrder).
+		SetOrderBy(data.sortBy).
+		SetOffset(data.pageInt * data.perPage).
+		SetLimit(data.perPage)
 
 	if data.formCreatedFrom != "" {
-		// query.CreatedAtGte = data.formCreatedFrom + " 00:00:00"
-		query, err = query.SetCreatedAtGte(data.formCreatedFrom + " 00:00:00")
-
-		if err != nil {
-			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-			return []userstore.UserInterface{}, 0, err
-		}
+		query.SetCreatedAtGte(data.formCreatedFrom + " 00:00:00")
 	}
 
 	if data.formCreatedTo != "" {
-		// query.CreatedAtLte = data.formCreatedTo + " 23:59:59"
-		query, err = query.SetCreatedAtLte(data.formCreatedTo + " 23:59:59")
-
-		if err != nil {
-			config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
-			return []userstore.UserInterface{}, 0, err
-		}
+		query.SetCreatedAtLte(data.formCreatedTo + " 23:59:59")
 	}
 
-	userList, err := config.UserStore.UserList(query)
+	userList, err := config.UserStore.UserList(data.request.Context(), query)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())
 		return []userstore.UserInterface{}, 0, err
 	}
 
-	userCount, err := config.UserStore.UserCount(query)
+	userCount, err := config.UserStore.UserCount(data.request.Context(), query)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userManagerController > prepareData", err.Error())

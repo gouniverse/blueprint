@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -37,7 +38,7 @@ func VaultStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func VaultStoreAutoMigrate() error {
+func VaultStoreAutoMigrate(_ context.Context) error {
 	if !VaultStoreUsed {
 		return nil
 	}

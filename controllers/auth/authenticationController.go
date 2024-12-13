@@ -2,6 +2,7 @@ package auth
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"log/slog"
@@ -13,10 +14,10 @@ import (
 	"project/internal/testutils"
 	"strings"
 
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/auth"
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/sessionstore"
-	"github.com/gouniverse/strutils"
 	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 	"github.com/samber/lo"
@@ -72,10 +73,10 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 		return helpers.ToFlashError(w, r, "Authentication Provider Error. "+errorMessage, homeURL, 5)
 	}
 
-	user, errUser := c.userFindByEmailOrCreate(email, userstore.USER_STATUS_ACTIVE)
+	user, errUser := c.userFindByEmailOrCreate(r.Context(), email, userstore.USER_STATUS_ACTIVE)
 
 	if errUser != nil {
-		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > User Create Error: ", errUser.Error())
+		config.Logger.Error("At Auth Controller > AnyIndex > User Create Error: ", "error", errUser.Error())
 		return helpers.ToFlashError(w, r, msgUserNotFound, homeURL, 5)
 	}
 
@@ -87,19 +88,24 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 		return helpers.ToFlashError(w, r, msgAccountNotActive, homeURL, 5)
 	}
 
-	sessionKey := strutils.RandomFromGamma(64, "BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz")
-	errSession := config.SessionStore.Set(sessionKey, user.ID(), 2*60*60, sessionstore.SessionOptions{
-		UserID:    user.ID(),
-		UserAgent: r.UserAgent(),
-		IPAddress: utils.IP(r),
-	})
+	session := sessionstore.NewSession().
+		SetUserID(user.ID()).
+		SetUserAgent(r.UserAgent()).
+		SetIPAddress(utils.IP(r)).
+		SetExpiresAt(carbon.Now(carbon.UTC).AddHours(2).ToDateTimeString(carbon.UTC))
 
-	if errSession != nil {
-		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Session Store Error: ", errSession.Error())
+	if config.IsEnvDevelopment() {
+		session.SetExpiresAt(carbon.Now(carbon.UTC).AddHours(4).ToDateTimeString(carbon.UTC))
+	}
+
+	err := config.SessionStore.SessionCreate(session)
+
+	if err != nil {
+		config.Logger.Error("At Auth Controller > AnyIndex > Session Store Error: ", "error", err.Error())
 		return helpers.ToFlashError(w, r, "Error creating session", homeURL, 5)
 	}
 
-	auth.AuthCookieSet(w, r, sessionKey)
+	auth.AuthCookieSet(w, r, session.GetKey())
 
 	redirectUrl := c.calculateRedirectURL(user)
 
@@ -108,7 +114,11 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 
 // == PRIVATE METHODS =========================================================
 
-func (c *authenticationController) userFindByEmailOrCreate(email string, status string) (userstore.UserInterface, error) {
+func (c *authenticationController) userFindByEmailOrCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
+	if config.UserStore == nil {
+		return nil, errors.New("user store is nil")
+	}
+
 	userID, err := c.findEmailInBlindIndex(email)
 
 	if err != nil {
@@ -116,10 +126,10 @@ func (c *authenticationController) userFindByEmailOrCreate(email string, status 
 	}
 
 	if userID == "" {
-		return c.userCreate(email, status)
+		return c.userCreate(ctx, email, status)
 	}
 
-	user, err := config.UserStore.UserFindByID(userID)
+	user, err := config.UserStore.UserFindByID(context.Background(), userID)
 
 	if err != nil {
 		return nil, err
@@ -135,18 +145,22 @@ func (c *authenticationController) userFindByEmailOrCreate(email string, status 
 	return user, nil
 }
 
-func (c *authenticationController) userCreate(email string, status string) (userstore.UserInterface, error) {
+func (c *authenticationController) userCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
 	user := userstore.NewUser().
 		SetStatus(status).
 		SetEmail(email)
 
-	err := config.UserStore.UserCreate(user)
+	if config.UserStore == nil {
+		return nil, errors.New("user store is nil")
+	}
+
+	err := config.UserStore.UserCreate(ctx, user)
 
 	if err != nil {
 		return nil, err
 	}
 
-	emailToken, err := config.VaultStore.TokenCreate(email, config.VaultKey, 20)
+	emailToken, err := config.VaultStore.TokenCreate(ctx, email, config.VaultKey, 20)
 
 	if err != nil {
 		return nil, err
@@ -154,7 +168,7 @@ func (c *authenticationController) userCreate(email string, status string) (user
 
 	user.SetEmail(emailToken)
 
-	err = config.UserStore.UserUpdate(user)
+	err = config.UserStore.UserUpdate(context.Background(), user)
 
 	if err != nil {
 		return nil, err
@@ -199,7 +213,7 @@ func (c *authenticationController) emailFromAuthKnightRequest(r *http.Request) (
 
 	response, err := c.callAuthKnight(once)
 	if err != nil {
-		config.LogStore.ErrorWithContext("At Auth Controller > emailFromAuthKnightRequest > Call Auth Knight Error: ", err.Error())
+		config.Logger.Error("At Auth Controller > emailFromAuthKnightRequest > Call Auth Knight Error: ", "error", err.Error())
 		return "", "No response from authentication provider"
 	}
 
@@ -220,7 +234,7 @@ func (c *authenticationController) emailFromAuthKnightRequest(r *http.Request) (
 	}
 
 	if status != "success" {
-		config.LogStore.ErrorWithContext("At Auth Controller > AnyIndex > Response Status: ", message.(string))
+		config.Logger.Error("At Auth Controller > AnyIndex > Response Status: ", "error", message.(string))
 		return "", "Invalid authentication response status"
 	}
 

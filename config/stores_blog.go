@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -20,7 +21,7 @@ func BlogStoreInitialize(db *sql.DB) error {
 	}
 
 	blogStoreInstance, err := blogstore.NewStore(blogstore.NewStoreOptions{
-		DB:            Database.DB(),
+		DB:            db,
 		PostTableName: "snv_blogs_post",
 	})
 
@@ -37,7 +38,7 @@ func BlogStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func BlogStoreAutoMigrate() error {
+func BlogStoreAutoMigrate(_ context.Context) error {
 	if !BlogStoreUsed {
 		return nil
 	}

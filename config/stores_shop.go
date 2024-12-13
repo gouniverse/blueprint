@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -20,8 +21,10 @@ func ShopStoreInitialize(db *sql.DB) error {
 	}
 
 	shopStoreInstance, err := shopstore.NewStore(shopstore.NewStoreOptions{
-		DB:                     Database.DB(),
+		DB:                     db,
+		CategoryTableName:      "snv_shop_category",
 		DiscountTableName:      "snv_shop_discount",
+		MediaTableName:         "snv_shop_media",
 		OrderTableName:         "snv_shop_order",
 		OrderLineItemTableName: "snv_shop_order_line_item",
 		ProductTableName:       "snv_shop_product",
@@ -40,7 +43,7 @@ func ShopStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func ShopStoreAutoMigrate() error {
+func ShopStoreAutoMigrate(_ context.Context) error {
 	if !ShopStoreUsed {
 		return nil
 	}

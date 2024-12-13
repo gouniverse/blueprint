@@ -16,16 +16,24 @@ import (
 func RegisterTasks() {
 	tasks := []taskstore.TaskHandlerInterface{
 		NewBlindIndexRebuildTask(),
+		NewCmsTransferTask(),
+		NewEmailToAdminTaskHandler(),
+		NewEmailToAdminOnNewContactFormSubmittedTaskHandler(),
+		NewEmailToAdminOnNewUserRegisteredTaskHandler(),
 		NewEnvencTask(),
 		NewHelloWorldTask(),
 		NewStatsVisitorEnhanceTask(),
+	}
+
+	if config.TaskStore == nil {
+		return
 	}
 
 	for _, task := range tasks {
 		err := config.TaskStore.TaskHandlerAdd(task, true)
 
 		if err != nil {
-			config.LogStore.ErrorWithContext("At registerTaskHandlers", "Error registering task: "+task.Alias()+" - "+err.Error())
+			config.Logger.Error("At registerTaskHandlers", "error", "Error registering task: "+task.Alias()+" - "+err.Error())
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -37,7 +38,7 @@ func CacheStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func CacheStoreAutoMigrate() error {
+func CacheStoreAutoMigrate(_ context.Context) error {
 	if !CacheStoreUsed {
 		return nil
 	}

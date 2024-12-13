@@ -34,11 +34,6 @@ func adminRoutes() []router.RouteInterface {
 			Path:        links.ADMIN_BLOG_POST_DELETE,
 			HTMLHandler: adminBlog.NewPostDeleteController().Handler,
 		},
-		// {
-		// 	Name:    "Admin > Blog > Post Details",
-		// 	Path:    links.ADMIN_BLOG_POST_VIEW,
-		// 	Handler: adminBlog.NewPostViewController().Handler,
-		// },
 		&router.Route{
 			Name:        "Admin > Blog > Post Manager",
 			Path:        links.ADMIN_BLOG_POST_MANAGER,

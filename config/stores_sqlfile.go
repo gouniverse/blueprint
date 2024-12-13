@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -40,7 +41,7 @@ func SqlFileStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func SqlFileStoreAutoMigrate() error {
+func SqlFileStoreAutoMigrate(_ context.Context) error {
 	if !SqlFileStoreUsed {
 		return nil
 	}

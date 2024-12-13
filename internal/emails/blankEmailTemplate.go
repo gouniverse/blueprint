@@ -4,7 +4,7 @@ import (
 	"project/config"
 	"project/internal/links"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/hb"
 )
 

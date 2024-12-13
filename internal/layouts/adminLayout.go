@@ -8,6 +8,7 @@ import (
 
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/dashboard"
+	"github.com/samber/lo"
 )
 
 func NewAdminLayout(r *http.Request, options Options) *dashboard.Dashboard {
@@ -27,7 +28,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	dashboardUser := dashboard.User{}
 	if authUser != nil {
-		firstName, lastName, _, err := helpers.UserUntokenized(authUser)
+		firstName, lastName, _, err := helpers.UserUntokenized(r.Context(), authUser)
 		if err == nil {
 			dashboardUser = dashboard.User{
 				FirstName: firstName,
@@ -53,6 +54,13 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	homeLink := links.NewAdminLinks().Home(map[string]string{})
 
+	path := lo.IfF(r != nil, func() string {
+		return r.URL.Path
+	}).ElseF(func() string {
+		return ""
+	})
+	themeLink := links.NewWebsiteLinks().Theme(map[string]string{"redirect": path})
+
 	dashboard := dashboard.NewDashboard(dashboard.Config{
 		HTTPRequest:     r,
 		Content:         options.Content.ToHTML(),
@@ -64,7 +72,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		LogoRedirectURL: homeLink,
 		User:            dashboardUser,
 		UserMenu:        adminLayoutUserMenu(authUser),
-		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
+		ThemeHandlerUrl: themeLink,
 		Scripts:         scripts,
 		ScriptURLs:      scriptURLs,
 		Styles:          styles,

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"crypto/sha256"
 	"errors"
 	"fmt"
@@ -277,7 +278,7 @@ func initializeDatabase() error {
 // - error: the error if any
 func migrateDatabase() (err error) {
 	for _, migrate := range databaseMigrations {
-		err = migrate()
+		err = migrate(context.Background())
 
 		if err != nil {
 			return err

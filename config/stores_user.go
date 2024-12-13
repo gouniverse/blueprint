@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -37,9 +38,13 @@ func UserStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func UserStoreAutoMigrate() error {
+func UserStoreAutoMigrate(_ context.Context) error {
 	if !UserStoreUsed {
 		return nil
+	}
+
+	if UserStore == nil {
+		return errors.New("userstore.AutoMigrate: UserStore is nil")
 	}
 
 	err := UserStore.AutoMigrate()

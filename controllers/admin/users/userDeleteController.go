@@ -135,7 +135,7 @@ func (controller *userDeleteController) prepareDataAndValidate(r *http.Request) 
 		return data, "user id is required"
 	}
 
-	user, err := config.UserStore.UserFindByID(data.userID)
+	user, err := config.UserStore.UserFindByID(r.Context(), data.userID)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error. At userDeleteController > prepareDataAndValidate", err.Error())
@@ -152,7 +152,7 @@ func (controller *userDeleteController) prepareDataAndValidate(r *http.Request) 
 		return data, ""
 	}
 
-	err = config.UserStore.UserSoftDelete(user)
+	err = config.UserStore.UserSoftDelete(r.Context(), user)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error. At userDeleteController > prepareDataAndValidate", err.Error())

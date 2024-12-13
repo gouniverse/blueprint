@@ -1,6 +1,8 @@
 package testutils
 
 import (
+	"context"
+	"errors"
 	"project/config"
 
 	"github.com/gouniverse/userstore"
@@ -8,7 +10,15 @@ import (
 
 // SeedUser find existing or generates a new user with the given ID
 func SeedUser(userID string) (userstore.UserInterface, error) {
-	user, err := config.UserStore.UserFindByID(userID)
+	if config.UserStore == nil {
+		return nil, errors.New("userstore is not configured")
+	}
+
+	if userID == "" {
+		return nil, errors.New("user ID is empty")
+	}
+
+	user, err := config.UserStore.UserFindByID(context.Background(), userID)
 
 	if err != nil {
 		return nil, err
@@ -30,7 +40,7 @@ func SeedUser(userID string) (userstore.UserInterface, error) {
 		user.SetRole(userstore.USER_ROLE_ADMINISTRATOR)
 	}
 
-	err = config.UserStore.UserCreate(user)
+	err = config.UserStore.UserCreate(context.Background(), user)
 	if err != nil {
 		return nil, err
 	}

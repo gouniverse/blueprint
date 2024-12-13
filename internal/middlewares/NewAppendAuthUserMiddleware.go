@@ -8,8 +8,6 @@ import (
 
 	"github.com/gouniverse/auth"
 	"github.com/gouniverse/router"
-	"github.com/gouniverse/sessionstore"
-	"github.com/gouniverse/utils"
 )
 
 func NewAppendAuthUserMiddleware() router.Middleware {
@@ -61,27 +59,35 @@ func AppendUserHandler(next http.Handler) http.Handler {
 			return
 		}
 
-		userID, err := config.SessionStore.Get(userSessionKey, "", sessionstore.SessionOptions{
-			// !!! Important: leave UserID out, we don't know it at this point
-			IPAddress: utils.IP(r),
-			UserAgent: r.UserAgent(),
-		})
+		session, err := config.SessionStore.SessionFindByKey(userSessionKey)
 
 		if err != nil {
-			log.Println(err.Error())
+			config.Logger.Error("At appendUserHandler", "error", err.Error())
 			next.ServeHTTP(w, r)
 			return
 		}
+
+		if session == nil {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		if session.IsExpired() {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		userID := session.GetUserID()
 
 		if userID == "" {
 			next.ServeHTTP(w, r)
 			return
 		}
 
-		user, err := config.UserStore.UserFindByID(userID)
+		user, err := config.UserStore.UserFindByID(r.Context(), userID)
 
 		if err != nil {
-			config.LogStore.ErrorWithContext("At appendUserHandler", err.Error())
+			config.Logger.Error("At appendUserHandler", "error", err.Error())
 			next.ServeHTTP(w, r)
 			return
 		}

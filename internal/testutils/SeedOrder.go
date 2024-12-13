@@ -1,13 +1,14 @@
 package testutils
 
 import (
+	"context"
 	"project/config"
 
 	"github.com/gouniverse/shopstore"
 )
 
 func SeedOrder(orderID string, customerID string) (shopstore.OrderInterface, error) {
-	order, err := config.ShopStore.OrderFindByID(orderID)
+	order, err := config.ShopStore.OrderFindByID(context.Background(), orderID)
 
 	if err != nil {
 		return nil, err
@@ -21,7 +22,7 @@ func SeedOrder(orderID string, customerID string) (shopstore.OrderInterface, err
 	order.SetID(orderID)
 	order.SetCustomerID(customerID)
 
-	if err := config.ShopStore.OrderCreate(order); err != nil {
+	if err := config.ShopStore.OrderCreate(context.Background(), order); err != nil {
 		return nil, err
 	}
 
@@ -29,7 +30,7 @@ func SeedOrder(orderID string, customerID string) (shopstore.OrderInterface, err
 }
 
 func SeedProduct(productID string, price float64) (shopstore.ProductInterface, error) {
-	product, err := config.ShopStore.ProductFindByID(productID)
+	product, err := config.ShopStore.ProductFindByID(context.Background(), productID)
 
 	if err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func SeedProduct(productID string, price float64) (shopstore.ProductInterface, e
 	product.SetStatus(shopstore.PRODUCT_STATUS_ACTIVE)
 	product.SetPriceFloat(price)
 
-	if err := config.ShopStore.ProductCreate(product); err != nil {
+	if err := config.ShopStore.ProductCreate(context.Background(), product); err != nil {
 		return nil, err
 	}
 

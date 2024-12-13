@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"project/config"
 	"project/internal/helpers"
-	"project/internal/layouts"
+
+	// "project/internal/layouts"
 	"project/internal/links"
 	"strings"
 
@@ -150,21 +151,23 @@ func (w *blogPostWidget) processContent(content string, editor string) string {
 }
 
 func (w *blogPostWidget) sectionBreadcrumbs(post blogstore.Post) *hb.Tag {
-	breadcrumbs := []bs.Breadcrumb{
-		{
-			Name: "Blog",
-			URL:  links.NewWebsiteLinks().Blog(map[string]string{}),
-		},
-		{
-			Name: "Post",
-			URL:  links.NewWebsiteLinks().BlogPost(post.ID(), post.Slug()),
-		},
-	}
+	// breadcrumbs := []bs.Breadcrumb{
+	// 	{
+	// 		Name: "Blog",
+	// 		URL:  links.NewWebsiteLinks().Blog(map[string]string{}),
+	// 	},
+	// 	{
+	// 		Name: "Post",
+	// 		URL:  links.NewWebsiteLinks().BlogPost(post.ID(), post.Slug()),
+	// 	},
+	// }
 
-	breadcrumbSection := layouts.NewWebsiteBreadcrumbsSectionWithContainer(breadcrumbs).
-		Style("padding: 20px 0;")
+	return hb.Wrap()
 
-	return breadcrumbSection
+	// breadcrumbSection := layouts.NewWebsiteBreadcrumbsSectionWithContainer(breadcrumbs).
+	// 	Style("padding: 20px 0;")
+
+	// return breadcrumbSection
 }
 
 func (w *blogPostWidget) sectionPost(post blogstore.Post) *hb.Tag {

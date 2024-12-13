@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"errors"
 	"project/config"
 
 	"github.com/gouniverse/taskstore"
@@ -29,6 +30,9 @@ func (handler *helloWorldTask) Description() string {
 }
 
 func (handler *helloWorldTask) Enqueue() (task taskstore.QueueInterface, err error) {
+	if config.TaskStore == nil {
+		return nil, errors.New("task store is nil")
+	}
 	return config.TaskStore.TaskEnqueueByAlias(handler.Alias(), map[string]any{})
 }
 

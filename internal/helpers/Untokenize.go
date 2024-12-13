@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"context"
 	"project/config"
 
 	"github.com/samber/lo"
@@ -29,12 +30,12 @@ import (
 // Returns:
 // - untokenizedMap (map[string]string): A map of key value pairs
 // - err (error): An error if one occurred
-func Untokenize(keyTokenMap map[string]string) (map[string]string, error) {
+func Untokenize(ctx context.Context, keyTokenMap map[string]string) (map[string]string, error) {
 	tokens := lo.Values(keyTokenMap)
-	values, err := config.VaultStore.TokensRead(tokens, config.VaultKey)
+	values, err := config.VaultStore.TokensRead(ctx, tokens, config.VaultKey)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error reading tokens", err.Error())
+		config.Logger.Error("Error reading tokens", "error", err.Error())
 		return map[string]string{}, err
 	}
 

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"project/config"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/statsstore"
 	"github.com/gouniverse/utils"
@@ -58,7 +58,7 @@ func (m statsMiddleware) Handler(next http.Handler) http.Handler {
 		visitor.SetUserReferrer(userReferer)
 		visitor.SetPath("[" + r.Method + "] " + r.RequestURI)
 
-		err := config.StatsStore.VisitorCreate(visitor)
+		err := config.StatsStore.VisitorCreate(r.Context(), visitor)
 
 		if err != nil {
 			config.Logger.Error("Error at statsMiddleware", slog.String("error", err.Error()))

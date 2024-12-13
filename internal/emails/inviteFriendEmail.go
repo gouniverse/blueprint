@@ -1,6 +1,7 @@
 package emails
 
 import (
+	"context"
 	"errors"
 	"project/config"
 	"project/internal/links"
@@ -16,7 +17,7 @@ type inviteFriendEmail struct{}
 
 // EmailSendOnRegister sends the email when user registers
 func (e *inviteFriendEmail) Send(sendingUserID string, userNote string, recipientEmail string, recipientName string) error {
-	user, err := config.UserStore.UserFindByID(sendingUserID)
+	user, err := config.UserStore.UserFindByID(context.Background(), sendingUserID)
 
 	if err != nil {
 		return err

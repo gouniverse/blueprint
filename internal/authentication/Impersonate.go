@@ -4,33 +4,31 @@ import (
 	"net/http"
 	"project/config"
 
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/auth"
 	"github.com/gouniverse/sessionstore"
-	"github.com/gouniverse/strutils"
 	"github.com/gouniverse/utils"
-	"github.com/spf13/cast"
 )
 
 func Impersonate(w http.ResponseWriter, r *http.Request, userID string) error {
-	sessionTimeout := 2 * 60 * 60 // 2 hours
+	session := sessionstore.NewSession().
+		SetUserID(userID).
+		SetUserAgent(r.UserAgent()).
+		SetIPAddress(utils.IP(r)).
+		SetExpiresAt(carbon.Now(carbon.UTC).AddHours(2).ToDateTimeString(carbon.UTC))
 
 	if config.IsEnvDevelopment() {
-		sessionTimeout = 4 * 60 * 60 // 4 hours
+		session.SetExpiresAt(carbon.Now(carbon.UTC).AddHours(4).ToDateTimeString(carbon.UTC))
 	}
 
-	sessionKey := strutils.RandomFromGamma(64, "BCDFGHJKLMNPQRSTVWXZbcdfghjklmnpqrstvwxz")
-	errSession := config.SessionStore.Set(sessionKey, userID, cast.ToInt64(sessionTimeout), sessionstore.SessionOptions{
-		UserID:    userID,
-		UserAgent: r.UserAgent(),
-		IPAddress: utils.IP(r),
-	})
+	err := config.SessionStore.SessionCreate(session)
 
-	if errSession != nil {
-		config.LogStore.ErrorWithContext("At Impersonate Error: ", errSession.Error())
-		return errSession
+	if err != nil {
+		config.Logger.Error("At Impersonate Error: ", "error", err.Error())
+		return err
 	}
 
-	auth.AuthCookieSet(w, r, sessionKey)
+	auth.AuthCookieSet(w, r, session.GetKey())
 
 	return nil
 }

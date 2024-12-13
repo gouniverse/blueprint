@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -39,7 +40,7 @@ func GeoStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func GeoStoreAutoMigrate() error {
+func GeoStoreAutoMigrate(_ context.Context) error {
 	if !GeoStoreUsed {
 		return nil
 	}

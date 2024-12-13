@@ -1,7 +1,8 @@
 package tasks
 
 import (
-	// "io/ioutil"
+	"context"
+	"errors"
 	"io"
 	"log"
 	"net/http"
@@ -43,6 +44,9 @@ var _ taskstore.TaskHandlerInterface = (*statsVisitorEnhanceTask)(nil) // verify
 // == PUBLIC METHODS ==========================================================
 
 func (t *statsVisitorEnhanceTask) Enqueue() (taskstore.QueueInterface, error) {
+	if config.TaskStore == nil {
+		return nil, errors.New("task store is nil")
+	}
 	return config.TaskStore.TaskEnqueueByAlias(t.Alias(), map[string]interface{}{})
 }
 
@@ -59,7 +63,13 @@ func (t *statsVisitorEnhanceTask) Description() string {
 }
 
 func (t *statsVisitorEnhanceTask) Handle() bool {
-	unprocessedEntries, err := config.StatsStore.VisitorList(statsstore.VisitorQueryOptions{
+	if config.StatsStore == nil {
+		t.LogError("Task StatsVisitorEnhance. Store is nil")
+		return false
+	}
+
+	ctx := context.Background()
+	unprocessedEntries, err := config.StatsStore.VisitorList(ctx, statsstore.VisitorQueryOptions{
 		Country: "empty",
 		Limit:   10,
 	})
@@ -78,7 +88,7 @@ func (t *statsVisitorEnhanceTask) Handle() bool {
 
 	for i := 0; i < len(unprocessedEntries); i++ {
 		entry := unprocessedEntries[i]
-		t.processVisitor(entry)
+		t.processVisitor(ctx, entry)
 	}
 
 	// cfmt.Infoln("Visitors countries populate")
@@ -115,7 +125,11 @@ func (t *statsVisitorEnhanceTask) Handle() bool {
 
 // == PRIVATE METHODS =========================================================
 
-func (t *statsVisitorEnhanceTask) processVisitor(visitor statsstore.VisitorInterface) bool {
+func (t *statsVisitorEnhanceTask) processVisitor(ctx context.Context, visitor statsstore.VisitorInterface) bool {
+	if config.StatsStore == nil {
+		t.LogError("Task StatsVisitorEnhance. Store is nil")
+		return false
+	}
 	ua := useragent.Parse(visitor.UserAgent())
 	userOs := ua.OS
 	userOsVersion := ua.OSVersion
@@ -148,7 +162,7 @@ func (t *statsVisitorEnhanceTask) processVisitor(visitor statsstore.VisitorInter
 	visitor.SetUserOs(userOs)
 	visitor.SetUserOsVersion(userOsVersion)
 
-	errUpdated := config.StatsStore.VisitorUpdate(visitor)
+	errUpdated := config.StatsStore.VisitorUpdate(ctx, visitor)
 
 	if errUpdated != nil {
 		cfmt.Errorln(errUpdated.Error())
@@ -168,7 +182,13 @@ func (t *statsVisitorEnhanceTask) findCountryByIp(ip string) string {
 		log.Printf("Request Failed: %s", err)
 		return "ER" // error
 	}
+
+	if resp == nil {
+		return "UN"
+	}
+
 	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("Reading body failed: %s", err)

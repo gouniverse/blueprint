@@ -11,6 +11,9 @@ import (
 
 // GuestLayout is a layout for guest pages, which are not connected to the CMS
 // it differs from the website layout, which uses the CMS template
+//
+// NOTE: It is used for the registration page, which only has a
+// registration form and no navigation
 type guestLayout struct {
 	title      string
 	content    hb.TagInterface

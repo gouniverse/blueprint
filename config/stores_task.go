@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -38,9 +39,13 @@ func TaskStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func TaskStoreAutoMigrate() error {
+func TaskStoreAutoMigrate(_ context.Context) error {
 	if !TaskStoreUsed {
 		return nil
+	}
+
+	if TaskStore == nil {
+		return errors.New("taskstore.AutoMigrate: TaskStore is nil")
 	}
 
 	err := TaskStore.AutoMigrate()

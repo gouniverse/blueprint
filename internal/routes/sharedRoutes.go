@@ -6,11 +6,19 @@ import (
 	"project/internal/links"
 
 	"github.com/gouniverse/dashboard"
+	"github.com/gouniverse/responses"
 	"github.com/gouniverse/router"
 )
 
 func sharedRoutes() []router.RouteInterface {
 	sharedRoutes := []router.RouteInterface{
+		&router.Route{
+			Name: "Shared > ads.txt",
+			Path: "/ads.txt",
+			HTMLHandler: responses.HTMLHandler(func(w http.ResponseWriter, r *http.Request) string {
+				return "google.com, pub-8821108004642146, DIRECT, f08c47fec0942fa0"
+			}),
+		},
 		&router.Route{
 			Name:        "Shared > Files Controller",
 			Path:        links.FILES,

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -37,7 +38,7 @@ func MetaStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func MetaStoreAutoMigrate() error {
+func MetaStoreAutoMigrate(_ context.Context) error {
 	if !MetaStoreUsed {
 		return nil
 	}

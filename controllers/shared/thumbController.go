@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -51,12 +52,14 @@ func (controller *thumbnailController) Handler(w http.ResponseWriter, r *http.Re
 
 	cacheKey := utils.StrToMD5Hash(fmt.Sprint(data.path, data.extension, data.width, "x", data.height, data.quality))
 
-	if config.CacheFile.Contains(cacheKey) {
-		thumb, err := config.CacheFile.Fetch(cacheKey)
+	if config.CacheFile != nil {
+		if config.CacheFile.Contains(cacheKey) {
+			thumb, err := config.CacheFile.Fetch(cacheKey)
 
-		if err == nil {
-			controller.setHeaders(w, data.extension)
-			return thumb
+			if err == nil {
+				controller.setHeaders(w, data.extension)
+				return thumb
+			}
 		}
 	}
 
@@ -66,10 +69,12 @@ func (controller *thumbnailController) Handler(w http.ResponseWriter, r *http.Re
 		return errorMessage
 	}
 
-	err := config.CacheFile.Save(cacheKey, thumb, 5*time.Minute) // cache for 5 minutes
+	if config.CacheFile != nil {
+		err := config.CacheFile.Save(cacheKey, thumb, 5*time.Minute) // cache for 5 minutes
 
-	if err != nil {
-		cfmt.Errorln("Error at thumbnailController > CacheFile.Save", "error", err.Error())
+		if err != nil {
+			cfmt.Errorln("Error at thumbnailController > CacheFile.Save", "error", err.Error())
+		}
 	}
 
 	controller.setHeaders(w, data.extension)
@@ -132,8 +137,8 @@ func (controller *thumbnailController) prepareData(r *http.Request) (data thumbn
 	heightStr := ""
 	if strings.Contains(size, "x") {
 		splits := strings.Split(size, "x")
-		widthStr = splits[0]
-		heightStr = splits[1]
+		widthStr = lo.TernaryF(len(splits) > 0, func() string { return splits[0] }, func() string { return "100" })
+		heightStr = lo.TernaryF(len(splits) > 1, func() string { return splits[1] }, func() string { return "100" })
 	} else {
 		widthStr = size
 	}
@@ -201,7 +206,7 @@ func (controller *thumbnailController) generateThumb(data thumbnailControllerDat
 // 	thumbnail, errorMessage := controller.thumbnailValidate(r)
 
 // 	if errorMessage != "" {
-// 		config.LogStore.ErrorWithContext("Error at thumbnailController", errorMessage)
+// 		config.Logger.Error("Error at thumbnailController", errorMessage)
 // 		return "", errorMessage
 // 	}
 
@@ -223,7 +228,7 @@ func (controller *thumbnailController) generateThumb(data thumbnailControllerDat
 // 		imgBytes, err = media.ToBytes(thumbnail.Path)
 
 // 		if err != nil {
-// 			config.LogStore.ErrorWithContext("Error at thumbnailController", err.Error())
+// 			config.Logger.Error("Error at thumbnailController", err.Error())
 // 			return "", err.Error()
 // 		}
 // 	}
@@ -231,7 +236,7 @@ func (controller *thumbnailController) generateThumb(data thumbnailControllerDat
 // 	imgBytesResized, err := helpers.ImageResize(imgBytes, int(thumbnail.Width), int(thumbnail.Height), ext)
 
 // 	if err != nil {
-// 		config.LogStore.ErrorWithContext("Error at thumbnailController", err.Error())
+// 		config.Logger.Error("Error at thumbnailController", err.Error())
 // 		return "", err.Error()
 // 	}
 
@@ -317,16 +322,25 @@ func (controller *thumbnailController) generateThumb(data thumbnailControllerDat
 
 func (controller *thumbnailController) urlToBytes(url string) ([]byte, error) {
 	resp, err := http.Get(url)
+
 	if err != nil {
 		log.Println("Url: " + url + " NOT FOUND")
 		return nil, err
 	}
+
+	if resp == nil {
+		return nil, errors.New("no response")
+	}
+
 	defer resp.Body.Close()
+
 	body, err := ioutil.ReadAll(resp.Body)
+
 	if err != nil {
 		log.Println("Url: " + url + " NOT FOUND")
 		return nil, err
 	}
+
 	return body, nil
 }
 

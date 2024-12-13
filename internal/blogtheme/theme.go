@@ -17,7 +17,7 @@ type theme struct {
 }
 
 func New(blocksJSON string) (*theme, error) {
-	blocks, err := ui.BlocksFromJson(blocksJSON)
+	blocks, err := ui.UnmarshalJsonToBlocks(blocksJSON)
 
 	if err != nil {
 		return nil, err

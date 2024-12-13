@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 	"project/controllers/admin/shop/shared"
@@ -135,7 +136,7 @@ func (controller *productDeleteController) prepareDataAndValidate(r *http.Reques
 		return data, "product id is required"
 	}
 
-	product, err := config.ShopStore.ProductFindByID(data.productID)
+	product, err := config.ShopStore.ProductFindByID(context.Background(), data.productID)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error. At productDeleteController > prepareDataAndValidate", err.Error())
@@ -152,7 +153,7 @@ func (controller *productDeleteController) prepareDataAndValidate(r *http.Reques
 		return data, ""
 	}
 
-	err = config.ShopStore.ProductSoftDelete(product)
+	err = config.ShopStore.ProductSoftDelete(context.Background(), product)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error. At productDeleteController > prepareDataAndValidate", err.Error())

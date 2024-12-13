@@ -17,7 +17,7 @@ import (
 
 	"github.com/mingrammer/cfmt"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/api"
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/hb"

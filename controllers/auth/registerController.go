@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 	"project/internal/helpers"
@@ -76,7 +77,7 @@ func (controller *registerController) Handler(w http.ResponseWriter, r *http.Req
 	}
 
 	if r.Method == http.MethodPost {
-		return controller.postUpdate(data)
+		return controller.postUpdate(r.Context(), data)
 	}
 
 	return layouts.NewGuestLayout(layouts.Options{
@@ -97,7 +98,12 @@ func (controller *registerController) Handler(w http.ResponseWriter, r *http.Req
 
 // == PRIVATE METHODS =========================================================
 
-func (controller *registerController) postUpdate(data registerControllerData) string {
+func (controller *registerController) postUpdate(ctx context.Context, data registerControllerData) string {
+	if config.UserStore == nil {
+		data.formErrorMessage = "We are very sorry user store is not configured. Saving the details not possible."
+		return controller.formRegister(data).ToHTML()
+	}
+
 	if data.firstName == "" {
 		data.formErrorMessage = "First name is required field"
 		return controller.formRegister(data).ToHTML()
@@ -118,7 +124,7 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 		return controller.formRegister(data).ToHTML()
 	}
 
-	firstNameToken, err := config.VaultStore.TokenCreate(data.firstName, config.VaultKey, 20)
+	firstNameToken, err := config.VaultStore.TokenCreate(ctx, data.firstName, config.VaultKey, 20)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error creating first name token", err.Error())
@@ -126,7 +132,7 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 		return controller.formRegister(data).ToHTML()
 	}
 
-	lastNameToken, err := config.VaultStore.TokenCreate(data.lastName, config.VaultKey, 20)
+	lastNameToken, err := config.VaultStore.TokenCreate(ctx, data.lastName, config.VaultKey, 20)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error creating last name token", err.Error())
@@ -134,7 +140,7 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 		return controller.formRegister(data).ToHTML()
 	}
 
-	businessNameToken, err := config.VaultStore.TokenCreate(data.buinessName, config.VaultKey, 20)
+	businessNameToken, err := config.VaultStore.TokenCreate(ctx, data.buinessName, config.VaultKey, 20)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error creating business name token", err.Error())
@@ -142,7 +148,7 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 		return controller.formRegister(data).ToHTML()
 	}
 
-	phoneToken, err := config.VaultStore.TokenCreate(data.phone, config.VaultKey, 20)
+	phoneToken, err := config.VaultStore.TokenCreate(ctx, data.phone, config.VaultKey, 20)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error creating phone token", err.Error())
@@ -157,7 +163,7 @@ func (controller *registerController) postUpdate(data registerControllerData) st
 	data.authUser.SetCountry(data.country)
 	data.authUser.SetTimezone(data.timezone)
 
-	err = config.UserStore.UserUpdate(data.authUser)
+	err = config.UserStore.UserUpdate(context.Background(), data.authUser)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error updating user profile", err.Error())
@@ -346,7 +352,7 @@ func (controller *registerController) formRegister(data registerControllerData) 
 		ChildIf(data.formRedirectURL != "", hb.Script(`window.location.href = '`+data.formRedirectURL+`'`))
 }
 
-func (controller *registerController) untokenizeData(user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
+func (controller *registerController) untokenizeData(ctx context.Context, user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
 	emailToken := user.Email()
 	firstNameToken := user.FirstName()
 	lastNameToken := user.LastName()
@@ -354,7 +360,7 @@ func (controller *registerController) untokenizeData(user userstore.UserInterfac
 	phoneToken := user.Phone()
 
 	if emailToken != "" {
-		email, err = config.VaultStore.TokenRead(emailToken, config.VaultKey)
+		email, err = config.VaultStore.TokenRead(ctx, emailToken, config.VaultKey)
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("Error reading email", err.Error())
@@ -363,7 +369,7 @@ func (controller *registerController) untokenizeData(user userstore.UserInterfac
 	}
 
 	if firstNameToken != "" {
-		firstName, err = config.VaultStore.TokenRead(firstNameToken, config.VaultKey)
+		firstName, err = config.VaultStore.TokenRead(ctx, firstNameToken, config.VaultKey)
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("Error reading first name", err.Error())
@@ -372,7 +378,7 @@ func (controller *registerController) untokenizeData(user userstore.UserInterfac
 	}
 
 	if lastNameToken != "" {
-		lastName, err = config.VaultStore.TokenRead(lastNameToken, config.VaultKey)
+		lastName, err = config.VaultStore.TokenRead(ctx, lastNameToken, config.VaultKey)
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("Error reading last name", err.Error())
@@ -381,7 +387,7 @@ func (controller *registerController) untokenizeData(user userstore.UserInterfac
 	}
 
 	if businessNameToken != "" {
-		businessName, err = config.VaultStore.TokenRead(businessNameToken, config.VaultKey)
+		businessName, err = config.VaultStore.TokenRead(ctx, businessNameToken, config.VaultKey)
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("Error reading business name", err.Error())
@@ -390,7 +396,7 @@ func (controller *registerController) untokenizeData(user userstore.UserInterfac
 	}
 
 	if phoneToken != "" {
-		phone, err = config.VaultStore.TokenRead(phoneToken, config.VaultKey)
+		phone, err = config.VaultStore.TokenRead(ctx, phoneToken, config.VaultKey)
 
 		if err != nil {
 			config.LogStore.ErrorWithContext("Error reading phone", err.Error())
@@ -402,6 +408,10 @@ func (controller *registerController) untokenizeData(user userstore.UserInterfac
 }
 
 func (controller *registerController) prepareData(r *http.Request) (data registerControllerData, errorMessage string) {
+	if config.UserStore == nil {
+		return registerControllerData{}, "User store is nil"
+	}
+
 	action := utils.Req(r, "action", "")
 	authUser := helpers.GetAuthUser(r)
 
@@ -419,7 +429,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 		return registerControllerData{}, "Error listing countries"
 	}
 
-	email, firstName, lastName, businessName, phone, err := controller.untokenizeData(authUser)
+	email, firstName, lastName, businessName, phone, err := controller.untokenizeData(r.Context(), authUser)
 
 	if r.Method == http.MethodGet {
 		if err != nil {

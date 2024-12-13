@@ -27,7 +27,7 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	dashboardUser := dashboard.User{}
 	if authUser != nil {
-		firtsName, lastName, _, err := helpers.UserUntokenized(authUser)
+		firtsName, lastName, _, err := helpers.UserUntokenized(r.Context(), authUser)
 		if err == nil {
 			dashboardUser = dashboard.User{
 				FirstName: firtsName,
@@ -35,6 +35,11 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 			}
 		}
 	}
+
+	// googleTagScriptURL := "https://www.googletagmanager.com/gtag/js?id=G-247NHE839P"
+	// googleTagScript := `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-247NHE839P');`
+	// googleAdsScriptURL := "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8821108004642146"
+	// statcounterScript := `<script type="text/javascript">var sc_project=12939246;var sc_invisible=1;var sc_security="2c1cdc75";</script><script	src="https://www.statcounter.com/counter/counter.js" async></script><noscript><img	src="https://c.statcounter.com/12939246/0/2c1cdc75/1/" alt=""></noscript>`
 
 	// Prepare script URLs
 	scriptURLs := []string{} // prepend any if required
@@ -54,23 +59,23 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	homeLink := links.NewUserLinks().Home(map[string]string{})
 
 	dashboard := dashboard.NewDashboard(dashboard.Config{
-		HTTPRequest:     r,
-		Content:         options.Content.ToHTML(),
-		Title:           options.Title + " | User | " + config.AppName,
-		LoginURL:        links.NewAuthLinks().Login(homeLink),
-		Menu:            userLayoutMainMenu(authUser),
-		LogoImageURL:    "/media/user/dashboard-logo.jpg",
+		HTTPRequest:               r,
+		Content:                   options.Content.ToHTML(),
+		Title:                     options.Title + " | User | " + config.AppName,
+		LoginURL:                  links.NewAuthLinks().Login(homeLink),
+		Menu:                      userLayoutMainMenu(authUser),
+		LogoImageURL:              "/media/user/dashboard-logo.jpg",
 		NavbarBackgroundColorMode: "primary",
-		LogoRawHtml:     userLogoHtml(),
-		LogoRedirectURL: homeLink,
-		User:            dashboardUser,
-		UserMenu:        userLayoutUserMenu(authUser),
-		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
-		Scripts:         scripts,
-		ScriptURLs:      scriptURLs,
-		Styles:          styles,
-		StyleURLs:       options.StyleURLs,
-		FaviconURL:      FaviconURL(),
+		LogoRawHtml:               userLogoHtml(),
+		LogoRedirectURL:           homeLink,
+		User:                      dashboardUser,
+		UserMenu:                  userLayoutUserMenu(authUser),
+		ThemeHandlerUrl:           links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
+		Scripts:                   scripts,
+		ScriptURLs:                scriptURLs,
+		Styles:                    styles,
+		StyleURLs:                 options.StyleURLs,
+		FaviconURL:                FaviconURL(),
 		// Theme: dashboard.THEME_MINTY,
 	})
 

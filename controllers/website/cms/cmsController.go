@@ -32,28 +32,11 @@ func NewCmsController() *cmsController {
 // == PUBLIC METHODS ===========================================================
 
 func (controller cmsController) Handler(w http.ResponseWriter, r *http.Request) string {
-	//return config.Cms.FrontendHandlerRenderAsString(w, r)
-
-	// list := widgets.WidgetRegistry()
-
-	// shortcodes := []cmsstore.ShortcodeInterface{}
-	// for _, widget := range list {
-	// 	shortcodes = append(shortcodes, widget)
-	// }
-
-	// frontend := cmsFrontend.New(cmsFrontend.Config{
-	// 	// BlockEditorDefinitions: webtheme.BlockEditorDefinitions(),
-	// 	BlockEditorRenderer: func(blocks []ui.BlockInterface) string {
-	// 		return webtheme.New(blocks).ToHtml()
-	// 	},
-	// 	Shortcodes:         shortcodes,
-	// 	Store:              config.CmsStore,
-	// 	Logger:             &config.Logger,
-	// 	CacheEnabled:       true,
-	// 	CacheExpireSeconds: 10 * 60, // 10 mins
-	// })
-
 	instance := GetInstance()
+	if instance == nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return "cms is not configured"
+	}
 	return instance.StringHandler(w, r)
 }
 
@@ -78,7 +61,7 @@ func GetInstance() cmsFrontend.FrontendInterface {
 			Store:              config.CmsStore,
 			Logger:             &config.Logger,
 			CacheEnabled:       true,
-			CacheExpireSeconds: 10 * 60, // 10 mins
+			CacheExpireSeconds: 1 * 60, // 1 mins
 		})
 
 		instance = frontend

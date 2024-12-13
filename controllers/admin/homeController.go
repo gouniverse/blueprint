@@ -1,12 +1,14 @@
 package admin
 
 import (
+	"context"
+	"errors"
 	"net/http"
 	"project/config"
 	"project/internal/layouts"
 	"project/internal/links"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/hb"
@@ -279,13 +281,18 @@ func (c *homeController) datesInRange(timeStart, timeEnd carbon.Carbon) []string
 }
 
 func (c *homeController) visitorsData() (dates []string, visits []int64, err error) {
+	if config.StatsStore == nil {
+		return nil, nil, errors.New("statsstore is nil")
+	}
+
 	datesInRange := c.datesInRange(carbon.Now().SubDays(31), carbon.Now())
 
 	dates = []string{}
 	visits = []int64{}
 
+	ctx := context.Background()
 	for _, date := range datesInRange {
-		visitorCount, err := config.StatsStore.VisitorCount(statsstore.VisitorQueryOptions{
+		visitorCount, err := config.StatsStore.VisitorCount(ctx, statsstore.VisitorQueryOptions{
 			CreatedAtGte: date + " 00:00:00",
 			CreatedAtLte: date + " 23:59:59",
 			Distinct:     statsstore.COLUMN_IP_ADDRESS,

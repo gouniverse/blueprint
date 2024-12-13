@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"project/config"
@@ -8,7 +9,7 @@ import (
 	"project/internal/layouts"
 	"project/internal/links"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/cdn"
 	crud "github.com/gouniverse/crud/v2"
 	"github.com/gouniverse/form"
@@ -237,7 +238,7 @@ func (discountController *discountController) FuncLayout(w http.ResponseWriter, 
 }
 
 func (discountController *discountController) FuncRows() ([]crud.Row, error) {
-	discounts, err := config.ShopStore.DiscountList(shopstore.DiscountQueryOptions{})
+	discounts, err := config.ShopStore.DiscountList(context.Background(), shopstore.NewDiscountQuery())
 
 	if err != nil {
 		return nil, err
@@ -262,7 +263,7 @@ func (discountController *discountController) FuncRows() ([]crud.Row, error) {
 }
 
 func (discountController *discountController) FuncUpdate(entityID string, data map[string]string) error {
-	discount, err := config.ShopStore.DiscountFindByID(entityID)
+	discount, err := config.ShopStore.DiscountFindByID(context.Background(), entityID)
 
 	if err != nil {
 		return err
@@ -317,7 +318,7 @@ func (discountController *discountController) FuncUpdate(entityID string, data m
 	discount.SetStartsAt(startsAt)
 	discount.SetEndsAt(endsAt)
 
-	err = config.ShopStore.DiscountUpdate(discount)
+	err = config.ShopStore.DiscountUpdate(context.Background(), discount)
 
 	if err != nil {
 		return err
@@ -327,7 +328,7 @@ func (discountController *discountController) FuncUpdate(entityID string, data m
 }
 
 func (discountController *discountController) FuncFetchReadData(discountID string) ([][2]string, error) {
-	discount, err := config.ShopStore.DiscountFindByID(discountID)
+	discount, err := config.ShopStore.DiscountFindByID(context.Background(), discountID)
 
 	if err != nil {
 		return nil, err
@@ -349,7 +350,7 @@ func (discountController *discountController) FuncFetchReadData(discountID strin
 }
 
 func (discountController *discountController) FuncFetchUpdateData(discountID string) (map[string]string, error) {
-	discount, err := config.ShopStore.DiscountFindByID(discountID)
+	discount, err := config.ShopStore.DiscountFindByID(context.Background(), discountID)
 
 	if err != nil {
 		return nil, err
@@ -374,7 +375,7 @@ func (discountController *discountController) FuncCreate(data map[string]string)
 	discount.SetTitle(data["title"])
 	discount.SetStatus(shopstore.DISCOUNT_STATUS_DRAFT)
 	discount.SetAmount(0.00)
-	err = config.ShopStore.DiscountCreate(discount)
+	err = config.ShopStore.DiscountCreate(context.Background(), discount)
 
 	if err != nil {
 		return "", err
@@ -384,6 +385,6 @@ func (discountController *discountController) FuncCreate(data map[string]string)
 }
 
 func (discountController *discountController) FuncTrash(discountID string) error {
-	err := config.ShopStore.DiscountSoftDeleteByID(discountID)
+	err := config.ShopStore.DiscountSoftDeleteByID(context.Background(), discountID)
 	return err
 }

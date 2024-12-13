@@ -9,7 +9,7 @@ import (
 	"project/internal/links"
 	"strings"
 
-	"github.com/golang-module/carbon/v2"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/blockeditor"
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/bs"

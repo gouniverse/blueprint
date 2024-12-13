@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 	"project/controllers/admin/shop/shared"
@@ -522,31 +523,36 @@ func (controller *productManagerController) fetchProductList(data productManager
 		data.sortBy = shopstore.COLUMN_CREATED_AT
 	}
 
-	query := shopstore.ProductQueryOptions{
-		IDIn:      productIDs,
-		Offset:    data.pageInt * data.perPage,
-		Limit:     data.perPage,
-		Status:    data.formStatus,
-		SortOrder: data.sortOrder,
-		OrderBy:   data.sortBy,
+	query := shopstore.NewProductQuery().
+		SetOffset(data.pageInt * data.perPage).
+		SetLimit(data.perPage).
+		SetOrderBy(data.sortBy).
+		SetSortDirection(data.sortOrder)
+
+	if len(productIDs) > 0 {
+		query.SetIDIn(productIDs)
+	}
+
+	if data.formStatus != "" {
+		query.SetStatus(data.formStatus)
 	}
 
 	if data.formCreatedFrom != "" {
-		query.CreatedAtGte = data.formCreatedFrom + " 00:00:00"
+		query.SetCreatedAtGte(data.formCreatedFrom + " 00:00:00")
 	}
 
 	if data.formCreatedTo != "" {
-		query.CreatedAtLte = data.formCreatedTo + " 23:59:59"
+		query.SetCreatedAtLte(data.formCreatedTo + " 23:59:59")
 	}
 
-	productList, err := config.ShopStore.ProductList(query)
+	productList, err := config.ShopStore.ProductList(context.Background(), query)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At productManagerController > prepareData", err.Error())
 		return []shopstore.ProductInterface{}, 0, err
 	}
 
-	productCount, err := config.ShopStore.ProductCount(query)
+	productCount, err := config.ShopStore.ProductCount(context.Background(), query)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At productManagerController > prepareData", err.Error())

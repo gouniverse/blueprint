@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -33,12 +34,12 @@ func SessionStoreInitialize(db *sql.DB) error {
 		return errors.Join(errors.New("sessionStoreInstance is nil"))
 	}
 
-	SessionStore = *sessionStoreInstance
+	SessionStore = sessionStoreInstance
 
 	return nil
 }
 
-func SessionStoreAutoMigrate() error {
+func SessionStoreAutoMigrate(_ context.Context) error {
 	if !SessionStoreUsed {
 		return nil
 	}

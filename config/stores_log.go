@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -37,7 +38,7 @@ func LogStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func LogStoreAutoMigrate() error {
+func LogStoreAutoMigrate(_ context.Context) error {
 	if !LogStoreUsed {
 		return nil
 	}

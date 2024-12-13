@@ -31,6 +31,19 @@ func (l *websiteLinks) Flash(params map[string]string) string {
 	return URL(FLASH, params)
 }
 
+func (l *websiteLinks) Shop(params map[string]string) string {
+	return URL(SHOP, params)
+}
+
+func (l *websiteLinks) ShopProduct(productID string, productSlug string, params map[string]string) string {
+	uri := SHOP_PRODUCT
+	uri += "/" + productID
+	if productSlug != "" {
+		uri += "/" + productSlug
+	}
+	return URL(uri, params)
+}
+
 func (l *websiteLinks) PaymentCanceled(paymentKey string) string {
 	params := map[string]string{}
 	params["payment_key"] = paymentKey

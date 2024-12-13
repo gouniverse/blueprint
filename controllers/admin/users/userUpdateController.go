@@ -265,7 +265,7 @@ func (controller userUpdateController) saveUser(r *http.Request, data userUpdate
 	data.user.SetMemo(data.formMemo)
 	data.user.SetStatus(data.formStatus)
 
-	err := config.UserStore.UserUpdate(data.user)
+	err := config.UserStore.UserUpdate(r.Context(), data.user)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userUpdateController > prepareDataAndValidate", err.Error())
@@ -294,7 +294,7 @@ func (controller userUpdateController) prepareDataAndValidate(r *http.Request) (
 		return data, "User ID is required"
 	}
 
-	user, err := config.UserStore.UserFindByID(data.userID)
+	user, err := config.UserStore.UserFindByID(r.Context(), data.userID)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userUpdateController > prepareDataAndValidate", err.Error())
@@ -307,7 +307,7 @@ func (controller userUpdateController) prepareDataAndValidate(r *http.Request) (
 
 	data.user = user
 
-	firstName, lastName, email, err := helpers.UserUntokenized(data.user)
+	firstName, lastName, email, err := helpers.UserUntokenized(r.Context(), data.user)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At userManagerController > tableUsers", err.Error())

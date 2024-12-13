@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"project/internal/webtheme"
@@ -69,7 +70,7 @@ func CmsInitialize(db *sql.DB) error {
 	return nil
 }
 
-func CmsAutoMigrate() error {
+func CmsAutoMigrate(_ context.Context) error {
 	if !CmsStoreUsed {
 		return nil
 	}
@@ -105,6 +106,9 @@ func CmsStoreInitialize(db *sql.DB) error {
 		TranslationTableName:       "snv_cms_translation",
 		TranslationLanguageDefault: TranslationLanguageDefault,
 		TranslationLanguages:       TranslationLanguageList,
+
+		VersioningEnabled:   true,
+		VersioningTableName: "snv_cms_version",
 	})
 
 	if err != nil {
@@ -120,12 +124,16 @@ func CmsStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func CmsStoreAutoMigrate() error {
+func CmsStoreAutoMigrate(ctx context.Context) error {
 	if !CmsStoreUsed {
 		return nil
 	}
 
-	err := CmsStore.AutoMigrate()
+	if CmsStore == nil {
+		return errors.New("cmsstore.AutoMigrate: CmsStore is nil")
+	}
+
+	err := CmsStore.AutoMigrate(ctx)
 
 	if err != nil {
 		return errors.Join(errors.New("cmsstore.AutoMigrate"), err)

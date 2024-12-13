@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -37,9 +38,13 @@ func StatsStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func StatsStoreAutoMigrate() error {
+func StatsStoreAutoMigrate(_ context.Context) error {
 	if !StatsStoreUsed {
 		return nil
+	}
+
+	if StatsStore == nil {
+		return errors.New("statsstore.AutoMigrate: StatsStore is nil")
 	}
 
 	err := StatsStore.AutoMigrate()

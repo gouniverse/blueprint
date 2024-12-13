@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 	"project/internal/helpers"
@@ -168,7 +169,7 @@ func (controller *userCreateController) prepareDataAndValidate(r *http.Request) 
 	user.SetLastName(data.lastName)
 	user.SetEmail(data.email)
 
-	err := config.UserStore.UserCreate(user)
+	err := config.UserStore.UserCreate(context.Background(), user)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error. At userCreateController > prepareDataAndValidate", err.Error())

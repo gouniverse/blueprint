@@ -59,6 +59,12 @@ const PAYPAL_SUCCESS = "/paypal/success"
 const PAYMENT_CANCELED = "/payment/canceled"
 const PAYMENT_SUCCESS = "/payment/success"
 const RESOURCES = "/resources"
+
+const SHOP = "/shop"
+const SHOP_PRODUCT = SHOP + "/product"
+const SHOP_PRODUCT_WITH_REGEX = SHOP_PRODUCT + "/{id:[0-9]+}"
+const SHOP_PRODUCT_WITH_REGEX2 = SHOP_PRODUCT + "/{id:[0-9]+}/{title}"
+
 const THEME = "/theme"
 const THUMB = "/th/{extension:[a-z]+}/{size:[0-9x]+}/{quality:[0-9]+}/*"
 const WIDGET = "/widget"

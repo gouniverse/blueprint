@@ -1,6 +1,7 @@
 package user
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 	"project/controllers/user/partials"
@@ -123,37 +124,37 @@ func (controller *profileController) postUpdate(data profileControllerData) stri
 	}
 
 	// First name
-	err := config.VaultStore.TokenUpdate(data.authUser.FirstName(), data.firstName, config.VaultKey)
+	err := config.VaultStore.TokenUpdate(data.request.Context(), data.authUser.FirstName(), data.firstName, config.VaultKey)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error saving first name", err.Error())
+		config.Logger.Error("Error saving first name", "error", err.Error())
 		data.formErrorMessage = "Saving profile failed. Please try again later."
 		return controller.formProfile(data).ToHTML()
 	}
 
 	// Last name
-	err = config.VaultStore.TokenUpdate(data.authUser.LastName(), data.lastName, config.VaultKey)
+	err = config.VaultStore.TokenUpdate(data.request.Context(), data.authUser.LastName(), data.lastName, config.VaultKey)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error saving last name", err.Error())
+		config.Logger.Error("Error saving last name", "error", err.Error())
 		data.formErrorMessage = "Saving profile failed. Please try again later."
 		return controller.formProfile(data).ToHTML()
 	}
 
 	// Business name
-	err = config.VaultStore.TokenUpdate(data.authUser.BusinessName(), data.buinessName, config.VaultKey)
+	err = config.VaultStore.TokenUpdate(data.request.Context(), data.authUser.BusinessName(), data.buinessName, config.VaultKey)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error saving business name", err.Error())
+		config.Logger.Error("Error saving business name", "error", err.Error())
 		data.formErrorMessage = "Saving profile failed. Please try again later."
 		return controller.formProfile(data).ToHTML()
 	}
 
 	// Phone
-	err = config.VaultStore.TokenUpdate(data.authUser.Phone(), data.phone, config.VaultKey)
+	err = config.VaultStore.TokenUpdate(data.request.Context(), data.authUser.Phone(), data.phone, config.VaultKey)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error saving phone", err.Error())
+		config.Logger.Error("Error saving phone", "error", err.Error())
 		data.formErrorMessage = "Saving profile failed. Please try again later."
 		return controller.formProfile(data).ToHTML()
 	}
@@ -161,10 +162,16 @@ func (controller *profileController) postUpdate(data profileControllerData) stri
 	data.authUser.SetCountry(data.country)
 	data.authUser.SetTimezone(data.timezone)
 
-	err = config.UserStore.UserUpdate(data.authUser)
+	if config.UserStore == nil {
+		config.Logger.Warn("At profileController > post update. UserStore is nil.")
+		data.formErrorMessage = "Saving profile failed. Please try again later."
+		return controller.formProfile(data).ToHTML()
+	}
+
+	err = config.UserStore.UserUpdate(context.Background(), data.authUser)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error updating user profile", err.Error())
+		config.Logger.Error("Error updating user profile", "error", err.Error())
 
 		data.formErrorMessage = "Saving profile failed. Please try again later."
 		return controller.formProfile(data).ToHTML()
@@ -325,7 +332,7 @@ func (controller *profileController) selectTimezoneByCountry(country string, sel
 	timezones, errZones := config.GeoStore.TimezoneList(query)
 
 	if errZones != nil {
-		config.LogStore.ErrorWithContext("Error listing timezones", errZones.Error())
+		config.Logger.Error("Error listing timezones", "error", errZones.Error())
 		return hb.Text("Error listing timezones")
 	}
 
@@ -354,14 +361,14 @@ func (controller *profileController) prepareData(r *http.Request) (data profileC
 	})
 
 	if errCountries != nil {
-		config.LogStore.ErrorWithContext("Error listing countries", errCountries.Error())
+		config.Logger.Error("Error listing countries", "error", errCountries.Error())
 		return profileControllerData{}, "Error listing countries"
 	}
 
-	email, firstName, lastName, buinessName, phone, err := controller.untokenizeProfileData(authUser)
+	email, firstName, lastName, buinessName, phone, err := controller.untokenizeProfileData(r.Context(), authUser)
 
 	if err != nil {
-		config.LogStore.ErrorWithContext("Error reading profile data", err.Error())
+		config.Logger.Error("Error reading profile data", "error", err.Error())
 		return profileControllerData{}, "Error reading profile data"
 	}
 
@@ -392,7 +399,7 @@ func (controller *profileController) prepareData(r *http.Request) (data profileC
 	return data, ""
 }
 
-func (controller *profileController) untokenizeProfileData(user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
+func (controller *profileController) untokenizeProfileData(ctx context.Context, user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
 	emailToken := user.Email()
 	firstNameToken := user.FirstName()
 	lastNameToken := user.LastName()
@@ -400,46 +407,46 @@ func (controller *profileController) untokenizeProfileData(user userstore.UserIn
 	phoneToken := user.Phone()
 
 	if emailToken != "" {
-		email, err = config.VaultStore.TokenRead(emailToken, config.VaultKey)
+		email, err = config.VaultStore.TokenRead(ctx, emailToken, config.VaultKey)
 
 		if err != nil {
-			config.LogStore.ErrorWithContext("Error reading email", err.Error())
+			config.Logger.Error("Error reading email", "error", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
 
 	if firstNameToken != "" {
-		firstName, err = config.VaultStore.TokenRead(firstNameToken, config.VaultKey)
+		firstName, err = config.VaultStore.TokenRead(ctx, firstNameToken, config.VaultKey)
 
 		if err != nil {
-			config.LogStore.ErrorWithContext("Error reading first name", err.Error())
+			config.Logger.Error("Error reading first name", "error", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
 
 	if lastNameToken != "" {
-		lastName, err = config.VaultStore.TokenRead(lastNameToken, config.VaultKey)
+		lastName, err = config.VaultStore.TokenRead(ctx, lastNameToken, config.VaultKey)
 
 		if err != nil {
-			config.LogStore.ErrorWithContext("Error reading last name", err.Error())
+			config.Logger.Error("Error reading last name", "error", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
 
 	if businessNameToken != "" {
-		businessName, err = config.VaultStore.TokenRead(businessNameToken, config.VaultKey)
+		businessName, err = config.VaultStore.TokenRead(ctx, businessNameToken, config.VaultKey)
 
 		if err != nil {
-			config.LogStore.ErrorWithContext("Error reading business name", err.Error())
+			config.Logger.Error("Error reading business name", "error", err.Error())
 			return "", "", "", "", "", err
 		}
 	}
 
 	if phoneToken != "" {
-		phone, err = config.VaultStore.TokenRead(phoneToken, config.VaultKey)
+		phone, err = config.VaultStore.TokenRead(ctx, phoneToken, config.VaultKey)
 
 		if err != nil {
-			config.LogStore.ErrorWithContext("Error reading phone", err.Error())
+			config.Logger.Error("Error reading phone", "error", err.Error())
 			return "", "", "", "", "", err
 		}
 	}

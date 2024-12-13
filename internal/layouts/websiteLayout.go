@@ -3,7 +3,9 @@ package layouts
 import (
 	"net/http"
 	"project/config"
+	"project/internal/widgets"
 
+	"github.com/gouniverse/cmsstore"
 	"github.com/gouniverse/cmsstore/frontend"
 	"github.com/gouniverse/hb"
 )
@@ -31,9 +33,17 @@ type websiteLayout struct {
 }
 
 func (layout *websiteLayout) ToHTML() string {
+	list := widgets.WidgetRegistry()
+
+	shortcodes := []cmsstore.ShortcodeInterface{}
+	for _, widget := range list {
+		shortcodes = append(shortcodes, widget)
+	}
+
 	fe := frontend.New(frontend.Config{
-		Store:  config.CmsStore,
-		Logger: &config.Logger,
+		Store:      config.CmsStore,
+		Logger:     &config.Logger,
+		Shortcodes: shortcodes,
 	})
 
 	html, err := fe.TemplateRenderHtmlByID(layout.request, config.CmsUserTemplateID, struct {

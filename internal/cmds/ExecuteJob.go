@@ -34,6 +34,11 @@ func ExecuteJob(args []string) {
 		return
 	}
 
+	if config.TaskStore == nil {
+		cfmt.Errorln("TaskStore is nil")
+		return
+	}
+
 	queuedTask, err := config.TaskStore.QueueFindByID(queuedTaskID)
 
 	if err != nil {

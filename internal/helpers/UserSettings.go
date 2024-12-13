@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"project/config"
 
-	"github.com/gouniverse/sessionstore"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/utils"
 )
 
@@ -16,31 +16,25 @@ func UserSettingGet(r *http.Request, key string, defaultValue string) string {
 		return defaultValue
 	}
 
-	hasValue, err := config.SessionStore.Has(key, sessionstore.SessionOptions{
-		UserID:    authUser.ID(),
-		UserAgent: r.UserAgent(),
-		IPAddress: utils.IP(r),
-	})
+	session, err := config.SessionStore.SessionFindByKey(key)
 
 	if err != nil {
 		return defaultValue
 	}
 
-	if !hasValue {
+	if session.GetUserID() != authUser.ID() {
 		return defaultValue
 	}
 
-	value, err := config.SessionStore.Get(key, defaultValue, sessionstore.SessionOptions{
-		UserID:    authUser.ID(),
-		UserAgent: r.UserAgent(),
-		IPAddress: utils.IP(r),
-	})
-
-	if err != nil {
+	if session.GetIPAddress() != utils.IP(r) {
 		return defaultValue
 	}
 
-	return value
+	if session.GetUserAgent() != r.UserAgent() {
+		return defaultValue
+	}
+
+	return session.GetValue()
 }
 
 func UserSettingSet(r *http.Request, key string, value string) error {
@@ -50,11 +44,28 @@ func UserSettingSet(r *http.Request, key string, value string) error {
 		return errors.New("auth user is nil")
 	}
 
-	err := config.SessionStore.Set(key, value, 60*60*24, sessionstore.SessionOptions{
-		UserID:    authUser.ID(),
-		UserAgent: r.UserAgent(),
-		IPAddress: utils.IP(r),
-	})
+	session, err := config.SessionStore.SessionFindByKey(key)
+
+	if err != nil {
+		return err
+	}
+
+	if session.GetUserID() != authUser.ID() {
+		return errors.New("session user id does not match auth user id")
+	}
+
+	if session.GetIPAddress() != utils.IP(r) {
+		return errors.New("session ip address does not match request ip address")
+	}
+
+	if session.GetUserAgent() != r.UserAgent() {
+		return errors.New("session user agent does not match request user agent")
+	}
+
+	session.SetValue(value)
+	session.SetExpiresAt(carbon.Now(carbon.UTC).AddHours(1).ToDateTimeString(carbon.UTC))
+
+	err = config.SessionStore.SessionUpdate(session)
 
 	return err
 }

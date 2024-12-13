@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 	"project/controllers/admin/shop/shared"
@@ -483,7 +484,7 @@ func (controller *productUpdateController) saveProductDetails(r *http.Request, d
 	data.product.SetStatus(data.formStatus)
 	data.product.SetTitle(data.formTitle)
 
-	err := config.ShopStore.ProductUpdate(data.product)
+	err := config.ShopStore.ProductUpdate(context.Background(), data.product)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At productUpdateController > prepareDataAndValidate", err.Error())
@@ -576,7 +577,7 @@ func (controller *productUpdateController) saveProductMetadata(r *http.Request, 
 
 	data.product.SetMetas(data.formMetas)
 
-	err := config.ShopStore.ProductUpdate(data.product)
+	err := config.ShopStore.ProductUpdate(context.Background(), data.product)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At productUpdateController > prepareDataAndValidate", err.Error())
@@ -597,7 +598,7 @@ func (controller *productUpdateController) prepareDataAndValidate(r *http.Reques
 		return data, "Product ID is required"
 	}
 
-	product, err := config.ShopStore.ProductFindByID(data.productID)
+	product, err := config.ShopStore.ProductFindByID(context.Background(), data.productID)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("At productUpdateController > prepareDataAndValidate", err.Error())

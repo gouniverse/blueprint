@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -20,7 +21,7 @@ func BlindIndexStoreInitialize(db *sql.DB) error {
 	}
 
 	blindIndexStoreEmailInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
-		DB:          Database.DB(),
+		DB:          db,
 		TableName:   "snv_bindx_email",
 		Transformer: &blindindexstore.Sha256Transformer{},
 	})
@@ -36,7 +37,7 @@ func BlindIndexStoreInitialize(db *sql.DB) error {
 	BlindIndexStoreEmail = *blindIndexStoreEmailInstance
 
 	blindIndexStoreFirstNameInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
-		DB:          Database.DB(),
+		DB:          db,
 		TableName:   "snv_bindx_first_name",
 		Transformer: &blindindexstore.Sha256Transformer{},
 	})
@@ -52,7 +53,7 @@ func BlindIndexStoreInitialize(db *sql.DB) error {
 	BlindIndexStoreFirstName = *blindIndexStoreFirstNameInstance
 
 	blindIndexStoreLastNameInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
-		DB:          Database.DB(),
+		DB:          db,
 		TableName:   "snv_bindx_last_name",
 		Transformer: &blindindexstore.Sha256Transformer{},
 	})
@@ -70,7 +71,7 @@ func BlindIndexStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func BlindIndexStoreAutoMigrate() error {
+func BlindIndexStoreAutoMigrate(_ context.Context) error {
 	if !BlindIndexStoreUsed {
 		return nil
 	}

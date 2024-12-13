@@ -65,7 +65,7 @@ func (controller *homeController) prepareData(r *http.Request) (data homeControl
 		return data, "User not found"
 	}
 
-	untokenized, err := helpers.Untokenize(map[string]string{
+	untokenized, err := helpers.Untokenize(r.Context(), map[string]string{
 		"first_name": authUser.FirstName(),
 		"last_name":  authUser.LastName(),
 		"email":      authUser.Email(),

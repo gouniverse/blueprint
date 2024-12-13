@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"net/http"
 	"project/config"
 	"project/controllers/admin/shop/shared"
@@ -142,7 +143,7 @@ func (controller *productCreateController) prepareDataAndValidate(r *http.Reques
 	product := shopstore.NewProduct()
 	product.SetTitle(data.formTitle)
 
-	err := config.ShopStore.ProductCreate(product)
+	err := config.ShopStore.ProductCreate(context.Background(), product)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error. At productCreateController > prepareDataAndValidate", err.Error())

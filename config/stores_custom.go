@@ -1,6 +1,7 @@
 package config
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -37,7 +38,7 @@ func CustomStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func CustomStoreAutoMigrate() error {
+func CustomStoreAutoMigrate(_ context.Context) error {
 	if !CustomStoreUsed {
 		return nil
 	}

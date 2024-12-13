@@ -40,7 +40,7 @@ var AppName string
 var AppUrl string
 var AppVersion string
 var AuthEndpoint = "/auth"
-var Database *sb.Database
+var Database sb.DatabaseInterface
 var DbDriver string
 var DbHost string
 var DbName string
@@ -116,7 +116,7 @@ var MetaStoreUsed = false
 var MetaStore metastore.Store
 
 var SessionStoreUsed = true
-var SessionStore sessionstore.Store
+var SessionStore sessionstore.StoreInterface
 
 var ShopStoreUsed = false
 var ShopStore shopstore.Store
