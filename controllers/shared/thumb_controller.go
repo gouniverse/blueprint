@@ -7,7 +7,6 @@ import (
 	"log"
 	"net/http"
 	"project/config"
-	"project/internal/helpers"
 	"project/internal/links"
 	"project/internal/resources"
 	"time"
@@ -16,23 +15,22 @@ import (
 
 	"github.com/disintegration/imaging"
 	"github.com/go-chi/chi/v5"
+	"github.com/gouniverse/base/img"
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"
 	"github.com/mingrammer/cfmt"
 	"github.com/samber/lo"
 )
 
-// == CONTROLLER ==============================================================
-
-type thumbnailController struct{}
-
 // == CONSTRUCTOR =============================================================
 
-func NewThumbController() *thumbnailController {
+func NewThumbController() router.HTMLControllerInterface {
 	return &thumbnailController{}
 }
 
-var _ router.HTMLControllerInterface = (*thumbnailController)(nil)
+// == CONTROLLER ==============================================================
+
+type thumbnailController struct{}
 
 // ThumbnailHandler
 // ================================================================
@@ -192,7 +190,7 @@ func (controller *thumbnailController) generateThumb(data thumbnailControllerDat
 		}
 	}
 
-	imgBytesResized, err := helpers.ImageResize(imgBytes, int(data.width), int(data.height), ext)
+	imgBytesResized, err := img.Resize(imgBytes, int(data.width), int(data.height), ext)
 
 	if err != nil {
 		config.Logger.Error("Error at thumbnailController > generateThumb", "error", err.Error())

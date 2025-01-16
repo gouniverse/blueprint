@@ -224,6 +224,8 @@ func (controller *productManagerController) page(data productManagerControllerDa
 		Class("container").
 		Child(breadcrumbs).
 		Child(hb.HR()).
+		Child(shared.Header(config.ShopStore, &config.Logger, data.request)).
+		Child(hb.HR()).
 		Child(title).
 		Child(controller.tableProducts(data))
 }

@@ -12,6 +12,7 @@ import (
 
 func NewWebsiteLayout(options Options) *websiteLayout {
 	layout := &websiteLayout{}
+	layout.request = options.Request
 	layout.title = options.Title // + " | " + config.AppName
 	layout.content = options.Content
 	layout.scriptURLs = options.ScriptURLs

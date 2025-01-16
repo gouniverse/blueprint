@@ -30,12 +30,12 @@ func (l *adminLinks) BlogPostUpdate(params map[string]string) string {
 	return URL(ADMIN_BLOG_POST_UPDATE, params)
 }
 
-func (l *adminLinks) Cms() string {
-	return URL(ADMIN_CMS, nil)
+func (l *adminLinks) Cms(params map[string]string) string {
+	return URL(ADMIN_CMS, params)
 }
 
-func (l *adminLinks) CmsNew() string {
-	return URL(ADMIN_CMS_NEW, nil)
+func (l *adminLinks) CmsNew(params map[string]string) string {
+	return URL(ADMIN_CMS_NEW, params)
 }
 
 func (l *adminLinks) FileManager(params map[string]string) string {

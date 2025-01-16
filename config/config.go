@@ -119,7 +119,7 @@ var SessionStoreUsed = true
 var SessionStore sessionstore.StoreInterface
 
 var ShopStoreUsed = false
-var ShopStore shopstore.Store
+var ShopStore shopstore.StoreInterface
 
 var SqlFileStoreUsed = false
 var SqlFileStorage filesystem.StorageInterface

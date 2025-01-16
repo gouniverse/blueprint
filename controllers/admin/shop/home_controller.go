@@ -2,6 +2,7 @@ package admin
 
 import (
 	"net/http"
+	"project/config"
 	"project/controllers/admin/shop/shared"
 	"project/internal/layouts"
 	"project/internal/links"
@@ -32,7 +33,7 @@ var _ router.HTMLControllerInterface = (*homeController)(nil)
 func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request) string {
 	return layouts.NewAdminLayout(r, layouts.Options{
 		Title:      "Shop",
-		Content:    controller.view(),
+		Content:    controller.view(r),
 		ScriptURLs: []string{},
 		Styles:     []string{},
 	}).ToHTML()
@@ -40,7 +41,7 @@ func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request
 
 // == PRIVATE METHODS ==========================================================
 
-func (controller *homeController) view() *hb.Tag {
+func (controller *homeController) view(r *http.Request) *hb.Tag {
 	breadcrumbs := layouts.Breadcrumbs([]layouts.Breadcrumb{
 		{
 			Name: "Home",
@@ -65,6 +66,9 @@ func (controller *homeController) view() *hb.Tag {
 
 	return hb.Wrap().
 		Child(breadcrumbs).
+		Child(hb.HR()).
+		Child(shared.Header(config.ShopStore, &config.Logger, r)).
+		Child(hb.HR()).
 		Child(header).
 		Child(sectionTiles)
 }

@@ -38,7 +38,7 @@ func ShopStoreInitialize(db *sql.DB) error {
 		return errors.Join(errors.New("shopStoreInstance is nil"))
 	}
 
-	ShopStore = *shopStoreInstance
+	ShopStore = shopStoreInstance
 
 	return nil
 }

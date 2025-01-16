@@ -2,18 +2,14 @@ package links
 
 const CATCHALL = "/*"
 
-// ===========================================================================
-// == AUTH LINKS
-// ===========================================================================
+// == AUTH LINKS =============================================================
 
 const AUTH_AUTH = "/auth/auth"
 const AUTH_LOGIN = "/auth/login"
 const AUTH_LOGOUT = "/auth/logout"
 const AUTH_REGISTER = "/auth/register"
 
-// ===========================================================================
-// == ADMIN LINKS
-// ===========================================================================
+// == ADMIN LINKS ============================================================
 
 const ADMIN_HOME = "/admin"
 const ADMIN_BLOG = "/admin/blog"
@@ -35,9 +31,7 @@ const ADMIN_USERS_USER_IMPERSONATE = ADMIN_USERS + "/user-impersonate"
 const ADMIN_USERS_USER_MANAGER = ADMIN_USERS + "/user-manager"
 const ADMIN_USERS_USER_UPDATE = ADMIN_USERS + "/user-update"
 
-// ===========================================================================
-// == USER LINKS
-// ===========================================================================
+// == USER LINKS =============================================================
 
 const USER_HOME = "/user"
 const USER_ORDERS = USER_HOME + "/orders"

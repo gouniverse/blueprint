@@ -453,11 +453,34 @@ setTimeout(() => {
 			Value: data.formMetaRobots,
 			Help:  "Specifies if this blog should be indexed by the search engines. Index, Follow, means all. NoIndex, NoFollow means none.",
 			Options: []form.FieldOption{
-				{Value: "INDEX, FOLLOW"},
-				{Value: "NOINDEX, FOLLOW"},
-				{Value: "INDEX, NOFOLLOW"},
-				{Value: "NOINDEX, NOFOLLOW"},
+				{
+					Value: "- not selected -",
+					Key:   "",
+				},
+				{
+					Value: "INDEX, FOLLOW",
+					Key:   "INDEX, FOLLOW",
+				},
+				{
+					Value: "NOINDEX, FOLLOW",
+					Key:   "NOINDEX, FOLLOW",
+				},
+				{
+					Value: "INDEX, NOFOLLOW",
+					Key:   "INDEX, NOFOLLOW",
+				},
+				{
+					Value: "NOINDEX, NOFOLLOW",
+					Key:   "NOINDEX, NOFOLLOW",
+				},
 			},
+		}),
+		form.NewField(form.FieldOptions{
+			Label: "Canonical URL",
+			Name:  "post_canonical_url",
+			Type:  form.FORM_FIELD_TYPE_STRING,
+			Value: data.formCanonicalURL,
+			Help:  "The canonical URL for this blog. This is used by the search engines to display the preferred version of the blog post in search results.",
 		}),
 		form.NewField(form.FieldOptions{
 			Label:    "Post ID",

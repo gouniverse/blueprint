@@ -34,7 +34,7 @@ const JSON_ACTION_DIRECTORY_CREATE = "directory_create"
 const JSON_ACTION_DIRECTORY_DELETE = "directory_delete"
 const MAX_UPLOAD_SIZE = 50 * 1024 * 1024 // 50MB
 
-func NewFileManagerController() *FileManagerController {
+func NewMediaManagerController() *mediaManagerController {
 	// //        $this->user = \App\Helpers\AppHelper::getUser('admin');
 	// //        if ($this->user == null) {
 	// //            die('User authentication needed to use this service');
@@ -67,7 +67,7 @@ func NewFileManagerController() *FileManagerController {
 	rootDirPath = strings.Trim(rootDirPath, ".")
 	rootDirPath = "/" + rootDirPath
 
-	return &FileManagerController{
+	return &mediaManagerController{
 		rootDirPath: rootDirPath,
 	}
 }
@@ -83,32 +83,35 @@ type FileEntry struct {
 	LastModifiedHuman string
 }
 
-type FileManagerController struct {
+type mediaManagerController struct {
 	// rootDir if not empty will be used as the root/top directory
 	rootDirPath string
 	funcLayout  func(content string) string
 	storage     filesystem.StorageInterface
 }
 
-func (controller *FileManagerController) init(r *http.Request) string {
-	// cfmt.Infoln(config.MediaEndpoint)
+func (controller *mediaManagerController) init(r *http.Request) string {
+	var err error
 
-	// controller.storage, err = filesystem.NewStorage(filesystem.Disk{
-	// 	DiskName:             "S3",
-	// 	Driver:               filesystem.DRIVER_S3,
-	// 	Url:                  config.MediaUrl,
-	// 	Region:               config.MediaRegion,
-	// 	Key:                  config.MediaKey,
-	// 	Secret:               config.MediaSecret,
-	// 	Bucket:               config.MediaBucket,
-	// 	UsePathStyleEndpoint: true,
-	// })
+	controller.storage, err = filesystem.NewStorage(filesystem.Disk{
+		DiskName:             "S3",
+		Driver:               filesystem.DRIVER_S3,
+		Url:                  config.MediaUrl,
+		Region:               config.MediaRegion,
+		Key:                  config.MediaKey,
+		Secret:               config.MediaSecret,
+		Bucket:               config.MediaBucket,
+		UsePathStyleEndpoint: true,
+	})
 
-	controller.storage = config.SqlFileStorage
+	if err != nil {
+		cfmt.Errorln(err.Error())
+		return err.Error()
+	}
 
 	controller.funcLayout = func(content string) string {
 		return layouts.NewAdminLayout(r, layouts.Options{
-			Title:   "File Manager",
+			Title:   "Media Manager",
 			Content: hb.Raw(content),
 		}).ToHTML()
 	}
@@ -116,7 +119,7 @@ func (controller *FileManagerController) init(r *http.Request) string {
 	return ""
 }
 
-func (c *FileManagerController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
 	c.init(r)
 
 	if lo.Contains([]string{
@@ -134,7 +137,7 @@ func (c *FileManagerController) AnyIndex(w http.ResponseWriter, r *http.Request)
 	return ""
 }
 
-func (c *FileManagerController) anyIndex(w http.ResponseWriter, r *http.Request) string {
+func (c *mediaManagerController) anyIndex(w http.ResponseWriter, r *http.Request) string {
 	action := strings.TrimSpace(utils.Req(r, "action", ""))
 	if action == JSON_ACTION_FILE_RENAME {
 		return c.fileRenameAjax(r)
@@ -159,7 +162,7 @@ func (c *FileManagerController) anyIndex(w http.ResponseWriter, r *http.Request)
 	return c.getMediaManager(r)
 }
 
-func (c *FileManagerController) fileUploadAjax(r *http.Request) string {
+func (c *mediaManagerController) fileUploadAjax(r *http.Request) string {
 	if r.ContentLength > MAX_UPLOAD_SIZE {
 		return api.Error("The uploaded image is too big. Please use an file less than 50MB in size").ToString()
 	}
@@ -204,7 +207,7 @@ func (c *FileManagerController) fileUploadAjax(r *http.Request) string {
 	return api.Success("File uploaded successfully").ToString()
 }
 
-func (c *FileManagerController) directoryCreateAjax(r *http.Request) string {
+func (c *mediaManagerController) directoryCreateAjax(r *http.Request) string {
 	newDirName := strings.TrimSpace(utils.Req(r, "create_dir", ""))
 
 	if newDirName == "" {
@@ -244,7 +247,7 @@ func (c *FileManagerController) directoryCreateAjax(r *http.Request) string {
 	return api.Error(errDeleted.Error()).ToString()
 }
 
-func (c *FileManagerController) directoryDeleteAjax(r *http.Request) string {
+func (c *mediaManagerController) directoryDeleteAjax(r *http.Request) string {
 	selectedDirName := strings.TrimSpace(utils.Req(r, "delete_dir", ""))
 
 	if selectedDirName == "" {
@@ -285,7 +288,7 @@ func (c *FileManagerController) directoryDeleteAjax(r *http.Request) string {
 	return api.Error(errDeleted.Error()).ToString()
 }
 
-func (c *FileManagerController) fileDeleteAjax(r *http.Request) string {
+func (c *mediaManagerController) fileDeleteAjax(r *http.Request) string {
 	selectedFileName := utils.Req(r, "delete_file", "")
 	if selectedFileName == "" {
 		return api.Error("delete_file is required").ToString()
@@ -313,7 +316,7 @@ func (c *FileManagerController) fileDeleteAjax(r *http.Request) string {
 	return api.Error(errDeleted.Error()).ToString()
 }
 
-func (c *FileManagerController) fileRenameAjax(r *http.Request) string {
+func (c *mediaManagerController) fileRenameAjax(r *http.Request) string {
 	currentFileName := utils.Req(r, "rename_file", "")
 	if currentFileName == "" {
 		return api.Error("rename_file is required").ToString()
@@ -350,7 +353,7 @@ func (c *FileManagerController) fileRenameAjax(r *http.Request) string {
 	return api.Error(err.Error()).ToString()
 }
 
-func (controller *FileManagerController) getMediaManager(r *http.Request) string {
+func (controller *mediaManagerController) getMediaManager(r *http.Request) string {
 	if controller.storage == nil {
 		return api.Error("storage is required").ToString()
 	}
@@ -428,12 +431,12 @@ func (controller *FileManagerController) getMediaManager(r *http.Request) string
 		return controller.funcLayout(page)
 	}
 
-	layout := uiLayout("File Manager", page)
+	layout := uiLayout("Media Manager", page)
 	return layout
 }
 
-func (c *FileManagerController) modalFileUpload(currentDirectory string) string {
-	url := links.NewAdminLinks().FileManager(map[string]string{})
+func (c *mediaManagerController) modalFileUpload(currentDirectory string) string {
+	url := links.NewAdminLinks().MediaManager(map[string]string{})
 	return `
 <!-- START: Modal Upload File -->
 <div class="modal fade" id="ModalUploadFile" role="dialog">
@@ -510,8 +513,8 @@ function fileUpload() {
 	`
 }
 
-func (c *FileManagerController) modalDirectoryCreate(currentDirectory string) string {
-	url := links.NewAdminLinks().FileManager(map[string]string{})
+func (c *mediaManagerController) modalDirectoryCreate(currentDirectory string) string {
+	url := links.NewAdminLinks().MediaManager(map[string]string{})
 	if currentDirectory == "" {
 		currentDirectory = "/"
 	}
@@ -567,8 +570,8 @@ func (c *FileManagerController) modalDirectoryCreate(currentDirectory string) st
 	`
 }
 
-func (c *FileManagerController) modalDirectoryDelete(currentDirectory string) string {
-	url := links.NewAdminLinks().FileManager(map[string]string{})
+func (c *mediaManagerController) modalDirectoryDelete(currentDirectory string) string {
+	url := links.NewAdminLinks().MediaManager(map[string]string{})
 	return `
 	<!-- START: Modal Directory Delete -->
 	<div class="modal fade" id="ModalDirectoryDelete" role="dialog">
@@ -632,8 +635,8 @@ func (c *FileManagerController) modalDirectoryDelete(currentDirectory string) st
 	`
 }
 
-func (c *FileManagerController) modalFileDelete(currentDirectory string) string {
-	url := links.NewAdminLinks().FileManager(map[string]string{})
+func (c *mediaManagerController) modalFileDelete(currentDirectory string) string {
+	url := links.NewAdminLinks().MediaManager(map[string]string{})
 	return `
 	<!-- START: Modal File Delete -->
 	<div class="modal fade" id="ModalFileDelete" role="dialog">
@@ -696,8 +699,8 @@ func (c *FileManagerController) modalFileDelete(currentDirectory string) string 
 	`
 }
 
-func (c *FileManagerController) modalFileRename(currentDirectory string) string {
-	url := links.NewAdminLinks().FileManager(map[string]string{})
+func (c *mediaManagerController) modalFileRename(currentDirectory string) string {
+	url := links.NewAdminLinks().MediaManager(map[string]string{})
 	return `
 <!-- START: Modal File Rename -->
 <div class="modal fade" id="ModalFileRename" role="dialog">
@@ -761,7 +764,7 @@ func (c *FileManagerController) modalFileRename(currentDirectory string) string 
 	`
 }
 
-func (c *FileManagerController) modalFileView() string {
+func (c *mediaManagerController) modalFileView() string {
 	return `
 <div class="modal fade" id="ModalFileView" role="dialog">
 	<div class="modal-dialog" role="document">
@@ -792,7 +795,7 @@ func (c *FileManagerController) modalFileView() string {
 	`
 }
 
-func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
+func (c *mediaManagerController) tableFileList(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
 	table := hb.Table().Class("table table-bordered table-striped").Children([]hb.TagInterface{
 		hb.Thead().Children([]hb.TagInterface{
 			hb.TR().Children([]hb.TagInterface{
@@ -806,7 +809,7 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 		hb.Tbody().
 			// Parent DIrectory
 			ChildIfF(currentDirectory != "", func() hb.TagInterface {
-				parentDirectoryURL := links.NewAdminLinks().FileManager(map[string]string{"current_dir": parentDirectory})
+				parentDirectoryURL := links.NewAdminLinks().MediaManager(map[string]string{"current_dir": parentDirectory})
 
 				return hb.TR().Children([]hb.TagInterface{
 					hb.TD().Children([]hb.TagInterface{
@@ -831,7 +834,7 @@ func (c *FileManagerController) tableFileList(currentDirectory, parentDirectory 
 						return nil
 					}
 					path := strings.TrimRight(dir.Path, "/")
-					pathURL := links.NewAdminLinks().FileManager(map[string]string{"current_dir": path})
+					pathURL := links.NewAdminLinks().MediaManager(map[string]string{"current_dir": path})
 					size := dir.SizeHuman
 
 					buttonDelete := hb.Button().Class("btn btn-danger btn-sm").OnClick(`modalDirectoryDeleteShow('` + name + `')`).Children([]hb.TagInterface{
@@ -966,7 +969,7 @@ func uiLayout(title string, content string) string {
 	return html
 }
 
-func (c *FileManagerController) uiManager(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
+func (c *mediaManagerController) uiManager(currentDirectory, parentDirectory string, directoryList, fileList []FileEntry) string {
 	buttonUpload := hb.Button().
 		Class("btn btn-secondary float-end").
 		Data("bs-toggle", "modal").
@@ -984,7 +987,7 @@ func (c *FileManagerController) uiManager(currentDirectory, parentDirectory stri
 		HTML("New directory")
 
 	title := hb.Heading3().
-		HTML("File Manager").
+		HTML("Media Manager").
 		Child(buttonUpload).
 		Child(buttonDirectoryCreate)
 
@@ -1028,7 +1031,7 @@ if (window.opener !== null) {
 	return html
 }
 
-func (c *FileManagerController) HumanFilesize(size int64) string {
+func (c *mediaManagerController) HumanFilesize(size int64) string {
 	const unit = 1000
 	if size < unit {
 		return fmt.Sprintf("%d B", size)

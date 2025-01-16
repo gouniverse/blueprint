@@ -1,7 +1,10 @@
 package routes
 
 import (
+	"project/controllers/admin"
 	"project/controllers/auth"
+	"project/controllers/shared"
+	"project/controllers/user"
 	"project/controllers/website"
 	"project/internal/widgets"
 
@@ -13,10 +16,10 @@ import (
 func routes() []router.RouteInterface {
 	routes := []router.RouteInterface{}
 
-	routes = append(routes, adminRoutes()...)
+	routes = append(routes, admin.Routes()...)
 	routes = append(routes, auth.Routes()...)
-	routes = append(routes, userRoutes()...)
-	routes = append(routes, sharedRoutes()...)
+	routes = append(routes, shared.Routes()...)
+	routes = append(routes, user.Routes()...)
 	routes = append(routes, widgets.Routes()...)
 	routes = append(routes, website.Routes()...)
 

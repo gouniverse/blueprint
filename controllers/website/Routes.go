@@ -4,13 +4,15 @@ import (
 	"net/http"
 	"project/config"
 	"project/internal/links"
-	"project/internal/middlewares"
 
+	"github.com/gouniverse/responses"
 	"github.com/gouniverse/router"
 
 	"project/controllers/shared"
 	blogControllers "project/controllers/website/blog"
-	cmsControllers "project/controllers/website/cms"
+
+	cms "project/controllers/website/cms"
+	// paypalControllers "project/controllers/website/paypal"
 )
 
 func Routes() []router.RouteInterface {
@@ -53,11 +55,25 @@ func websiteRoutes() []router.RouteInterface {
 		HTMLHandler: NewContactController().AnyIndex,
 	}
 
+	// paymentSuccess := &router.Route{
+	// 	Name:        "Website > Payment Success Controller",
+	// 	Path:        links.PAYMENT_SUCCESS,
+	// 	HTMLHandler: payment.NewPaymentSuccessController().Handler,
+	// }
+
+	// paymentCancel := &router.Route{
+	// 	Name:        "Website > Payment Cancel Controller",
+	// 	Path:        links.PAYMENT_CANCELED,
+	// 	HTMLHandler: payment.NewPaymentCanceledController().Handler,
+	// }
+
 	// These are custom routes for the website, that cannot be served by the CMS
 	websiteRoutes := []router.RouteInterface{
 		faviconRoute,
 		contactRoute,
 		contactSubmitRoute,
+		// paymentSuccess,
+		// paymentCancel,
 	}
 
 	// Comment if you do not use the blog routes
@@ -65,11 +81,10 @@ func websiteRoutes() []router.RouteInterface {
 
 	// Comment if you do not use the payment routes
 	// websiteRoutes = append(websiteRoutes, paymentRoutes...)
-
 	websiteRoutes = append(websiteRoutes, seoRoutes()...)
 
 	if config.CmsStoreUsed {
-		websiteRoutes = append(websiteRoutes, cmsRoutes()...)
+		websiteRoutes = append(websiteRoutes, cms.Routes()...)
 	} else {
 		websiteRoutes = append(websiteRoutes, homeRoute)
 		websiteRoutes = append(websiteRoutes, pageNotFoundRoute)
@@ -115,28 +130,6 @@ func blogRoutes() []router.RouteInterface {
 	return blogRoutes
 }
 
-func cmsRoutes() []router.RouteInterface {
-	return []router.RouteInterface{
-		&router.Route{
-			Name:        "Website > Widget Controller > Handler",
-			Path:        links.WIDGET,
-			HTMLHandler: cmsControllers.NewWidgetController().Handler,
-		},
-		&router.Route{
-			Name:        "Website > Cms > Home Page",
-			Middlewares: []router.Middleware{middlewares.NewStatsMiddleware()},
-			Path:        links.HOME,
-			HTMLHandler: cmsControllers.NewCmsController().Handler,
-		},
-		&router.Route{
-			Name:        "Website > Cms > Catch All Pages",
-			Middlewares: []router.Middleware{middlewares.NewStatsMiddleware()},
-			Path:        links.CATCHALL,
-			HTMLHandler: cmsControllers.NewCmsController().Handler,
-		},
-	}
-}
-
 // func paymentRoutes() []router.RouteInterface {
 // 	paymentRoutes := []router.RouteInterface{
 // 		&router.Route{
@@ -170,6 +163,15 @@ func cmsRoutes() []router.RouteInterface {
 // }
 
 func seoRoutes() []router.RouteInterface {
+	adsRoute := &router.Route{
+		Name: "Website > ads.txt",
+		Path: "/ads.txt",
+		HTMLHandler: responses.HTMLHandler(func(w http.ResponseWriter, r *http.Request) string {
+			//return "google.com, pub-8821108004642146, DIRECT, f08c47fec0942fa0"
+			return "google.com, pub-YOURNUMBER, DIRECT, YOURSTRING"
+		}),
+	}
+
 	robotsRoute := &router.Route{
 		Name:        "Website > RobotsTxt",
 		Path:        "/robots.txt",
@@ -189,6 +191,7 @@ func seoRoutes() []router.RouteInterface {
 	}
 
 	return []router.RouteInterface{
+		adsRoute,
 		robotsRoute,
 		securityRoute,
 		sitemapRoute,

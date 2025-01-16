@@ -10,6 +10,7 @@ version: '3'
 
 vars:
   APPNAME: Welcome to Gouniverse Blueprint Project
+  DATETIME: '{{now | date "20060102_150405"}}'
 
 tasks:
   # ========================== #
@@ -36,7 +37,7 @@ tasks:
   # ========================== #
 
   cover:
-    desc: Builds a coverage report
+    desc: Builds a test coverage report
     cmds:
       - echo "Generating cover report..."
       - go test ./... -coverprofile=tmp/coverage.out  -covermode=count
@@ -169,6 +170,7 @@ tasks:
     silent: true
 
   test:
+    desc: Run tests
     cmds:
       - echo "Running tests..."
       - go test ./...

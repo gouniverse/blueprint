@@ -157,6 +157,8 @@ func (controller *productUpdateController) page(data productUpdateControllerData
 		Class("container").
 		Child(breadcrumbs).
 		Child(hb.HR()).
+		Child(shared.Header(config.ShopStore, &config.Logger, data.request)).
+		Child(hb.HR()).
 		Child(heading).
 		Child(productTitle).
 		Child(cardProductDetails).
@@ -165,75 +167,88 @@ func (controller *productUpdateController) page(data productUpdateControllerData
 }
 
 func (controller *productUpdateController) formDetails(data productUpdateControllerData) hb.TagInterface {
-	fieldsDetails := []form.FieldInterface{
-		form.NewField(form.FieldOptions{
-			Label: "Status",
-			Name:  "product_status",
-			Type:  form.FORM_FIELD_TYPE_SELECT,
-			Value: data.formStatus,
-			Help:  `The status of the product.`,
-			Options: []form.FieldOption{
-				{
-					Value: "- not selected -",
-					Key:   "",
-				},
-				{
-					Value: "Active",
-					Key:   shopstore.PRODUCT_STATUS_ACTIVE,
-				},
-				{
-					Value: "Disabled",
-					Key:   shopstore.PRODUCT_STATUS_DISABLED,
-				},
-				{
-					Value: "Draft",
-					Key:   shopstore.PRODUCT_STATUS_DRAFT,
-				},
+	status := form.NewField(form.FieldOptions{
+		Label: "Status",
+		Name:  "product_status",
+		Type:  form.FORM_FIELD_TYPE_SELECT,
+		Value: data.formStatus,
+		Help:  `The status of the product.`,
+		Options: []form.FieldOption{
+			{
+				Value: "- not selected -",
+				Key:   "",
 			},
-		}),
-		form.NewField(form.FieldOptions{
-			Label: "Title",
-			Name:  "product_title",
-			Type:  form.FORM_FIELD_TYPE_STRING,
-			Value: data.formTitle,
-			Help:  `The title of the product.`,
-		}),
-		form.NewField(form.FieldOptions{
-			Label: "Description",
-			Name:  "product_description",
-			Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			Value: data.formDescription,
-			Help:  `The description of the product.`,
-		}),
-		form.NewField(form.FieldOptions{
-			Label: "Price",
-			Name:  "product_price",
-			Type:  form.FORM_FIELD_TYPE_NUMBER,
-			Value: data.formPrice,
-			Help:  `The price of the product.`,
-		}),
-		form.NewField(form.FieldOptions{
-			Label: "Quantity",
-			Name:  "product_quantity",
-			Type:  form.FORM_FIELD_TYPE_NUMBER,
-			Value: data.formQuantity,
-			Help:  `The quantity of the product that is available to purchase.`,
-		}),
-		form.NewField(form.FieldOptions{
-			Label: "Admin Notes",
-			Name:  "product_memo",
-			Type:  form.FORM_FIELD_TYPE_TEXTAREA,
-			Value: data.formMemo,
-			Help:  "Admin notes for this product. These notes will not be visible to the public.",
-		}),
-		form.NewField(form.FieldOptions{
-			Label:    "Product ID",
-			Name:     "product_id",
-			Type:     form.FORM_FIELD_TYPE_STRING,
-			Value:    data.productID,
-			Readonly: true,
-			Help:     "The reference number (ID) of the product.",
-		}),
+			{
+				Value: "Active",
+				Key:   shopstore.PRODUCT_STATUS_ACTIVE,
+			},
+			{
+				Value: "Disabled",
+				Key:   shopstore.PRODUCT_STATUS_DISABLED,
+			},
+			{
+				Value: "Draft",
+				Key:   shopstore.PRODUCT_STATUS_DRAFT,
+			},
+		},
+	})
+
+	title := form.NewField(form.FieldOptions{
+		Label: "Title",
+		Name:  "product_title",
+		Type:  form.FORM_FIELD_TYPE_STRING,
+		Value: data.formTitle,
+		Help:  `The title of the product.`,
+	})
+
+	description := form.NewField(form.FieldOptions{
+		Label: "Description",
+		Name:  "product_description",
+		Type:  form.FORM_FIELD_TYPE_TEXTAREA,
+		Value: data.formDescription,
+		Help:  `The description of the product.`,
+	})
+
+	price := form.NewField(form.FieldOptions{
+		Label: "Price",
+		Name:  "product_price",
+		Type:  form.FORM_FIELD_TYPE_NUMBER,
+		Value: data.formPrice,
+		Help:  `The price of the product.`,
+	})
+	quantity := form.NewField(form.FieldOptions{
+		Label: "Quantity",
+		Name:  "product_quantity",
+		Type:  form.FORM_FIELD_TYPE_NUMBER,
+		Value: data.formQuantity,
+		Help:  `The quantity of the product that is available to purchase.`,
+	})
+
+	memo := form.NewField(form.FieldOptions{
+		Label: "Admin Notes",
+		Name:  "product_memo",
+		Type:  form.FORM_FIELD_TYPE_TEXTAREA,
+		Value: data.formMemo,
+		Help:  "Admin notes for this product. These notes will not be visible to the public.",
+	})
+
+	productID := form.NewField(form.FieldOptions{
+		Label:    "Product ID",
+		Name:     "product_id",
+		Type:     form.FORM_FIELD_TYPE_STRING,
+		Value:    data.productID,
+		Readonly: true,
+		Help:     "The reference number (ID) of the product.",
+	})
+
+	fieldsDetails := []form.FieldInterface{
+		status,
+		title,
+		description,
+		price,
+		quantity,
+		memo,
+		productID,
 	}
 
 	formUserUpdate := form.NewForm(form.FormOptions{
@@ -591,6 +606,7 @@ func (controller *productUpdateController) saveProductMetadata(r *http.Request, 
 }
 
 func (controller *productUpdateController) prepareDataAndValidate(r *http.Request) (data productUpdateControllerData, errorMessage string) {
+	data.request = r
 	data.action = utils.Req(r, "action", "")
 	data.productID = utils.Req(r, "product_id", "")
 
@@ -642,6 +658,7 @@ func (controller *productUpdateController) prepareDataAndValidate(r *http.Reques
 }
 
 type productUpdateControllerData struct {
+	request   *http.Request
 	action    string
 	productID string
 	product   shopstore.ProductInterface

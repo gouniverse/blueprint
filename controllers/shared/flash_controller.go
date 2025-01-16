@@ -42,6 +42,7 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 	}
 
 	return layouts.NewWebsiteLayout(layouts.Options{
+		Request:    r,
 		Title:      "System Message",
 		Content:    controller.pageHTML(r),
 		ScriptURLs: []string{},

@@ -25,6 +25,7 @@ func Setup() {
 	// authentication.Initialize()
 	// jobs.Initialize()
 	// setupMailServer()
+	// tasks.RegisterTasks()
 }
 
 // func setupMailServer() {
