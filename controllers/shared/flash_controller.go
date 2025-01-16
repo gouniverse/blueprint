@@ -40,14 +40,21 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 			Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
 		}).ToHTML()
 	}
-
-	return layouts.NewWebsiteLayout(layouts.Options{
-		Request:    r,
-		Title:      "System Message",
-		Content:    controller.pageHTML(r),
-		ScriptURLs: []string{},
-		Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
-	}).ToHTML()
+	if config.CmsStoreUsed {
+		return layouts.NewWebsiteLayout(layouts.Options{
+			Request:    r,
+			Title:      "System Message",
+			Content:    controller.pageHTML(r),
+			ScriptURLs: []string{},
+			Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
+		}).ToHTML()
+	} else {
+		return layouts.NewUserLayout(r, layouts.Options{
+			Title:      "Home",
+			Content:    controller.pageHTML(r),
+			ScriptURLs: []string{},
+		}).ToHTML()
+	}
 }
 
 func (c flashController) pageHTML(r *http.Request) *hb.Tag {

@@ -8,7 +8,6 @@ import (
 	"log/slog"
 	"os"
 	"project/internal/resources"
-
 	"strings"
 
 	"github.com/faabiosr/cachego/file"

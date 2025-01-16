@@ -25,17 +25,17 @@ func UserQuickLinks(req *http.Request) *hb.Tag {
 		IsSelected         bool
 	}{
 		{
-			Title:              "Dashboard",
-			Background:         "#87cefa",
-			BackgroundSelected: "cornflowerblue",
+			Title:              "My Dashboard",
+			Background:         "rgba(141, 210, 220, 0.5)",
+			BackgroundSelected: "rgba(141, 210, 220, 1)",
 			Count:              hb.I().Class("bi bi-file-earmark-text-fill").ToHTML(),
 			URL:                links.NewUserLinks().Home(map[string]string{}),
 			IsSelected:         lo.If(req.URL.Path == links.USER_HOME, true).Else(false),
 		},
 		{
 			Title:              "My Account",
-			Background:         "#c2ff99",
-			BackgroundSelected: "forestgreen",
+			Background:         "rgba(172, 220, 141, 0.5)",
+			BackgroundSelected: "rgba(172, 220, 141, 1)",
 			Count:              hb.I().Class("bi bi-person-circle").ToHTML(),
 			URL:                links.NewUserLinks().Profile(map[string]string{}),
 			IsSelected:         strings.Contains(req.URL.Path, "/profile"),

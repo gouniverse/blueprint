@@ -33,7 +33,7 @@ func VaultStoreInitialize(db *sql.DB) error {
 		panic("VaultStore is nil")
 	}
 
-	VaultStore = *vaultStoreInstance
+	VaultStore = vaultStoreInstance
 
 	return nil
 }

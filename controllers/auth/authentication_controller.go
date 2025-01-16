@@ -48,7 +48,7 @@ func NewAuthenticationController() *authenticationController {
 
 // == PUBLIC METHODS ==========================================================
 
-// AnyIndex handles the authentication.
+// Handler handles the authentication.
 //
 // 1. Checks if there is a once parameter in the request from the AuthKnight service.
 // 2. Calls the AuthKnight service with the once parameter.
@@ -66,6 +66,14 @@ func NewAuthenticationController() *authenticationController {
 // Return:
 // - string: the result of the authentication request.
 func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Request) string {
+	if !config.UserStoreUsed || config.UserStore == nil {
+		return helpers.ToFlashError(w, r, `user store is required`, links.NewWebsiteLinks().Home(), 5)
+	}
+
+	if !config.VaultStoreUsed || config.VaultStore == nil {
+		return helpers.ToFlashError(w, r, `vault store is required`, links.NewWebsiteLinks().Home(), 5)
+	}
+
 	homeURL := links.NewWebsiteLinks().Home()
 	email, errorMessage := c.emailFromAuthKnightRequest(r)
 
@@ -115,10 +123,6 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 // == PRIVATE METHODS =========================================================
 
 func (c *authenticationController) userFindByEmailOrCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
-	if config.UserStore == nil {
-		return nil, errors.New("user store is nil")
-	}
-
 	userID, err := c.findEmailInBlindIndex(email)
 
 	if err != nil {
@@ -152,6 +156,10 @@ func (c *authenticationController) userCreate(ctx context.Context, email string,
 
 	if config.UserStore == nil {
 		return nil, errors.New("user store is nil")
+	}
+
+	if config.VaultStore == nil {
+		return nil, errors.New(`vault store is nil`)
 	}
 
 	err := config.UserStore.UserCreate(ctx, user)

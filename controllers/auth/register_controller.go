@@ -66,6 +66,14 @@ func NewRegisterController() *registerController {
 // == PUBLIC METHODS ==========================================================
 
 func (controller *registerController) Handler(w http.ResponseWriter, r *http.Request) string {
+	if !config.UserStoreUsed || config.UserStore == nil {
+		return helpers.ToFlashError(w, r, `user store is required`, links.NewWebsiteLinks().Home(), 5)
+	}
+
+	if !config.VaultStoreUsed || config.VaultStore == nil {
+		return helpers.ToFlashError(w, r, `vault store is required`, links.NewWebsiteLinks().Home(), 5)
+	}
+
 	data, errorMessage := controller.prepareData(r)
 
 	if errorMessage != "" {
@@ -173,7 +181,7 @@ func (controller *registerController) postUpdate(ctx context.Context, data regis
 	}
 
 	data.formSuccessMessage = "Your registration completed successfully. You can now continue browsing the website."
-	data.formRedirectURL = helpers.ToFlashSuccessURL(data.formSuccessMessage, links.NewUserLinks().Home(map[string]string{}), 5)
+	data.formRedirectURL = links.NewUserLinks().Home(map[string]string{})
 	return controller.formRegister(data).ToHTML()
 }
 
@@ -416,7 +424,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 	authUser := helpers.GetAuthUser(r)
 
 	if authUser == nil {
-		return registerControllerData{}, "User not found"
+		return registerControllerData{}, "You must be logged in to access this page"
 	}
 
 	countries, errCountries := config.GeoStore.CountryList(geostore.CountryQueryOptions{

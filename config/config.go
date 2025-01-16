@@ -136,7 +136,7 @@ var UserStoreUsed = false
 var UserStore userstore.StoreInterface
 
 var VaultStoreUsed = false
-var VaultStore vaultstore.Store
+var VaultStore vaultstore.StoreInterface
 
 var Logger slog.Logger
 
