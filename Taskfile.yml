@@ -46,7 +46,7 @@ tasks:
       - echo "Done!"
     silent: true
 
-  # deploy:cloudrun:
+  # deploy-cloudrun:
   #   desc: Builds and deploys the app to Google Cloud Run, you may need to run "gcloud auth login"
   #   cmds:
   #     - gcloud config set account YOUREMAIL
@@ -55,12 +55,12 @@ tasks:
   #     - gcloud builds submit --tag gcr.io/YOURPROJECT/YOURPACKAGENAME
   #     - gcloud run deploy YOURAPPNAME --image gcr.io/YOURPROJECT/YOURPACKAGENAME --platform managed --region europe-west4 --allow-unauthenticated
 
-  deploy:live:
+  deploy-live:
     desc: Builds and deploys the app to VM (i.e. Digital Ocean) via SSH
     cmds:
       - go run cmd/deploy/main.go
 
-  dev:init:
+  dev-init:
     desc: Initialize development environment (copies the .env_example to .env)
     cmds:
       - cp .env_example .env
@@ -72,7 +72,7 @@ tasks:
     cmds:
       - air
 
-  errcheck:install:
+  errcheck-install:
     desc: Install errcheck or update to latest
     cmds:
       - echo "Installing/updating errcheck..."
@@ -88,7 +88,7 @@ tasks:
       - echo "Done!"
     silent: true
 
-  gocritic:install:
+  gocritic-install:
     desc: Install gocritic or update to latest
     cmds:
       - echo "Installing/updating gocritic..."
@@ -104,7 +104,7 @@ tasks:
       - echo "Done!"
     silent: true
 
-  golangci-lint:install:
+  golangci-lint-install:
     desc: Install golangci-lint or update to latest
     cmds:
       - echo "Installing/updating golangci-lint..."
@@ -136,7 +136,7 @@ tasks:
       - echo "Done!"
     silent: true
 
-  nilaway:install:
+  nilaway-install:
     desc: Install nilaway or update to latest
     cmds:
       - echo "installing/updating nilaway..."
