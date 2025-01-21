@@ -40,7 +40,7 @@ func NewAppendAuthUserMiddleware() router.Middleware {
 //
 //	 4. If the user details are successfully fetched, it creates a new context
 //	    with the authenticated user value using `context.WithValue`.
-//	    The `config.AuthenticatedUserKey{}` is used as the key to store the user
+//	    The `config.AuthenticatedUserContextKey{}` is used as the key to store the user
 //	    value in the context.
 //
 // 6. The modified request with the new context is then passed to the `next` handler.
@@ -92,8 +92,8 @@ func AppendUserHandler(next http.Handler) http.Handler {
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), config.AuthenticatedUserKey{}, user)
-		ctx = context.WithValue(ctx, config.AuthenticatedSessionKey{}, userSessionKey)
+		ctx := context.WithValue(r.Context(), config.AuthenticatedUserContextKey{}, user)
+		ctx = context.WithValue(ctx, config.AuthenticatedSessionContextKey{}, userSessionKey)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

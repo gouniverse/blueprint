@@ -26,8 +26,7 @@ var pm2ProcessName = "{{ PROCESSNAME }}"
 var otherFilesToDeploy = []struct {
 	LocalPath  string
 	RemotePath string
-}{
-}
+}{}
 
 func main() {
 	cfmt.Infoln("1. Building executable...")

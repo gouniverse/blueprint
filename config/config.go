@@ -25,8 +25,11 @@ import (
 	"github.com/jellydator/ttlcache/v3"
 )
 
-type AuthenticatedUserKey struct{}
-type AuthenticatedSessionKey struct{}
+// AuthenticatedUserContextKey is a context key for the authenticated user.
+type AuthenticatedUserContextKey struct{}
+
+// AuthenticatedSessionContextKey is a context key for the authenticated session.
+type AuthenticatedSessionContextKey struct{}
 
 const APP_ENVIRONMENT_DEVELOPMENT = "development"
 const APP_ENVIRONMENT_LOCAL = "local"
@@ -38,7 +41,6 @@ const ENV_ENCRYPTION_SALT = "YOUR_OBFUSCATED_SALT"
 var AppEnvironment string
 var AppName string
 var AppUrl string
-var AppVersion string
 var AuthEndpoint = "/auth"
 var Database sb.DatabaseInterface
 var DbDriver string
@@ -139,31 +141,3 @@ var VaultStoreUsed = false
 var VaultStore vaultstore.StoreInterface
 
 var Logger slog.Logger
-
-func init() {
-	AppVersion = "0.0.1" // default
-}
-
-func IsEnvDevelopment() bool {
-	return AppEnvironment == APP_ENVIRONMENT_DEVELOPMENT
-}
-
-func IsEnvLocal() bool {
-	return AppEnvironment == APP_ENVIRONMENT_LOCAL
-}
-
-func IsEnvProduction() bool {
-	return AppEnvironment == APP_ENVIRONMENT_PRODUCTION
-}
-
-func IsEnvStaging() bool {
-	return AppEnvironment == APP_ENVIRONMENT_STAGING
-}
-
-func IsEnvTesting() bool {
-	return AppEnvironment == APP_ENVIRONMENT_TESTING
-}
-
-func IsDebugEnabled() bool {
-	return Debug
-}

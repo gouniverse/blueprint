@@ -13,7 +13,7 @@ func GetAuthUser(r *http.Request) userstore.UserInterface {
 		return nil
 	}
 
-	value := r.Context().Value(config.AuthenticatedUserKey{})
+	value := r.Context().Value(config.AuthenticatedUserContextKey{})
 	if value == nil {
 		return nil
 	}

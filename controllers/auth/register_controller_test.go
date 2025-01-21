@@ -71,8 +71,8 @@ func TestRegisterController_ShowsRegisterForm(t *testing.T) {
 	responseHTML, response, err := testutils.CallHtmlEndpoint(http.MethodGet, NewRegisterController().Handler, testutils.NewRequestOptions{
 		GetValues: url.Values{},
 		Context: map[any]any{
-			auth.AuthenticatedUserID{}:    user.ID(),
-			config.AuthenticatedUserKey{}: user,
+			auth.AuthenticatedUserID{}:           user.ID(),
+			config.AuthenticatedUserContextKey{}: user,
 		},
 	})
 
@@ -110,8 +110,8 @@ func TestRegisterController_RequiresFirstName(t *testing.T) {
 			"email": {user.Email()},
 		},
 		Context: map[any]any{
-			auth.AuthenticatedUserID{}:    user.ID(),
-			config.AuthenticatedUserKey{}: user,
+			auth.AuthenticatedUserID{}:           user.ID(),
+			config.AuthenticatedUserContextKey{}: user,
 		},
 	})
 
@@ -151,8 +151,8 @@ func TestRegisterController_RequiresLastName(t *testing.T) {
 			"first_name": {"FirstName"},
 		},
 		Context: map[any]any{
-			auth.AuthenticatedUserID{}:    user.ID(),
-			config.AuthenticatedUserKey{}: user,
+			auth.AuthenticatedUserID{}:           user.ID(),
+			config.AuthenticatedUserContextKey{}: user,
 		},
 	})
 
@@ -193,8 +193,8 @@ func TestRegisterController_RequiresCountry(t *testing.T) {
 			"last_name":  {"LastName"},
 		},
 		Context: map[any]any{
-			auth.AuthenticatedUserID{}:    user.ID(),
-			config.AuthenticatedUserKey{}: user,
+			auth.AuthenticatedUserID{}:           user.ID(),
+			config.AuthenticatedUserContextKey{}: user,
 		},
 	})
 
@@ -236,8 +236,8 @@ func TestRegisterController_RequiresTimezone(t *testing.T) {
 			"country":    {"Country"},
 		},
 		Context: map[any]any{
-			auth.AuthenticatedUserID{}:    user.ID(),
-			config.AuthenticatedUserKey{}: user,
+			auth.AuthenticatedUserID{}:           user.ID(),
+			config.AuthenticatedUserContextKey{}: user,
 		},
 	})
 
@@ -280,8 +280,8 @@ func TestRegisterController_Success(t *testing.T) {
 			"timezone":   {"Timezone"},
 		},
 		Context: map[any]any{
-			auth.AuthenticatedUserID{}:    user.ID(),
-			config.AuthenticatedUserKey{}: user,
+			auth.AuthenticatedUserID{}:           user.ID(),
+			config.AuthenticatedUserContextKey{}: user,
 		},
 	})
 

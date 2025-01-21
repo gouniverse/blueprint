@@ -21,11 +21,11 @@ require (
 	github.com/gouniverse/cmsstore v0.22.0
 	github.com/gouniverse/crud/v2 v2.0.0-20241105205902-6a295ae50112
 	github.com/gouniverse/csrf v0.1.0
-	github.com/gouniverse/dashboard v1.5.3
+	github.com/gouniverse/dashboard v1.6.1
 	github.com/gouniverse/envenc v0.8.0
 	github.com/gouniverse/filesystem v0.3.1
 	github.com/gouniverse/form v0.16.0
-	github.com/gouniverse/hb v1.80.1
+	github.com/gouniverse/hb v1.81.0
 	github.com/gouniverse/icons v1.3.1
 	github.com/gouniverse/logstore v1.5.1
 	github.com/gouniverse/metastore v1.1.0
@@ -54,15 +54,15 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.33.0 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.7 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.53 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.54 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.28 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.28 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.28 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.5.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.5.2 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.18.9 // indirect
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.73.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.73.2 // indirect
 	github.com/aws/smithy-go v1.22.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
@@ -78,7 +78,7 @@ require (
 	github.com/gouniverse/settingstore v0.12.0 // indirect
 	github.com/gouniverse/shortcode v0.4.0 // indirect
 	github.com/gouniverse/sqlfilestore v0.2.0 // indirect
-	github.com/gouniverse/strutils v0.6.0 // indirect
+	github.com/gouniverse/strutils v0.7.0 // indirect
 	github.com/gouniverse/uncdn v0.7.4 // indirect
 	github.com/gouniverse/validator v0.11.0 // indirect
 	github.com/gouniverse/versionstore v0.4.2 // indirect
@@ -102,7 +102,7 @@ require (
 	golang.org/x/term v0.28.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.61.8 // indirect
+	modernc.org/libc v1.61.9 // indirect
 )
 
 require (

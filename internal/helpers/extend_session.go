@@ -11,17 +11,7 @@ import (
 )
 
 func ExtendSession(r *http.Request, seconds int64) error {
-	sessionKey := r.Context().Value(config.AuthenticatedSessionKey{}).(string)
-
-	if sessionKey == "" {
-		return errors.New("session key not found")
-	}
-
-	session, err := config.SessionStore.SessionFindByKey(sessionKey)
-
-	if err != nil {
-		return err
-	}
+	session := GetAuthSession(r)
 
 	if session == nil {
 		return errors.New("session not found")
@@ -37,7 +27,7 @@ func ExtendSession(r *http.Request, seconds int64) error {
 
 	session.SetExpiresAt(carbon.Now(carbon.UTC).AddSeconds(cast.ToInt(seconds)).ToDateTimeString(carbon.UTC))
 
-	err = config.SessionStore.SessionUpdate(session)
+	err := config.SessionStore.SessionUpdate(session)
 
 	return err
 }

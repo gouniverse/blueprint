@@ -2,9 +2,7 @@ package config
 
 import (
 	"context"
-	"crypto/sha256"
 	"errors"
-	"fmt"
 	"log/slog"
 	"os"
 	"project/internal/resources"
@@ -13,7 +11,6 @@ import (
 	"github.com/faabiosr/cachego/file"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gouniverse/base/database"
-	"github.com/gouniverse/envenc"
 	"github.com/gouniverse/logstore"
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/utils"
@@ -185,29 +182,6 @@ func intializeEnvEncVariables(appEnvironment string) {
 	if err != nil {
 		panic(err.Error())
 	}
-}
-
-// buildEnvEncKey builds the envenc key
-//
-// Business logic:
-//   - deobfuscates the salt
-//   - creates the temp key based on the salt and key
-//   - hashes the temp key
-//   - returns the hash
-//
-// Parameters:
-// - envEncryptionKey: the env encryption key
-//
-// Returns:
-// - string: the final key
-func buildEnvEncKey(envEncryptionKey string) string {
-	envEncryptionSalt, _ := envenc.Deobfuscate(ENV_ENCRYPTION_SALT)
-	tempKey := envEncryptionSalt + envEncryptionKey
-
-	hash := sha256.Sum256([]byte(tempKey))
-	realKey := fmt.Sprintf("%x", hash)
-
-	return realKey
 }
 
 // initializeCache initializes the cache

@@ -48,11 +48,18 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	// Prepare styles
 	styles := []string{ // prepend any if required
-		`nav#Toolbar {border-bottom: 8px solid red;}  nav#Toolbar .btn {margin-top: -12px;} nav#Toolbar .dropdown {margin-top: 12px;}`,
+		`nav#Toolbar {border-bottom: 8px solid red;}`,
 	}
 	styles = append(styles, options.Styles...)
 
 	homeLink := links.NewAdminLinks().Home(map[string]string{})
+
+	path := lo.IfF(r != nil, func() string {
+		return r.URL.Path
+	}).ElseF(func() string {
+		return ""
+	})
+	themeLink := links.NewWebsiteLinks().Theme(map[string]string{"redirect": path})
 
 	dashboard := dashboard.NewDashboard(dashboard.Config{
 		HTTPRequest:     r,
@@ -65,7 +72,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		LogoRedirectURL: homeLink,
 		User:            dashboardUser,
 		UserMenu:        adminLayoutUserMenu(authUser),
-		ThemeHandlerUrl: links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
+		ThemeHandlerUrl: themeLink,
 		Scripts:         scripts,
 		ScriptURLs:      scriptURLs,
 		Styles:          styles,

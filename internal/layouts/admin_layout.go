@@ -66,7 +66,7 @@ func adminLayout(r *http.Request, options Options) *dashboard.Dashboard {
 		Content:         options.Content.ToHTML(),
 		Title:           options.Title + " | Admin | " + config.AppName,
 		LoginURL:        links.NewAuthLinks().Login(homeLink),
-		Menu:            adminLayoutMainMenu(authUser),
+		MenuItems:       adminLayoutMainMenu(authUser),
 		LogoImageURL:    "/media/user/dashboard-logo.jpg",
 		LogoRawHtml:     adminLogoHtml(),
 		LogoRedirectURL: homeLink,

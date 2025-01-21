@@ -8,6 +8,7 @@ import (
 
 	"github.com/gouniverse/cdn"
 	"github.com/gouniverse/dashboard"
+	"github.com/samber/lo"
 )
 
 func NewUserLayout(r *http.Request, options Options) *dashboard.Dashboard {
@@ -58,18 +59,20 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	homeLink := links.NewUserLinks().Home(map[string]string{})
 
+	titlePostfix := ` | ` + lo.Ternary(authUser == nil, `Guest`, `User`) + ` | ` + config.AppName
+
 	dashboard := dashboard.NewDashboard(dashboard.Config{
-		HTTPRequest:               r,
-		Content:                   options.Content.ToHTML(),
-		Title:                     options.Title + " | User | " + config.AppName,
-		LoginURL:                  links.NewAuthLinks().Login(homeLink),
-		Menu:                      userLayoutMainMenu(authUser),
-		LogoImageURL:              "/media/user/dashboard-logo.jpg",
+		HTTPRequest: r,
+		Content:     options.Content.ToHTML(),
+		Title:       options.Title + titlePostfix,
+		LoginURL:    links.NewAuthLinks().Login(homeLink),
+		MenuItems:   userLayoutMainMenuItems(authUser),
+		// LogoImageURL:              "/media/user/dashboard-logo.jpg",
 		NavbarBackgroundColorMode: "primary",
 		LogoRawHtml:               userLogoHtml(),
 		LogoRedirectURL:           homeLink,
 		User:                      dashboardUser,
-		UserMenu:                  userLayoutUserMenu(authUser),
+		UserMenu:                  userLayoutUserMenuItems(authUser),
 		ThemeHandlerUrl:           links.NewWebsiteLinks().Theme(map[string]string{"redirect": r.URL.Path}),
 		Scripts:                   scripts,
 		ScriptURLs:                scriptURLs,
