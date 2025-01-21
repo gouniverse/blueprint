@@ -12,11 +12,13 @@ func (l *authLinks) Auth() string {
 }
 
 func (l *authLinks) Login(backUrl string) string {
-	params := map[string]string{
-		"back_url": backUrl,
-		"next_url": l.Auth(),
+	params := map[string]string{}
+
+	if backUrl != "" {
+		params["back_url"] = backUrl
 	}
-	return "https://authknight.com/app/login" + query(params)
+
+	return URL(AUTH_LOGIN, params)
 }
 
 func (l *authLinks) Logout() string {
@@ -25,4 +27,12 @@ func (l *authLinks) Logout() string {
 
 func (l *authLinks) Register(params map[string]string) string {
 	return URL(AUTH_REGISTER, params)
+}
+
+func (l *authLinks) AuthKnightLogin(backUrl string) string {
+	params := map[string]string{
+		"back_url": backUrl,
+		"next_url": l.Auth(),
+	}
+	return "https://authknight.com/app/login" + query(params)
 }

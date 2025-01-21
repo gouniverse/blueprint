@@ -134,10 +134,10 @@ var StatsStore statsstore.StoreInterface
 var TaskStoreUsed = true
 var TaskStore taskstore.StoreInterface
 
-var UserStoreUsed = false
+var UserStoreUsed = true
 var UserStore userstore.StoreInterface
 
-var VaultStoreUsed = false
+var VaultStoreUsed = true
 var VaultStore vaultstore.StoreInterface
 
 var Logger slog.Logger

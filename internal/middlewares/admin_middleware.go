@@ -10,6 +10,12 @@ import (
 
 // NewAdminMiddleware checks if the user is an administrator or superuser
 // before allowing access to the protected route.
+//
+// Business logic:
+//  1. user must be authenticated
+//  2. user must be active
+//  3. user must be registered
+//  4. user must be an admin or superuser
 func NewAdminMiddleware() router.Middleware {
 	m := router.Middleware{
 		Name: "Admin Middleware",
@@ -23,14 +29,20 @@ func NewAdminMiddleware() router.Middleware {
 				if authUser == nil {
 					returnURL := links.URL(r.URL.Path, map[string]string{})
 					loginURL := links.NewAuthLinks().Login(returnURL)
-					helpers.ToFlash(w, r, "error", "You must be logged in to access this page", loginURL, 15)
+					helpers.ToFlashError(w, r, "You must be logged in to access this page", loginURL, 15)
+					return
+				}
+
+				if !authUser.IsRegistrationCompleted() {
+					registerURL := links.NewAuthLinks().Register(map[string]string{})
+					helpers.ToFlashInfo(w, r, "Please complete your registration to continue", registerURL, 15)
 					return
 				}
 
 				// Check if user is active? No => redirect to website home
 				if !authUser.IsActive() {
 					homeURL := links.NewWebsiteLinks().Home()
-					helpers.ToFlash(w, r, "error", "You must activate your account before you can access this page", homeURL, 15)
+					helpers.ToFlash(w, r, "error", "Your account is not active", homeURL, 15)
 					return
 				}
 

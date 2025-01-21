@@ -11,6 +11,11 @@ import (
 
 // NewUserMiddleware checks if the user is authenticated and active
 // before allowing access to the protected route.
+//
+// Business logic:
+//  1. user must be authenticated
+//  2. user must be active
+//  3. user must be registered
 func NewUserMiddleware() router.Middleware {
 	m := router.Middleware{
 		Name: "User Middleware",

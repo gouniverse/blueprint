@@ -48,7 +48,9 @@ const USER_ORDER_LIST = USER_ORDERS + "/list"
 const USER_PROFILE = USER_HOME + "/profile"
 const USER_PROFILE_UPDATE = USER_HOME + "/profile/update"
 
-// == WEBSITE LINKS ==========================================================
+// ===========================================================================
+// == WEBSITE LINKS
+// ===========================================================================
 
 const HOME = "/"
 const BLOG = "/blog"

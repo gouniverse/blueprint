@@ -28,7 +28,7 @@ func globalMiddlewares() []router.Middleware {
 
 	globalMiddlewares = append(globalMiddlewares, middlewares.NewLogRequestMiddleware())
 	globalMiddlewares = append(globalMiddlewares, middlewares.NewThemeMiddleware())
-	globalMiddlewares = append(globalMiddlewares, middlewares.NewAppendAuthUserMiddleware())
+	globalMiddlewares = append(globalMiddlewares, middlewares.NewAuthMiddleware())
 
 	return globalMiddlewares
 }
