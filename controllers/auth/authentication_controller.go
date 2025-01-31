@@ -70,8 +70,12 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 		return helpers.ToFlashError(w, r, `user store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
-	if !config.VaultStoreUsed || config.VaultStore == nil {
+	if config.VaultStoreUsed && config.VaultStore == nil {
 		return helpers.ToFlashError(w, r, `vault store is required`, links.NewWebsiteLinks().Home(), 5)
+	}
+
+	if config.VaultStoreUsed && !config.BlindIndexStoreUsed {
+		return helpers.ToFlashError(w, r, `blind index store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
 	homeURL := links.NewWebsiteLinks().Home()
@@ -122,7 +126,7 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 
 // == PRIVATE METHODS =========================================================
 
-func (c *authenticationController) findEmailInBlindIndex(email string) (userID string, err error) {
+func (c *authenticationController) findUserIDInBlindIndex(email string) (userID string, err error) {
 	recordsFound, err := config.BlindIndexStoreEmail.SearchValueList(blindindexstore.SearchValueQueryOptions{
 		SearchValue: email,
 		SearchType:  blindindexstore.SEARCH_TYPE_EQUALS,
@@ -260,6 +264,25 @@ func (c *authenticationController) calculateRedirectURL(user userstore.UserInter
 	return redirectUrl
 }
 
+// userCreate creates a new user and returns the user object.
+//
+// Business Logic:
+// 1. Create a new user object.
+// 2. If the vault store is not used, return the user object.
+// 3. Create a new email token and store it in the vault store.
+// 4. Replace the email in user object with the email token.
+// 5. Update the user object in the database.
+// 6. Insert the email token in the blind index.
+// 7. Return the user object.
+//
+// Parameters:
+//   - ctx: The context for the request.
+//   - email: The email address of the user.
+//   - status: The status of the user.
+//
+// Returns:
+//   - userstore.UserInterface: The user object.
+//   - error: An error object if an error occurred during the operation.
 func (c *authenticationController) userCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
 	user := userstore.NewUser().
 		SetStatus(status).
@@ -269,7 +292,7 @@ func (c *authenticationController) userCreate(ctx context.Context, email string,
 		return nil, errors.New("user store is nil")
 	}
 
-	if config.VaultStore == nil {
+	if config.VaultStoreUsed && config.VaultStore == nil {
 		return nil, errors.New(`vault store is nil`)
 	}
 
@@ -277,6 +300,10 @@ func (c *authenticationController) userCreate(ctx context.Context, email string,
 
 	if err != nil {
 		return nil, err
+	}
+
+	if !config.VaultStoreUsed {
+		return user, nil
 	}
 
 	emailToken, err := config.VaultStore.TokenCreate(ctx, email, config.VaultKey, 20)
@@ -306,29 +333,60 @@ func (c *authenticationController) userCreate(ctx context.Context, email string,
 	return user, nil
 }
 
-
+// userFindByEmailOrCreate finds or creates a user based on the provided email.
+//
+// Business Logic:
+//  1. If VultStore is used:
+//     a. Check if the email is in the blind index, and get the user ID.
+//     b. If the user ID is not found, create a new user.
+//     c. Find the user by ID.
+//  2. If VultStore is not used:
+//     a. Find the user by email.
+//     b. If the user is not found, create a new user.
+//
+// Parameters:
+//   - ctx: The context for the request.
+//   - email: The email address of the user.
+//   - status: The status of the user.
+//
+// Returns:
+//   - userstore.UserInterface: The user object.
+//   - error: An error object if an error occurred during the operation.
 func (c *authenticationController) userFindByEmailOrCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
-	userID, err := c.findEmailInBlindIndex(email)
+	if config.VaultStoreUsed {
+		userID, err := c.findUserIDInBlindIndex(email)
+		if err != nil {
+			return nil, err
+		}
 
-	if err != nil {
-		return nil, err
+		if userID == "" {
+			return c.userCreate(ctx, email, status)
+		}
+
+		user, err := config.UserStore.UserFindByID(context.Background(), userID)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if user == nil {
+			config.Logger.Error("At Auth Controller > userFindByEmailOrCreate",
+				slog.String("error", "User not found, even though email was found in the blind index, and user ID returned successfully"),
+				"user", userID)
+			return nil, nil
+		}
+
+		return user, nil
 	}
 
-	if userID == "" {
-		return c.userCreate(ctx, email, status)
-	}
-
-	user, err := config.UserStore.UserFindByID(context.Background(), userID)
+	user, err := config.UserStore.UserFindByEmail(ctx, email)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if user == nil {
-		config.Logger.Error("At Auth Controller > userFindByEmailOrCreate",
-			slog.String("error", "User not found, even though email was found in the blind index, and user ID returned successfully"),
-			"user", userID)
-		return nil, nil
+		return c.userCreate(ctx, email, status)
 	}
 
 	return user, nil

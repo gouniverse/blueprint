@@ -70,7 +70,7 @@ func (controller *registerController) Handler(w http.ResponseWriter, r *http.Req
 		return helpers.ToFlashError(w, r, `user store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
-	if !config.VaultStoreUsed || config.VaultStore == nil {
+	if config.VaultStoreUsed && config.VaultStore == nil {
 		return helpers.ToFlashError(w, r, `vault store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
@@ -132,46 +132,56 @@ func (controller *registerController) postUpdate(ctx context.Context, data regis
 		return controller.formRegister(data).ToHTML()
 	}
 
-	firstNameToken, err := config.VaultStore.TokenCreate(ctx, data.firstName, config.VaultKey, 20)
+	if config.VaultStoreUsed {
 
-	if err != nil {
-		config.LogStore.ErrorWithContext("Error creating first name token", err.Error())
-		data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
-		return controller.formRegister(data).ToHTML()
+		firstNameToken, err := config.VaultStore.TokenCreate(ctx, data.firstName, config.VaultKey, 20)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("Error creating first name token", err.Error())
+			data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
+			return controller.formRegister(data).ToHTML()
+		}
+
+		lastNameToken, err := config.VaultStore.TokenCreate(ctx, data.lastName, config.VaultKey, 20)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("Error creating last name token", err.Error())
+			data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
+			return controller.formRegister(data).ToHTML()
+		}
+
+		businessNameToken, err := config.VaultStore.TokenCreate(ctx, data.buinessName, config.VaultKey, 20)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("Error creating business name token", err.Error())
+			data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
+			return controller.formRegister(data).ToHTML()
+		}
+
+		phoneToken, err := config.VaultStore.TokenCreate(ctx, data.phone, config.VaultKey, 20)
+
+		if err != nil {
+			config.LogStore.ErrorWithContext("Error creating phone token", err.Error())
+			data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
+			return controller.formRegister(data).ToHTML()
+		}
+
+		data.authUser.SetFirstName(firstNameToken)
+		data.authUser.SetLastName(lastNameToken)
+		data.authUser.SetBusinessName(businessNameToken)
+		data.authUser.SetPhone(phoneToken)
+		data.authUser.SetCountry(data.country)
+		data.authUser.SetTimezone(data.timezone)
+	} else {
+		data.authUser.SetFirstName(data.firstName)
+		data.authUser.SetLastName(data.lastName)
+		data.authUser.SetBusinessName(data.buinessName)
+		data.authUser.SetPhone(data.phone)
+		data.authUser.SetCountry(data.country)
+		data.authUser.SetTimezone(data.timezone)
 	}
 
-	lastNameToken, err := config.VaultStore.TokenCreate(ctx, data.lastName, config.VaultKey, 20)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("Error creating last name token", err.Error())
-		data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
-		return controller.formRegister(data).ToHTML()
-	}
-
-	businessNameToken, err := config.VaultStore.TokenCreate(ctx, data.buinessName, config.VaultKey, 20)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("Error creating business name token", err.Error())
-		data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
-		return controller.formRegister(data).ToHTML()
-	}
-
-	phoneToken, err := config.VaultStore.TokenCreate(ctx, data.phone, config.VaultKey, 20)
-
-	if err != nil {
-		config.LogStore.ErrorWithContext("Error creating phone token", err.Error())
-		data.formErrorMessage = "We are very sorry. Saving the details failed. Please try again later."
-		return controller.formRegister(data).ToHTML()
-	}
-
-	data.authUser.SetFirstName(firstNameToken)
-	data.authUser.SetLastName(lastNameToken)
-	data.authUser.SetBusinessName(businessNameToken)
-	data.authUser.SetPhone(phoneToken)
-	data.authUser.SetCountry(data.country)
-	data.authUser.SetTimezone(data.timezone)
-
-	err = config.UserStore.UserUpdate(context.Background(), data.authUser)
+	err := config.UserStore.UserUpdate(context.Background(), data.authUser)
 
 	if err != nil {
 		config.LogStore.ErrorWithContext("Error updating user profile", err.Error())

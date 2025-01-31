@@ -97,7 +97,7 @@ var BlindIndexStoreLastName blindindexstore.Store
 var BlogStoreUsed = true
 var BlogStore blogstore.Store
 
-var CmsStoreUsed = true
+var CmsStoreUsed = false
 var CmsStore cmsstore.StoreInterface
 
 var CacheStoreUsed = true
@@ -137,7 +137,7 @@ var TaskStore taskstore.StoreInterface
 var UserStoreUsed = true
 var UserStore userstore.StoreInterface
 
-var VaultStoreUsed = true
+var VaultStoreUsed = false
 var VaultStore vaultstore.StoreInterface
 
 var Logger slog.Logger

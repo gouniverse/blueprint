@@ -40,6 +40,7 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 			Styles:     []string{`.Center > div{padding:0px !important;margin:0px !important;}`},
 		}).ToHTML()
 	}
+
 	if config.CmsStoreUsed {
 		return layouts.NewWebsiteLayout(layouts.Options{
 			Request:    r,

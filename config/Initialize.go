@@ -130,7 +130,11 @@ func initializeEnvVariables() {
 	// StripeKeyPrivate = utils.EnvMust("STRIPE_KEY_PRIVATE")
 	// StripeKeyPublic = utils.EnvMust("STRIPE_KEY_PUBLIC")
 
-	VaultKey = utils.EnvMust("VAULT_KEY")
+	VaultKey = lo.TernaryF(VaultStoreUsed, func() string {
+		return utils.EnvMust("VAULT_KEY")
+	}, func() string {
+		return utils.Env("VAULT_KEY")
+	})
 
 	// Enable if you use Vertex
 	// VertexModelID = utils.EnvMust("VERTEX_MODEL_ID")
