@@ -12,6 +12,7 @@ import (
 	blogControllers "project/controllers/website/blog"
 
 	cms "project/controllers/website/cms"
+	seo "project/controllers/website/seo"
 	// paypalControllers "project/controllers/website/paypal"
 )
 
@@ -175,19 +176,19 @@ func seoRoutes() []router.RouteInterface {
 	robotsRoute := &router.Route{
 		Name:        "Website > RobotsTxt",
 		Path:        "/robots.txt",
-		HTMLHandler: NewRobotsTxtController().Handler,
+		HTMLHandler: seo.NewRobotsTxtController().Handler,
 	}
 
 	securityRoute := &router.Route{
 		Name:        "Website > SecurityTxt",
 		Path:        "/security.txt",
-		HTMLHandler: NewSecurityTxtController().Handler,
+		HTMLHandler: seo.NewSecurityTxtController().Handler,
 	}
 
 	sitemapRoute := &router.Route{
 		Name:        "Website > Sitemap",
 		Path:        "/sitemap.xml",
-		HTMLHandler: NewSitemapXmlController().Handler,
+		HTMLHandler: seo.NewSitemapXmlController().Handler,
 	}
 
 	return []router.RouteInterface{

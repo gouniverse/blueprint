@@ -9,12 +9,14 @@ import (
 
 // == TYPE ===================================================================
 
-// GuestLayout is a layout for guest pages, which are not connected to the CMS
-// it differs from the website layout, which uses the CMS template
+// blankLayout is an empty layout
+//
+// The blank layout is not connected to the CMS, unlike the website layout,
+// which uses the CMS template
 //
 // NOTE: It is used for the registration page, which only has a
 // registration form and no navigation
-type guestLayout struct {
+type blankLayout struct {
 	title      string
 	content    hb.TagInterface
 	scriptURLs []string
@@ -25,9 +27,9 @@ type guestLayout struct {
 
 // == CONSTRUCTOR =============================================================
 
-// NewGuestLayout creates a new guest layout
-func NewGuestLayout(options Options) *guestLayout {
-	layout := &guestLayout{}
+// NewBlankLayout creates a new guest layout
+func NewBlankLayout(options Options) *blankLayout {
+	layout := &blankLayout{}
 	layout.title = options.Title + " | " + config.AppName
 	layout.content = options.Content
 	layout.scriptURLs = options.ScriptURLs
@@ -40,7 +42,7 @@ func NewGuestLayout(options Options) *guestLayout {
 // == PUBLIC METHODS ==========================================================
 
 // ToHTML generates the HTML for the guest layout
-func (layout *guestLayout) ToHTML() string {
+func (layout *blankLayout) ToHTML() string {
 	layout.styleURLs = append([]string{cdn.BootstrapCss_5_3_3()}, layout.styleURLs...)
 	webpage := hb.Webpage().
 		SetTitle(layout.title).

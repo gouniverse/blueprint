@@ -122,79 +122,6 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 
 // == PRIVATE METHODS =========================================================
 
-func (c *authenticationController) userFindByEmailOrCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
-	userID, err := c.findEmailInBlindIndex(email)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if userID == "" {
-		return c.userCreate(ctx, email, status)
-	}
-
-	user, err := config.UserStore.UserFindByID(context.Background(), userID)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if user == nil {
-		config.Logger.Error("At Auth Controller > userFindByEmailOrCreate",
-			slog.String("error", "User not found, even though email was found in the blind index, and user ID returned successfully"),
-			"user", userID)
-		return nil, nil
-	}
-
-	return user, nil
-}
-
-func (c *authenticationController) userCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
-	user := userstore.NewUser().
-		SetStatus(status).
-		SetEmail(email)
-
-	if config.UserStore == nil {
-		return nil, errors.New("user store is nil")
-	}
-
-	if config.VaultStore == nil {
-		return nil, errors.New(`vault store is nil`)
-	}
-
-	err := config.UserStore.UserCreate(ctx, user)
-
-	if err != nil {
-		return nil, err
-	}
-
-	emailToken, err := config.VaultStore.TokenCreate(ctx, email, config.VaultKey, 20)
-
-	if err != nil {
-		return nil, err
-	}
-
-	user.SetEmail(emailToken)
-
-	err = config.UserStore.UserUpdate(context.Background(), user)
-
-	if err != nil {
-		return nil, err
-	}
-
-	searchValue := blindindexstore.NewSearchValue().
-		SetSourceReferenceID(user.ID()).
-		SetSearchValue(email)
-
-	err = config.BlindIndexStoreEmail.SearchValueCreate(searchValue)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
-}
-
 func (c *authenticationController) findEmailInBlindIndex(email string) (userID string, err error) {
 	recordsFound, err := config.BlindIndexStoreEmail.SearchValueList(blindindexstore.SearchValueQueryOptions{
 		SearchValue: email,
@@ -331,4 +258,78 @@ func (c *authenticationController) calculateRedirectURL(user userstore.UserInter
 	}
 
 	return redirectUrl
+}
+
+func (c *authenticationController) userCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
+	user := userstore.NewUser().
+		SetStatus(status).
+		SetEmail(email)
+
+	if config.UserStore == nil {
+		return nil, errors.New("user store is nil")
+	}
+
+	if config.VaultStore == nil {
+		return nil, errors.New(`vault store is nil`)
+	}
+
+	err := config.UserStore.UserCreate(ctx, user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	emailToken, err := config.VaultStore.TokenCreate(ctx, email, config.VaultKey, 20)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.SetEmail(emailToken)
+
+	err = config.UserStore.UserUpdate(context.Background(), user)
+
+	if err != nil {
+		return nil, err
+	}
+
+	searchValue := blindindexstore.NewSearchValue().
+		SetSourceReferenceID(user.ID()).
+		SetSearchValue(email)
+
+	err = config.BlindIndexStoreEmail.SearchValueCreate(searchValue)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+
+func (c *authenticationController) userFindByEmailOrCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
+	userID, err := c.findEmailInBlindIndex(email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if userID == "" {
+		return c.userCreate(ctx, email, status)
+	}
+
+	user, err := config.UserStore.UserFindByID(context.Background(), userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
+		config.Logger.Error("At Auth Controller > userFindByEmailOrCreate",
+			slog.String("error", "User not found, even though email was found in the blind index, and user ID returned successfully"),
+			"user", userID)
+		return nil, nil
+	}
+
+	return user, nil
 }

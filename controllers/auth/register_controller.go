@@ -88,7 +88,7 @@ func (controller *registerController) Handler(w http.ResponseWriter, r *http.Req
 		return controller.postUpdate(r.Context(), data)
 	}
 
-	return layouts.NewGuestLayout(layouts.Options{
+	return layouts.NewBlankLayout(layouts.Options{
 		Title: "Register",
 		// CanonicalURL: links.NewWebsiteLinks().Flash(map[string]string{}),
 		Content: controller.pageHTML(data),

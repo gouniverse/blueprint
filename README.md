@@ -30,6 +30,27 @@ This is a quick start blueprint for an MVC web applications
 git clone https://github.com/gouniverse/blueprint
 ```
 
+## Environment Variables
+
+- Copy the `.env_example` file to `.env`
+
+```bash
+cp .env_example .env
+```
+
+- Set the dev vault values
+
+```bash
+task env-dev
+```
+
+- Set the prod vault values
+
+```bash
+task env-prod
+```
+
+
 ## Local Development
 
 - Just starting

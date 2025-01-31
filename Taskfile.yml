@@ -72,6 +72,16 @@ tasks:
     cmds:
       - air
 
+  env-dev:
+    cmds:
+      # - go run . task EnvEnc ui ./internal/resources/.env.development.vault
+      - go run ./cmd/envenc/main.go ui ./internal/resources/.env.development.vault
+
+  env-prod:
+    cmds:
+      # - go run . task EnvEnc ui ./internal/resources/.env.production.vault
+      - go run ./cmd/envenc/main.go ui ./internal/resources/.env.production.vault
+
   errcheck-install:
     desc: Install errcheck or update to latest
     cmds:
@@ -120,7 +130,7 @@ tasks:
       - echo "Done!"
     silent: true
 
-  gosec:install:
+  gosec-install:
     desc: Install gosec or update to latest
     cmds:
       - echo "Installing/updating gosec..."

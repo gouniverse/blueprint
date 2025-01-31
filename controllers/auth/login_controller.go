@@ -5,15 +5,19 @@ import (
 	"project/config"
 	"project/internal/helpers"
 	"project/internal/links"
+	"strings"
+
+	"github.com/gouniverse/base/req"
+	"github.com/gouniverse/router"
 )
 
 type loginController struct{}
 
-func NewLoginController() *loginController {
+func NewLoginController() router.HTMLControllerInterface {
 	return &loginController{}
 }
 
-func (controller *loginController) AnyIndex(w http.ResponseWriter, r *http.Request) string {
+func (controller *loginController) Handler(w http.ResponseWriter, r *http.Request) string {
 	if !config.UserStoreUsed || config.UserStore == nil {
 		return helpers.ToFlashError(w, r, `user store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
@@ -22,6 +26,13 @@ func (controller *loginController) AnyIndex(w http.ResponseWriter, r *http.Reque
 		return helpers.ToFlashError(w, r, `vault store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
-	http.Redirect(w, r, links.NewAuthLinks().Login(links.NewWebsiteLinks().Home()), http.StatusSeeOther)
+	backUrl := req.ValueOr(r, "back_url", links.NewWebsiteLinks().Home())
+	if !strings.HasPrefix(backUrl, links.NewWebsiteLinks().Home()) {
+		backUrl = links.NewWebsiteLinks().Home()
+	}
+
+	loginUrl := links.NewAuthLinks().AuthKnightLogin(backUrl)
+
+	http.Redirect(w, r, loginUrl, http.StatusSeeOther)
 	return ""
 }

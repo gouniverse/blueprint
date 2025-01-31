@@ -16,7 +16,7 @@ func Routes() []router.RouteInterface {
 		&router.Route{
 			Name:        "Auth > Login Controller",
 			Path:        links.AUTH_LOGIN,
-			HTMLHandler: NewLoginController().AnyIndex,
+			HTMLHandler: NewLoginController().Handler,
 		},
 		&router.Route{
 			Name:        "Auth > Logout Controller",

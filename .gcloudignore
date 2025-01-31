@@ -1,5 +1,6 @@
-# ignore .env file. enter directly on Google Cloud Run
+# ignore .env files, enter directly on Google Cloud Run
 .env
+.env.example
 .env*
 
 # ignore .git and .cache folders
@@ -13,10 +14,14 @@
 **/*.class
 
 # ignore all *.db files in all folders, including build root
+**/*.database
 **/*.db
+**/*.sqlite
 
-# ignore all markdown files (md)
+# ignore all markdown files (md) beside all README*.md other than README-secret.md
 *.md
+# !README*.md
+# README-secret.md
 
 # ignore .vscode folder
 /.github
@@ -46,3 +51,6 @@
 
 # ignore /vendor folder
 /vendor/*
+
+.gitlab-ci.yaml
+Taskfile.yml

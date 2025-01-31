@@ -7,6 +7,7 @@ import (
 	"github.com/gouniverse/router"
 )
 
+// globalMiddlewares returns a list of middlewares to be applied to all routes
 func globalMiddlewares() []router.Middleware {
 	globalMiddlewares := []router.Middleware{
 		middlewares.NewJailBotsMiddleware(),
