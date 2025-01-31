@@ -37,7 +37,7 @@ tasks:
   # ========================== #
 
   cover:
-    desc: Builds a coverage report
+    desc: Builds a test coverage report
     cmds:
       - echo "Generating cover report..."
       - go test ./... -coverprofile=tmp/coverage.out  -covermode=count
