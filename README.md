@@ -15,6 +15,9 @@
 
 - https://YOURAPPURL
 - https://YOURAPPURL.a.run.app (Dev)
+
+## Description
+
 This is a quick start blueprint for an MVC web applications
 
 - Ready to develop in the cloud (Gitpod / Github CodeSpaces)
@@ -23,7 +26,9 @@ This is a quick start blueprint for an MVC web applications
 - Background tasks setup
 - Scheduler setup
 - Controllers setup
-- CMS setup
+- CMS setup (optional)
+- Data Vault (optional)
+- Blind Index (optional)
 
 ## Installation
 
