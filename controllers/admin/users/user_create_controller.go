@@ -138,6 +138,10 @@ func (controller *userCreateController) modal(data userCreateControllerData) hb.
 }
 
 func (controller *userCreateController) prepareDataAndValidate(r *http.Request) (data userCreateControllerData, errorMessage string) {
+	if config.UserStore == nil {
+		return data, "UserStore is not initialized"
+	}
+
 	authUser := helpers.GetAuthUser(r)
 
 	if authUser == nil {

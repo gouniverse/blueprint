@@ -231,6 +231,10 @@ func (controller userUpdateController) form(data userUpdateControllerData) hb.Ta
 }
 
 func (controller userUpdateController) saveUser(r *http.Request, data userUpdateControllerData) (d userUpdateControllerData, errorMessage string) {
+	if config.UserStore == nil {
+		return data, "User store is not configured"
+	}
+
 	data.formFirstName = utils.Req(r, "user_first_name", "")
 	data.formLastName = utils.Req(r, "user_last_name", "")
 	data.formEmail = utils.Req(r, "user_email", "")

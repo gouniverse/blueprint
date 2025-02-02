@@ -136,11 +136,19 @@ func TestAuthControllerOnceSuccessWithNewUser(t *testing.T) {
 }
 
 func TestAuthControllerOnceSuccessWithExistingUser(t *testing.T) {
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
+
 	testutils.Setup()
 	user, err := testutils.SeedUser(testutils.USER_01)
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("user should not be nil")
 	}
 
 	user.SetEmail("test@test.com")

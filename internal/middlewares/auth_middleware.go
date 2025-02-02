@@ -35,17 +35,17 @@ func NewAuthMiddleware() router.Middleware {
 // - an http.Handler which represents the modified handler with the user.
 func authHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		userSessionKey := authHandlerSessionKey(r)
+		sessionKey := authHandlerSessionKey(r)
 
-		if userSessionKey == "" {
+		if sessionKey == "" {
 			next.ServeHTTP(w, r)
 			return
 		}
 
-		session, err := config.SessionStore.SessionFindByKey(userSessionKey)
+		session, err := config.SessionStore.SessionFindByKey(sessionKey)
 
 		if err != nil {
-			config.Logger.Error("At authMiddleware", "error", err.Error())
+			config.Logger.Error("auth_middleware", "error", err.Error())
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -70,7 +70,7 @@ func authHandler(next http.Handler) http.Handler {
 		user, err := config.UserStore.UserFindByID(r.Context(), userID)
 
 		if err != nil {
-			config.Logger.Error("At authMiddleware", "error", err.Error())
+			config.Logger.Error("auth_middleware", "error", err.Error())
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -81,7 +81,7 @@ func authHandler(next http.Handler) http.Handler {
 		}
 
 		ctx := context.WithValue(r.Context(), config.AuthenticatedUserContextKey{}, user)
-		ctx = context.WithValue(ctx, config.AuthenticatedSessionContextKey{}, userSessionKey)
+		ctx = context.WithValue(ctx, config.AuthenticatedSessionContextKey{}, sessionKey)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})

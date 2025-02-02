@@ -2,12 +2,17 @@ package helpers
 
 import (
 	"context"
+	"errors"
 	"project/config"
 
 	"github.com/gouniverse/userstore"
 )
 
 func UserUntokenized(ctx context.Context, authUser userstore.UserInterface) (firstName string, lastName string, email string, err error) {
+	if config.VaultStore == nil {
+		return "", "", "", errors.New("vaultstore is nil")
+	}
+
 	firstNameToken := authUser.FirstName()
 	lastNameToken := authUser.LastName()
 	emailToken := authUser.Email()

@@ -24,6 +24,10 @@ func TestRegisterController_RequiresAuthenticatedUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if response == nil {
+		t.Fatal(`Response MUST not be nil`)
+	}
+
 	if response.StatusCode != http.StatusSeeOther {
 		t.Fatal(`Response MUST be `, http.StatusSeeOther, ` but was: `, response.StatusCode)
 	}
@@ -68,6 +72,10 @@ func TestRegisterController_ShowsRegisterForm(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if user == nil {
+		t.Fatal("user should not be nil")
+	}
+
 	responseHTML, response, err := testutils.CallHtmlEndpoint(http.MethodGet, NewRegisterController().Handler, testutils.NewRequestOptions{
 		GetValues: url.Values{},
 		Context: map[any]any{
@@ -78,6 +86,10 @@ func TestRegisterController_ShowsRegisterForm(t *testing.T) {
 
 	if err != nil {
 		t.Fatal("Response MUST NOT trigger error, but was:", err)
+	}
+
+	if response == nil {
+		t.Fatal(`Response MUST not be nil`)
 	}
 
 	if response.StatusCode != http.StatusOK {
@@ -105,6 +117,14 @@ func TestRegisterController_RequiresFirstName(t *testing.T) {
 
 	user, err := testutils.SeedUser(testutils.USER_01)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("user should not be nil")
+	}
+
 	responseHTML, response, err := testutils.CallHtmlEndpoint(http.MethodPost, NewRegisterController().Handler, testutils.NewRequestOptions{
 		PostValues: url.Values{
 			"email": {user.Email()},
@@ -117,6 +137,10 @@ func TestRegisterController_RequiresFirstName(t *testing.T) {
 
 	if err != nil {
 		t.Fatal("Response MUST NOT trigger error, but was:", err)
+	}
+
+	if response == nil {
+		t.Fatal(`Response MUST not be nil`)
 	}
 
 	if response.StatusCode != http.StatusOK {
@@ -145,6 +169,14 @@ func TestRegisterController_RequiresLastName(t *testing.T) {
 
 	user, err := testutils.SeedUser(testutils.USER_01)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("user should not be nil")
+	}
+
 	responseHTML, response, err := testutils.CallHtmlEndpoint(http.MethodPost, NewRegisterController().Handler, testutils.NewRequestOptions{
 		PostValues: url.Values{
 			"email":      {user.Email()},
@@ -158,6 +190,10 @@ func TestRegisterController_RequiresLastName(t *testing.T) {
 
 	if err != nil {
 		t.Fatal("Response MUST NOT trigger error, but was:", err)
+	}
+
+	if response == nil {
+		t.Fatal(`Response MUST not be nil`)
 	}
 
 	if response.StatusCode != http.StatusOK {
@@ -186,6 +222,14 @@ func TestRegisterController_RequiresCountry(t *testing.T) {
 
 	user, err := testutils.SeedUser(testutils.USER_01)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("user should not be nil")
+	}
+
 	responseHTML, response, err := testutils.CallHtmlEndpoint(http.MethodPost, NewRegisterController().Handler, testutils.NewRequestOptions{
 		PostValues: url.Values{
 			"email":      {user.Email()},
@@ -200,6 +244,10 @@ func TestRegisterController_RequiresCountry(t *testing.T) {
 
 	if err != nil {
 		t.Fatal("Response MUST NOT trigger error, but was:", err)
+	}
+
+	if response == nil {
+		t.Fatal(`Response MUST not be nil`)
 	}
 
 	if response.StatusCode != http.StatusOK {
@@ -228,6 +276,14 @@ func TestRegisterController_RequiresTimezone(t *testing.T) {
 
 	user, err := testutils.SeedUser(testutils.USER_01)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("user should not be nil")
+	}
+
 	responseHTML, response, err := testutils.CallHtmlEndpoint(http.MethodPost, NewRegisterController().Handler, testutils.NewRequestOptions{
 		PostValues: url.Values{
 			"email":      {user.Email()},
@@ -243,6 +299,10 @@ func TestRegisterController_RequiresTimezone(t *testing.T) {
 
 	if err != nil {
 		t.Fatal("Response MUST NOT trigger error, but was:", err)
+	}
+
+	if response == nil {
+		t.Fatal(`Response MUST not be nil`)
 	}
 
 	if response.StatusCode != http.StatusOK {
@@ -271,6 +331,14 @@ func TestRegisterController_Success(t *testing.T) {
 
 	user, err := testutils.SeedUser(testutils.USER_01)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("user should not be nil")
+	}
+
 	responseHTML, response, err := testutils.CallHtmlEndpoint(http.MethodPost, NewRegisterController().Handler, testutils.NewRequestOptions{
 		PostValues: url.Values{
 			"email":      {user.Email()},
@@ -287,6 +355,10 @@ func TestRegisterController_Success(t *testing.T) {
 
 	if err != nil {
 		t.Fatal("Response MUST NOT trigger error, but was:", err)
+	}
+
+	if response == nil {
+		t.Fatal("Response MUST NOT be nil")
 	}
 
 	if response.StatusCode != http.StatusOK {

@@ -130,6 +130,10 @@ func (controller *productCreateController) prepareDataAndValidate(r *http.Reques
 		return data, "You are not logged in. Please login to continue."
 	}
 
+	if config.ShopStore == nil {
+		return data, "Shop store is not configured. Please contact an administrator."
+	}
+
 	data.formTitle = strings.TrimSpace(utils.Req(r, "product_title", ""))
 
 	if r.Method != http.MethodPost {

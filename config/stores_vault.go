@@ -43,6 +43,10 @@ func VaultStoreAutoMigrate(_ context.Context) error {
 		return nil
 	}
 
+	if VaultStore == nil {
+		return errors.New("vaultstore.AutoMigrate: VaultStore is nil")
+	}
+
 	err := VaultStore.AutoMigrate()
 
 	if err != nil {

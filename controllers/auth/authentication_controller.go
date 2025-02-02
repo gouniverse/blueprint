@@ -78,6 +78,10 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 		return helpers.ToFlashError(w, r, `blind index store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
+	if config.SessionStore == nil {
+		return helpers.ToFlashError(w, r, `session store is required`, links.NewWebsiteLinks().Home(), 5)
+	}
+
 	homeURL := links.NewWebsiteLinks().Home()
 	email, errorMessage := c.emailFromAuthKnightRequest(r)
 
@@ -306,6 +310,10 @@ func (c *authenticationController) userCreate(ctx context.Context, email string,
 		return user, nil
 	}
 
+	if config.VaultStore == nil {
+		return nil, errors.New(`vault store is nil`)
+	}
+
 	emailToken, err := config.VaultStore.TokenCreate(ctx, email, config.VaultKey, 20)
 
 	if err != nil {
@@ -353,7 +361,15 @@ func (c *authenticationController) userCreate(ctx context.Context, email string,
 //   - userstore.UserInterface: The user object.
 //   - error: An error object if an error occurred during the operation.
 func (c *authenticationController) userFindByEmailOrCreate(ctx context.Context, email string, status string) (userstore.UserInterface, error) {
+	if config.UserStore == nil {
+		return nil, errors.New("user store is nil")
+	}
+
 	if config.VaultStoreUsed {
+		if config.VaultStore == nil {
+			return nil, errors.New(`vault store is nil`)
+		}
+
 		userID, err := c.findUserIDInBlindIndex(email)
 		if err != nil {
 			return nil, err

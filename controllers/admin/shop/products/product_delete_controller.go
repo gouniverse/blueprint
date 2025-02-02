@@ -125,6 +125,10 @@ func (controller *productDeleteController) modal(data productDeleteControllerDat
 }
 
 func (controller *productDeleteController) prepareDataAndValidate(r *http.Request) (data productDeleteControllerData, errorMessage string) {
+	if config.ShopStore == nil {
+		return data, "ShopStore is nil"
+	}
+
 	authUser := helpers.GetAuthUser(r)
 	data.productID = utils.Req(r, "product_id", "")
 

@@ -1,6 +1,7 @@
 package authentication
 
 import (
+	"errors"
 	"net/http"
 	"project/config"
 
@@ -11,6 +12,10 @@ import (
 )
 
 func Impersonate(w http.ResponseWriter, r *http.Request, userID string) error {
+	if config.SessionStore == nil {
+		return errors.New("session store is nil")
+	}
+
 	session := sessionstore.NewSession().
 		SetUserID(userID).
 		SetUserAgent(r.UserAgent()).

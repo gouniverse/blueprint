@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"project/config"
 	"project/internal/helpers"
@@ -133,6 +134,10 @@ func (controller *registerController) postUpdate(ctx context.Context, data regis
 	}
 
 	if config.VaultStoreUsed {
+		if config.VaultStore == nil {
+			data.formErrorMessage = "We are very sorry vault store is not configured. Saving the details not possible."
+			return controller.formRegister(data).ToHTML()
+		}
 
 		firstNameToken, err := config.VaultStore.TokenCreate(ctx, data.firstName, config.VaultKey, 20)
 
@@ -195,7 +200,7 @@ func (controller *registerController) postUpdate(ctx context.Context, data regis
 	return controller.formRegister(data).ToHTML()
 }
 
-func (controller *registerController) pageHTML(data registerControllerData) *hb.Tag {
+func (controller *registerController) pageHTML(data registerControllerData) hb.TagInterface {
 	form := controller.formRegister(data)
 	return hb.Div().
 		Class(`container container-xs text-center`).
@@ -211,7 +216,7 @@ func (controller *registerController) pageHTML(data registerControllerData) *hb.
 		Child(hb.BR())
 }
 
-func (controller *registerController) formRegister(data registerControllerData) *hb.Tag {
+func (controller *registerController) formRegister(data registerControllerData) hb.TagInterface {
 	required := hb.Sup().
 		Text("required").
 		Style("margin-left:5px;color:lightcoral;")
@@ -370,12 +375,31 @@ func (controller *registerController) formRegister(data registerControllerData) 
 		ChildIf(data.formRedirectURL != "", hb.Script(`window.location.href = '`+data.formRedirectURL+`'`))
 }
 
-func (controller *registerController) untokenizeData(ctx context.Context, user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
-	emailToken := user.Email()
-	firstNameToken := user.FirstName()
-	lastNameToken := user.LastName()
-	businessNameToken := user.BusinessName()
-	phoneToken := user.Phone()
+func (controller *registerController) getUserData(ctx context.Context, user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
+	if user == nil {
+		return "", "", "", "", "", errors.New("user is nil")
+	}
+
+	email = user.Email()
+	firstName = user.FirstName()
+	lastName = user.LastName()
+	businessName = user.BusinessName()
+	phone = user.Phone()
+
+	if !config.VaultStoreUsed {
+		return email, firstName, lastName, businessName, phone, nil
+	}
+
+	if config.VaultStore == nil {
+		return "", "", "", "", "", errors.New("vault store is nil")
+	}
+
+	// assign tokenized values
+	emailToken := email
+	firstNameToken := firstName
+	lastNameToken := lastName
+	businessNameToken := businessName
+	phoneToken := phone
 
 	if emailToken != "" {
 		email, err = config.VaultStore.TokenRead(ctx, emailToken, config.VaultKey)
@@ -447,7 +471,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 		return registerControllerData{}, "Error listing countries"
 	}
 
-	email, firstName, lastName, businessName, phone, err := controller.untokenizeData(r.Context(), authUser)
+	email, firstName, lastName, businessName, phone, err := controller.getUserData(r.Context(), authUser)
 
 	if r.Method == http.MethodGet {
 		if err != nil {
@@ -487,7 +511,7 @@ func (controller *registerController) prepareData(r *http.Request) (data registe
 	return data, ""
 }
 
-func (controller *registerController) selectTimezoneByCountry(country string, selectedTimezone string) *hb.Tag {
+func (controller *registerController) selectTimezoneByCountry(country string, selectedTimezone string) hb.TagInterface {
 	query := geostore.TimezoneQueryOptions{
 		SortOrder: sb.ASC,
 		OrderBy:   geostore.COLUMN_TIMEZONE,

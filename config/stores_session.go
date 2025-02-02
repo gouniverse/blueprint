@@ -44,6 +44,10 @@ func SessionStoreAutoMigrate(_ context.Context) error {
 		return nil
 	}
 
+	if SessionStore == nil {
+		return errors.New("sessionstore.AutoMigrate: SessionStore is nil")
+	}
+
 	err := SessionStore.AutoMigrate()
 
 	if err != nil {

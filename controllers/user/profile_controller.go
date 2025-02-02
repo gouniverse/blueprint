@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"project/config"
 	"project/controllers/user/partials"
@@ -98,6 +99,11 @@ func (controller *profileController) Handler(w http.ResponseWriter, r *http.Requ
 }
 
 func (controller *profileController) postUpdate(data profileControllerData) string {
+	if config.VaultStore == nil {
+		data.formErrorMessage = "We are very sorry vault store is not configured. Saving the details not possible."
+		return controller.formProfile(data).ToHTML()
+	}
+
 	if data.firstName == "" {
 		data.formErrorMessage = "First name is required field"
 		return controller.formProfile(data).ToHTML()
@@ -400,6 +406,10 @@ func (controller *profileController) prepareData(r *http.Request) (data profileC
 }
 
 func (controller *profileController) untokenizeProfileData(ctx context.Context, user userstore.UserInterface) (email string, firstName string, lastName string, businessName string, phone string, err error) {
+	if config.VaultStore == nil {
+		return "", "", "", "", "", errors.New("VaultStore is not initialized")
+	}
+
 	emailToken := user.Email()
 	firstNameToken := user.FirstName()
 	lastNameToken := user.LastName()

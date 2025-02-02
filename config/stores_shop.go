@@ -48,6 +48,10 @@ func ShopStoreAutoMigrate(_ context.Context) error {
 		return nil
 	}
 
+	if ShopStore == nil {
+		return errors.New("shopstore.AutoMigrate: ShopStore is nil")
+	}
+
 	err := ShopStore.AutoMigrate()
 
 	if err != nil {

@@ -11,6 +11,10 @@ import (
 )
 
 func ExtendSession(r *http.Request, seconds int64) error {
+	if config.SessionStore == nil {
+		return errors.New("session store is nil")
+	}
+
 	session := GetAuthSession(r)
 
 	if session == nil {

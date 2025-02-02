@@ -71,9 +71,15 @@ func startBackgroundProcesses() {
 	if config.TaskStore != nil {
 		go config.TaskStore.QueueRunGoroutine(10, 2) // 6. Initialize the task queue
 	}
-	scheduler.StartAsync()                          // 7. Initialize the scheduler
-	go config.CacheStore.ExpireCacheGoroutine()     // 8. Initialize the cache expiration goroutine
-	go config.SessionStore.SessionExpiryGoroutine() // 9. Initialize the session expiration goroutine
+
+	scheduler.StartAsync() // 7. Initialize the scheduler
+
+	go config.CacheStore.ExpireCacheGoroutine() // 8. Initialize the cache expiration goroutine
+
+	if config.SessionStore != nil {
+		go config.SessionStore.SessionExpiryGoroutine() // 9. Initialize the session expiration goroutine
+	}
+	
 	widgets.CmsAddShortcodes()                      // 10. Add CMS shortcodes
 }
 

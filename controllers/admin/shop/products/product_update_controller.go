@@ -441,6 +441,10 @@ func (controller *productUpdateController) formMetadata(data productUpdateContro
 }
 
 func (controller *productUpdateController) saveProductDetails(r *http.Request, data productUpdateControllerData) (d productUpdateControllerData, errorMessage string) {
+	if config.ShopStore == nil {
+		return data, "error retrieving shop store"
+	}
+
 	data.formDescription = utils.Req(r, "product_description", "")
 	data.formMemo = utils.Req(r, "product_memo", "")
 	data.formPrice = utils.Req(r, "product_price", "")
@@ -534,12 +538,16 @@ func ReqArrayOfMaps(r *http.Request, key string, defaultValue []map[string]strin
 		if !strings.Contains(k, "][") {
 			continue
 		}
+		if len(v) != 1 {
+			continue
+		}
+
 		mapValue := v[0]
 
 		str := strings.TrimSuffix(strings.TrimPrefix(k, key+"["), "]")
 		split := strings.Split(str, "][")
+
 		if len(split) != 2 {
-			// Handle invalid format
 			continue
 		}
 
@@ -565,7 +573,10 @@ func ReqArrayOfMaps(r *http.Request, key string, defaultValue []map[string]strin
 }
 
 func (controller *productUpdateController) saveProductMetadata(r *http.Request, data productUpdateControllerData) (d productUpdateControllerData, errorMessage string) {
-	// data.formMetas = utils.ReqMap(r, "product_meta")
+	if config.ShopStore == nil {
+		return data, "error retrieving shop store"
+	}
+
 	metas := ReqArrayOfMaps(r, "product_meta", []map[string]string{})
 
 	cfmt.Infoln(metas)
@@ -606,6 +617,10 @@ func (controller *productUpdateController) saveProductMetadata(r *http.Request, 
 }
 
 func (controller *productUpdateController) prepareDataAndValidate(r *http.Request) (data productUpdateControllerData, errorMessage string) {
+	if config.ShopStore == nil {
+		return data, "ShopStore is nil"
+	}
+
 	data.request = r
 	data.action = utils.Req(r, "action", "")
 	data.productID = utils.Req(r, "product_id", "")

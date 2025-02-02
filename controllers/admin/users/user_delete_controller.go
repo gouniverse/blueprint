@@ -124,6 +124,10 @@ func (controller *userDeleteController) modal(data userDeleteControllerData) hb.
 }
 
 func (controller *userDeleteController) prepareDataAndValidate(r *http.Request) (data userDeleteControllerData, errorMessage string) {
+	if config.UserStore == nil {
+		return data, "UserStore is nil"
+	}
+
 	authUser := helpers.GetAuthUser(r)
 	data.userID = utils.Req(r, "user_id", "")
 

@@ -1,16 +1,21 @@
 package testutils
 
 import (
+	"errors"
 	"net/http"
 	"project/config"
 
-	"github.com/goravel/framework/support/carbon"
+	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/sessionstore"
 	"github.com/gouniverse/userstore"
 	"github.com/gouniverse/utils"
 )
 
 func SeedSession(r *http.Request, user userstore.UserInterface, expiresSeconds int) (sessionstore.SessionInterface, error) {
+	if config.SessionStore == nil {
+		return nil, errors.New("session store is nil")
+	}
+
 	session := sessionstore.NewSession().
 		SetUserID(user.ID()).
 		SetUserAgent(r.UserAgent()).

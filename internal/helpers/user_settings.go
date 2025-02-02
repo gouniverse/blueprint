@@ -10,6 +10,10 @@ import (
 )
 
 func UserSettingGet(r *http.Request, key string, defaultValue string) string {
+	if config.SessionStore == nil {
+		return defaultValue
+	}
+
 	authUser := GetAuthUser(r)
 
 	if authUser == nil {
@@ -19,6 +23,10 @@ func UserSettingGet(r *http.Request, key string, defaultValue string) string {
 	session, err := config.SessionStore.SessionFindByKey(key)
 
 	if err != nil {
+		return defaultValue
+	}
+
+	if session == nil {
 		return defaultValue
 	}
 
@@ -38,6 +46,10 @@ func UserSettingGet(r *http.Request, key string, defaultValue string) string {
 }
 
 func UserSettingSet(r *http.Request, key string, value string) error {
+	if config.SessionStore == nil {
+		return errors.New("session store is nil")
+	}
+
 	authUser := GetAuthUser(r)
 
 	if authUser == nil {
@@ -48,6 +60,10 @@ func UserSettingSet(r *http.Request, key string, value string) error {
 
 	if err != nil {
 		return err
+	}
+
+	if session == nil {
+		return errors.New("session is nil")
 	}
 
 	if session.GetUserID() != authUser.ID() {

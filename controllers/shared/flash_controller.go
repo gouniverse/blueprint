@@ -58,7 +58,7 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func (c flashController) pageHTML(r *http.Request) *hb.Tag {
+func (c flashController) pageHTML(r *http.Request) hb.TagInterface {
 	messageID := utils.Req(r, "message_id", "")
 	msgData, err := config.CacheStore.GetJSON(messageID+"_flash_message", "")
 

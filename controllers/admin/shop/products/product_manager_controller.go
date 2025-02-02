@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"project/config"
 	"project/controllers/admin/shop/shared"
@@ -509,6 +510,10 @@ func (controller *productManagerController) prepareData(r *http.Request) (data p
 }
 
 func (controller *productManagerController) fetchProductList(data productManagerControllerData) ([]shopstore.ProductInterface, int64, error) {
+	if config.ShopStore == nil {
+		return nil, 0, errors.New("ShopStore is nil")
+	}
+
 	productIDs := []string{}
 
 	if !lo.Contains([]string{sb.DESC, sb.ASC}, data.sortOrder) {

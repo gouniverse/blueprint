@@ -2,12 +2,21 @@ package testutils
 
 import (
 	"context"
+	"errors"
 	"project/config"
 
 	"github.com/gouniverse/shopstore"
 )
 
 func SeedProduct(productID string, price float64) (shopstore.ProductInterface, error) {
+	if !config.ShopStoreUsed {
+		return nil, errors.New("shopstore is not used")
+	}
+
+	if config.ShopStore == nil {
+		return nil, errors.New("shopstore is nil")
+	}
+
 	product, err := config.ShopStore.ProductFindByID(context.Background(), productID)
 
 	if err != nil {

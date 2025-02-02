@@ -26,6 +26,14 @@ func TestAdminMiddleware_NoUserRedirectsToLogin(t *testing.T) {
 
 	// Assert
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if response == nil {
+		t.Fatal("Response should not be nil")
+	}
+
 	if response.StatusCode != http.StatusSeeOther {
 		t.Fatalf("Expected status code %d, got %d", http.StatusSeeOther, response.StatusCode)
 	}
@@ -118,9 +126,13 @@ func TestAdminMiddleware_RequiresRegisteredUser(t *testing.T) {
 }
 
 func TestAdminMiddleware_RequiresActiveUser(t *testing.T) {
-	// Arrange
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
 
+	// Arrange
 	testutils.Setup()
+
 	user, session, err := testutils.SeedUserAndSession(testutils.USER_01, httptest.NewRequest("GET", "/", nil), 1)
 
 	if err != nil {
@@ -189,13 +201,20 @@ func TestAdminMiddleware_RequiresActiveUser(t *testing.T) {
 }
 
 func TestAdminMiddleware_RequiresAdminUser(t *testing.T) {
-	// Arrange
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
 
+	// Arrange
 	testutils.Setup()
 	user, session, err := testutils.SeedUserAndSession(testutils.USER_01, httptest.NewRequest("GET", "/", nil), 1)
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if user == nil {
+		t.Fatal("user should not be nil")
 	}
 
 	user.SetStatus(userstore.USER_STATUS_ACTIVE)
@@ -260,6 +279,10 @@ func TestAdminMiddleware_RequiresAdminUser(t *testing.T) {
 }
 
 func TestAdminMiddleware_Success(t *testing.T) {
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
+
 	// Arrange
 	testutils.Setup()
 

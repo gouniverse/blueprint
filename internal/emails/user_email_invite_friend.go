@@ -17,6 +17,10 @@ type inviteFriendEmail struct{}
 
 // EmailSendOnRegister sends the email when user registers
 func (e *inviteFriendEmail) Send(sendingUserID string, userNote string, recipientEmail string, recipientName string) error {
+	if config.UserStore == nil {
+		return errors.New("user store not configured")
+	}
+
 	user, err := config.UserStore.UserFindByID(context.Background(), sendingUserID)
 
 	if err != nil {

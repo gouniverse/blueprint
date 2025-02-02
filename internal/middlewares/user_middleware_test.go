@@ -26,6 +26,14 @@ func TestUserMiddleware_NoUserRedirectsToLogin(t *testing.T) {
 
 	// Assert
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if response == nil {
+		t.Fatal("Response should not be nil")
+	}
+
 	if response.StatusCode != http.StatusSeeOther {
 		t.Fatalf("Expected status code %d, got %d", http.StatusSeeOther, response.StatusCode)
 	}
@@ -58,8 +66,15 @@ func TestUserMiddleware_NoUserRedirectsToLogin(t *testing.T) {
 }
 
 func TestUserMiddleware_RequiresRegisteredUser(t *testing.T) {
-	// Arrange
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
 
+	if config.SessionStore == nil {
+		t.Fatal("SessionStore should not be nil")
+	}
+
+	// Arrange
 	testutils.Setup()
 	user, session, err := testutils.SeedUserAndSession(testutils.USER_01, httptest.NewRequest("GET", "/", nil), 1)
 
@@ -118,8 +133,15 @@ func TestUserMiddleware_RequiresRegisteredUser(t *testing.T) {
 }
 
 func TestUserMiddleware_RequiresActiveUser(t *testing.T) {
-	// Arrange
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
 
+	if config.SessionStore == nil {
+		t.Fatal("SessionStore should not be nil")
+	}
+
+	// Arrange
 	testutils.Setup()
 	user, session, err := testutils.SeedUserAndSession(testutils.USER_01, httptest.NewRequest("GET", "/", nil), 1)
 
@@ -139,7 +161,6 @@ func TestUserMiddleware_RequiresActiveUser(t *testing.T) {
 	}
 
 	// Act
-
 	body, response, err := testutils.CallMiddleware("GET", NewUserMiddleware().Handler, func(w http.ResponseWriter, r *http.Request) {
 		t.Fatal("Should not be called")
 		w.WriteHeader(http.StatusOK)
@@ -152,6 +173,10 @@ func TestUserMiddleware_RequiresActiveUser(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if response == nil {
+		t.Fatal("Response should not be nil")
 	}
 
 	// Assert
@@ -189,6 +214,14 @@ func TestUserMiddleware_RequiresActiveUser(t *testing.T) {
 }
 
 func TestUserMiddleware_Success(t *testing.T) {
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
+
+	if config.SessionStore == nil {
+		t.Fatal("SessionStore should not be nil")
+	}
+
 	// Arrange
 	testutils.Setup()
 
@@ -227,6 +260,10 @@ func TestUserMiddleware_Success(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if response == nil {
+		t.Fatal("Response should not be nil")
 	}
 
 	// Assert

@@ -66,6 +66,10 @@ func TestAuthHandler_SessionNotFoundError(t *testing.T) {
 }
 
 func TestAuthHandler_SessionExpired(t *testing.T) {
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
+
 	testutils.Setup()
 
 	user, err := testutils.SeedUser(testutils.USER_01)
@@ -111,6 +115,10 @@ func TestAuthHandler_SessionExpired(t *testing.T) {
 }
 
 func TestAuthHandler_UserNotFound(t *testing.T) {
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
+
 	testutils.Setup()
 
 	user, err := testutils.SeedUser(testutils.USER_01)
@@ -163,6 +171,10 @@ func TestAuthHandler_UserNotFound(t *testing.T) {
 }
 
 func TestAuthHandler_SessionSuccess(t *testing.T) {
+	if config.UserStore == nil {
+		t.Fatal("UserStore should not be nil")
+	}
+
 	testutils.Setup()
 
 	user, err := testutils.SeedUser(testutils.USER_01)

@@ -26,14 +26,14 @@ func userBreadcrumbs(path []bs.Breadcrumb) *hb.Tag {
 	return breadcrumbs
 }
 
-func NewUserBreadcrumbsSection(path []bs.Breadcrumb) *hb.Tag {
+func NewUserBreadcrumbsSection(path []bs.Breadcrumb) hb.TagInterface {
 	return hb.Section().
 		ID("SectionBreadcrumbs").
 		Child(userBreadcrumbs(path)).
 		Style("margin-bottom:10px;")
 }
 
-func NewUserBreadcrumbsSectionWithContainer(path []bs.Breadcrumb) *hb.Tag {
+func NewUserBreadcrumbsSectionWithContainer(path []bs.Breadcrumb) hb.TagInterface {
 	return hb.Section().
 		ID("SectionBreadcrumbs").
 		Child(

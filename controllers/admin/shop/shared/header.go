@@ -12,6 +12,16 @@ import (
 )
 
 func Header(store shopstore.StoreInterface, logger *slog.Logger, r *http.Request) hb.TagInterface {
+	if store == nil {
+		logger.Error("shop store is nil")
+		return nil
+	}
+
+	if config.ShopStore == nil {
+		logger.Error("shop store is nil")
+		return nil
+	}
+
 	linkHome := hb.NewHyperlink().
 		HTML("Dashboard").
 		Href(links.NewAdminLinks().Home(map[string]string{})).

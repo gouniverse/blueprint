@@ -2,6 +2,7 @@ package admin
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"project/config"
 
@@ -505,6 +506,10 @@ func (controller *userManagerController) prepareData(r *http.Request) (data user
 }
 
 func (controller *userManagerController) fetchUserList(data userManagerControllerData) ([]userstore.UserInterface, int64, error) {
+	if config.UserStore == nil {
+		return []userstore.UserInterface{}, 0, errors.New("UserStore is not initialized")
+	}
+
 	userIDs := []string{}
 
 	if data.formFirstName != "" {
