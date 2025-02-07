@@ -17,7 +17,7 @@ func TestJailBotsMiddlewareName(t *testing.T) {
 	config.TestsConfigureAndInitialize()
 
 	// Act
-	m := NewJailBotsMiddleware()
+	m := NewJailBotsMiddleware(JailBotsConfig{})
 
 	// Assert
 	if m.Name != "Jail Bots Middleware" {
@@ -39,7 +39,7 @@ func TestJailBotsMiddlewareAllowedResponse(t *testing.T) {
 	// Act
 
 	for _, allowedUri := range allowedUris {
-		m := NewJailBotsMiddleware()
+		m := NewJailBotsMiddleware(JailBotsConfig{})
 		req, err := tests.NewRequest("GET", allowedUri, tests.NewRequestOptions{})
 
 		if err != nil {
@@ -78,7 +78,7 @@ func TestJailBotsMiddlewareJailedResponse(t *testing.T) {
 	// Act
 
 	for _, allowedUri := range allowedUris {
-		m := NewJailBotsMiddleware()
+		m := NewJailBotsMiddleware(JailBotsConfig{})
 		randInt := rand.IntN(1000)
 		req, err := tests.NewRequest("GET", allowedUri, tests.NewRequestOptions{
 			Headers: map[string]string{
@@ -115,7 +115,7 @@ func TestJailBotsMiddlewareHandler(t *testing.T) {
 	config.TestsConfigureAndInitialize()
 
 	// Act
-	m := NewJailBotsMiddleware()
+	m := NewJailBotsMiddleware(JailBotsConfig{})
 
 	// Assert
 	if m.Handler == nil {

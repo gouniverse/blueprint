@@ -2,7 +2,8 @@ package widgets
 
 import (
 	"net/http"
-	"project/internal/helpers"
+
+	"github.com/gouniverse/base/bbcode"
 )
 
 // Keep it here for now as there is source control. In the future add versioning to the CMS
@@ -240,5 +241,5 @@ func (w *termsOfUseWidget) Description() string {
 }
 
 func (w *termsOfUseWidget) Render(r *http.Request, content string, params map[string]string) string {
-	return helpers.BbcodeToHtml(termsOfUse)
+	return bbcode.BbcodeToHtml(termsOfUse)
 }

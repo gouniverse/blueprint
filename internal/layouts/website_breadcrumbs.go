@@ -8,7 +8,7 @@ import (
 	"github.com/gouniverse/icons"
 )
 
-func websiteBreadcrumbs(path []bs.Breadcrumb) *hb.Tag {
+func websiteBreadcrumbs(path []bs.Breadcrumb) hb.TagInterface {
 	breadcrumbsPath := []bs.Breadcrumb{
 		{
 			Name: "",
@@ -24,14 +24,14 @@ func websiteBreadcrumbs(path []bs.Breadcrumb) *hb.Tag {
 	return breadcrumbs
 }
 
-func NewWebsiteBreadcrumbsSection(path []bs.Breadcrumb) *hb.Tag {
+func NewWebsiteBreadcrumbsSection(path []bs.Breadcrumb) hb.TagInterface {
 	return hb.Section().
 		ID("SectionBreadcrumbs").
 		Child(websiteBreadcrumbs(path)).
 		Style("margin-bottom:10px;")
 }
 
-func NewWebsiteBreadcrumbsSectionWithContainer(path []bs.Breadcrumb) *hb.Tag {
+func NewWebsiteBreadcrumbsSectionWithContainer(path []bs.Breadcrumb) hb.TagInterface {
 	return hb.Section().
 		ID("SectionBreadcrumbs").
 		Child(

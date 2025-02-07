@@ -23,11 +23,9 @@ import (
 
 type homeController struct{}
 
-var _ router.HTMLControllerInterface = (*homeController)(nil)
-
 // == CONSTRUCTOR ==============================================================
 
-func NewHomeController() *homeController {
+func NewHomeController() router.HTMLControllerInterface {
 	return &homeController{}
 }
 

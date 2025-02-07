@@ -26,7 +26,7 @@ func websiteRoutes() []router.RouteInterface {
 	homeRoute := &router.Route{
 		Name:        "Website > Home Controller",
 		Path:        links.HOME,
-		HTMLHandler: HomeController().Handler,
+		HTMLHandler: newHomeController().Handler,
 	}
 
 	pageNotFoundRoute := &router.Route{

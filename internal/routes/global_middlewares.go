@@ -10,7 +10,7 @@ import (
 // globalMiddlewares returns a list of middlewares to be applied to all routes
 func globalMiddlewares() []router.Middleware {
 	globalMiddlewares := []router.Middleware{
-		middlewares.NewJailBotsMiddleware(),
+		middlewares.NewJailBotsMiddleware(middlewares.JailBotsConfig{Exclude: []string{}}),
 		router.NewCompressMiddleware(5, "text/html", "text/css"),
 		router.NewGetHeadMiddleware(),
 		router.NewCleanPathMiddleware(),

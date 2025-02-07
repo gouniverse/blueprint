@@ -7,19 +7,18 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/dromara/carbon/v2 v2.5.2
 	github.com/faabiosr/cachego v0.22.2
-	github.com/go-chi/chi/v5 v5.2.0
+	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-co-op/gocron v1.37.0
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/goravel/framework v1.15.3
 	github.com/gouniverse/auth v0.22.0
-	github.com/gouniverse/base v0.7.0
+	github.com/gouniverse/base v0.8.1
 	github.com/gouniverse/blindindexstore v1.1.0
 	github.com/gouniverse/blockeditor v0.21.2
 	github.com/gouniverse/blogstore v0.8.1
 	github.com/gouniverse/bs v0.13.0
 	github.com/gouniverse/cachestore v0.18.1
 	github.com/gouniverse/cdn v1.5.0
-	github.com/gouniverse/cmsstore v0.22.0
+	github.com/gouniverse/cmsstore v0.23.0
 	github.com/gouniverse/crud/v2 v2.0.0-20250124013508-aa498c4bb928
 	github.com/gouniverse/csrf v0.1.0
 	github.com/gouniverse/dashboard v1.6.1
@@ -54,17 +53,17 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/aws/aws-sdk-go-v2 v1.35.0 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.36.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.8 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.56 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.30 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.30 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.30 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.59 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.32 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.32 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.32 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.5.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.11 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.18.11 // indirect
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.75.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.5.6 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.13 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.18.13 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.76.0 // indirect
 	github.com/aws/smithy-go v1.22.2 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
@@ -75,6 +74,7 @@ require (
 	github.com/go-chi/httprate v0.14.1 // indirect
 	github.com/go-openapi/errors v0.22.0 // indirect
 	github.com/go-openapi/strfmt v0.23.0 // indirect
+	github.com/goravel/framework v1.15.3 // indirect
 	github.com/gouniverse/crypto v0.2.0 // indirect
 	github.com/gouniverse/settingstore v0.12.0 // indirect
 	github.com/gouniverse/shortcode v0.4.0 // indirect
@@ -96,13 +96,13 @@ require (
 	github.com/teambition/rrule-go v1.8.2 // indirect
 	go.mongodb.org/mongo-driver v1.17.2 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/exp v0.0.0-20250128182459-e0ece0dbea4c // indirect
-	golang.org/x/image v0.23.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/term v0.28.0 // indirect
+	golang.org/x/exp v0.0.0-20250207012021-f9890c6ad9f3 // indirect
+	golang.org/x/image v0.24.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/term v0.29.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.61.10 // indirect
+	modernc.org/libc v1.61.11 // indirect
 )
 
 require (
@@ -129,8 +129,8 @@ require (
 	github.com/samber/lo v1.49.1
 	golang.org/x/crypto v0.32.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
-	golang.org/x/sys v0.29.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.8.2 // indirect
 )

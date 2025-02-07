@@ -10,7 +10,7 @@ import (
 
 // userBreadcrumbs generates the user breadcrumbs
 // the first breadcrumb is always the dashboard
-func userBreadcrumbs(path []bs.Breadcrumb) *hb.Tag {
+func userBreadcrumbs(path []bs.Breadcrumb) hb.TagInterface {
 	breadcrumbsPath := []bs.Breadcrumb{
 		{
 			Name: "Dashboard",

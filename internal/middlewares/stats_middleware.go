@@ -30,6 +30,17 @@ func (m statsMiddleware) Name() string {
 
 func (m statsMiddleware) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !config.StatsStoreUsed {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		if config.StatsStore == nil {
+			config.Logger.Error("stats_middleware", "error", "stats store is marked as used but is nil")
+			next.ServeHTTP(w, r)
+			return
+		}
+
 		ip := utils.IP(r)
 		userAgent := r.UserAgent()
 		userAcceptLanguage := r.Header.Get("Accept-Language")

@@ -29,12 +29,6 @@ func Routes() []router.RouteInterface {
 		HTMLHandler: NewHomeController().Handler,
 	}
 
-	// subscriptionPlans := &router.Route{
-	// 	Name:        "Admin > Subscription Plans Controller > Index",
-	// 	Path:        links.ADMIN_SUBSCRIPTION_PLANS,
-	// 	HTMLHandler: NewSubscriptionPlanController().AnyIndex,
-	// }
-
 	adminRoutes := []router.RouteInterface{}
 	adminRoutes = append(adminRoutes, adminBlog.Routes()...)
 	adminRoutes = append(adminRoutes, adminCms.Routes()...)

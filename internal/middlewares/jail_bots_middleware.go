@@ -4,16 +4,19 @@ import (
 	"log/slog"
 	"net/http"
 	"project/config"
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/gouniverse/responses"
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"
+	"github.com/samber/lo"
 )
 
-func NewJailBotsMiddleware() router.Middleware {
+func NewJailBotsMiddleware(config JailBotsConfig) router.Middleware {
 	jb := new(jailBotsMiddleware)
+	jb.exclude = config.Exclude
 
 	m := router.Middleware{
 		Name:    jb.Name(),
@@ -23,7 +26,13 @@ func NewJailBotsMiddleware() router.Middleware {
 	return m
 }
 
-type jailBotsMiddleware struct{}
+type JailBotsConfig struct {
+	Exclude []string
+}
+
+type jailBotsMiddleware struct {
+	exclude []string
+}
 
 func (j *jailBotsMiddleware) Name() string {
 	return "Jail Bots Middleware"
@@ -61,15 +70,15 @@ func (m *jailBotsMiddleware) Handler(next http.Handler) http.Handler {
 	})
 }
 
-func (j jailBotsMiddleware) isJailed(ip string) bool {
+func (j *jailBotsMiddleware) isJailed(ip string) bool {
 	return config.CacheMemory.Has("jail:" + ip)
 }
 
-func (j jailBotsMiddleware) jail(ip string) {
+func (j *jailBotsMiddleware) jail(ip string) {
 	config.CacheMemory.Set("jail:"+ip, ip, 5*time.Minute)
 }
 
-func (m jailBotsMiddleware) isJailable(uri string) (jailable bool, reason string) {
+func (m *jailBotsMiddleware) isJailable(uri string) (jailable bool, reason string) {
 	startsWithList := m.startsWithBlacklistedUriList()
 
 	for i := 0; i < len(startsWithList); i++ {
@@ -93,8 +102,8 @@ func (m jailBotsMiddleware) isJailable(uri string) (jailable bool, reason string
 // which if they are found anywhere in the uri
 // clearly indicate that there is a malicious bot/user
 // trying to access them.
-func (j jailBotsMiddleware) containsBlacklistedUriList() []string {
-	return []string{
+func (j *jailBotsMiddleware) containsBlacklistedUriList() []string {
+	stopList := []string{
 		"print(",
 		"${print",
 		".aws",
@@ -145,6 +154,16 @@ func (j jailBotsMiddleware) containsBlacklistedUriList() []string {
 		"wp",
 		"www/license.txt",
 	}
+
+	// Check if we have any exclusion rules?
+
+	if len(j.exclude) > 0 { // Check if exclude list is not empty
+		stopList = lo.Filter(stopList, func(item string, index int) bool {
+			return !slices.Contains(j.exclude, item)
+		})
+	}
+
+	return stopList
 }
 
 // startsWithBlacklistedUriList returns a list of strings

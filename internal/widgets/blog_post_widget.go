@@ -150,7 +150,7 @@ func (w *blogPostWidget) processContent(content string, editor string) string {
 	return content
 }
 
-func (w *blogPostWidget) sectionBreadcrumbs(post blogstore.Post) *hb.Tag {
+func (w *blogPostWidget) sectionBreadcrumbs(_ blogstore.Post) *hb.Tag {
 	// breadcrumbs := []bs.Breadcrumb{
 	// 	{
 	// 		Name: "Blog",

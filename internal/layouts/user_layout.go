@@ -28,10 +28,10 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 
 	dashboardUser := dashboard.User{}
 	if authUser != nil {
-		firtsName, lastName, _, err := helpers.UserUntokenized(r.Context(), authUser)
+		firstName, lastName, err := getUserData(r, authUser)
 		if err == nil {
 			dashboardUser = dashboard.User{
-				FirstName: firtsName,
+				FirstName: firstName,
 				LastName:  lastName,
 			}
 		}

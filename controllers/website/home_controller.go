@@ -8,7 +8,7 @@ import (
 
 // == CONSTRUCTOR ==============================================================
 
-func HomeController() router.HTMLControllerInterface {
+func newHomeController() router.HTMLControllerInterface {
 	return &homeController{}
 }
 
