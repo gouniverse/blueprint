@@ -70,7 +70,7 @@ func Initialize() {
 //
 // Returns:
 // - none
-func initializeEnvVariables() {
+func initializeEnvVariables() error {
 	utils.EnvInitialize(".env")
 
 	AppEnvironment = utils.EnvMust("APP_ENV")
@@ -143,6 +143,7 @@ func initializeEnvVariables() {
 
 	WebServerHost = utils.EnvMust("SERVER_HOST")
 	WebServerPort = utils.EnvMust("SERVER_PORT")
+	return nil
 }
 
 // initializeEnvEncVariables initializes the envenc variables
