@@ -51,7 +51,7 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 		}).ToHTML()
 	} else {
 		return layouts.NewUserLayout(r, layouts.Options{
-			Title:      "Home",
+			Title:      "System Message",
 			Content:    controller.pageHTML(r),
 			ScriptURLs: []string{},
 		}).ToHTML()

@@ -7,6 +7,7 @@ import (
 	"project/internal/links"
 
 	"github.com/gouniverse/cdn"
+	"github.com/gouniverse/cmsstore"
 	"github.com/gouniverse/dashboard"
 	"github.com/samber/lo"
 )
@@ -60,6 +61,12 @@ func userLayout(r *http.Request, options Options) *dashboard.Dashboard {
 	homeLink := links.NewUserLinks().Home(map[string]string{})
 
 	titlePostfix := ` | ` + lo.Ternary(authUser == nil, `Guest`, `User`) + ` | ` + config.AppName
+
+	_, isPage := r.Context().Value("page").(cmsstore.PageInterface)
+
+	if isPage {
+		titlePostfix = "" // no postfix for CMS pages
+	}
 
 	dashboard := dashboard.NewDashboard(dashboard.Config{
 		HTTPRequest: r,

@@ -39,7 +39,7 @@ func SessionStoreInitialize(db *sql.DB) error {
 	return nil
 }
 
-func SessionStoreAutoMigrate(_ context.Context) error {
+func SessionStoreAutoMigrate(ctx context.Context) error {
 	if !SessionStoreUsed {
 		return nil
 	}
@@ -48,7 +48,7 @@ func SessionStoreAutoMigrate(_ context.Context) error {
 		return errors.New("sessionstore.AutoMigrate: SessionStore is nil")
 	}
 
-	err := SessionStore.AutoMigrate()
+	err := SessionStore.AutoMigrate(ctx)
 
 	if err != nil {
 		return errors.Join(errors.New("sessionstore.AutoMigrate"), err)

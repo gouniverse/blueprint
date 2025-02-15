@@ -42,9 +42,8 @@ func (layout *websiteLayout) ToHTML() string {
 	}
 
 	fe := frontend.New(frontend.Config{
-		Store:      config.CmsStore,
-		Logger:     &config.Logger,
-		Shortcodes: shortcodes,
+		Store:  config.CmsStore,
+		Logger: &config.Logger,
 	})
 
 	html, err := fe.TemplateRenderHtmlByID(layout.request, config.CmsUserTemplateID, struct {

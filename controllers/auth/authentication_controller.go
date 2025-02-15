@@ -114,7 +114,7 @@ func (c *authenticationController) Handler(w http.ResponseWriter, r *http.Reques
 		session.SetExpiresAt(carbon.Now(carbon.UTC).AddHours(4).ToDateTimeString(carbon.UTC))
 	}
 
-	err := config.SessionStore.SessionCreate(session)
+	err := config.SessionStore.SessionCreate(r.Context(), session)
 
 	if err != nil {
 		config.Logger.Error("At Auth Controller > AnyIndex > Session Store Error: ", "error", err.Error())

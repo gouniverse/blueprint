@@ -3,11 +3,19 @@ package widgets
 import (
 	"project/config"
 
-	"github.com/gouniverse/cms"
+	"github.com/gouniverse/cmsstore"
 )
 
 func CmsAddShortcodes() {
-	shortcodes := []cms.ShortcodeInterface{}
+	if !config.CmsStoreUsed {
+		return
+	}
+
+	if config.CmsStore == nil {
+		return
+	}
+
+	shortcodes := []cmsstore.ShortcodeInterface{}
 
 	list := WidgetRegistry()
 
@@ -15,5 +23,5 @@ func CmsAddShortcodes() {
 		shortcodes = append(shortcodes, widget)
 	}
 
-	config.Cms.ShortcodesAdd(shortcodes)
+	config.CmsStore.AddShortcodes(shortcodes)
 }

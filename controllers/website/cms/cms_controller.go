@@ -57,7 +57,6 @@ func GetInstance() cmsFrontend.FrontendInterface {
 			BlockEditorRenderer: func(blocks []ui.BlockInterface) string {
 				return webtheme.New(blocks).ToHtml()
 			},
-			Shortcodes:         shortcodes,
 			Store:              config.CmsStore,
 			Logger:             &config.Logger,
 			CacheEnabled:       true,

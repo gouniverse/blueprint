@@ -20,7 +20,7 @@ func UserSettingGet(r *http.Request, key string, defaultValue string) string {
 		return defaultValue
 	}
 
-	session, err := config.SessionStore.SessionFindByKey(key)
+	session, err := config.SessionStore.SessionFindByKey(r.Context(), key)
 
 	if err != nil {
 		return defaultValue
@@ -56,7 +56,7 @@ func UserSettingSet(r *http.Request, key string, value string) error {
 		return errors.New("auth user is nil")
 	}
 
-	session, err := config.SessionStore.SessionFindByKey(key)
+	session, err := config.SessionStore.SessionFindByKey(r.Context(), key)
 
 	if err != nil {
 		return err
@@ -81,7 +81,7 @@ func UserSettingSet(r *http.Request, key string, value string) error {
 	session.SetValue(value)
 	session.SetExpiresAt(carbon.Now(carbon.UTC).AddHours(1).ToDateTimeString(carbon.UTC))
 
-	err = config.SessionStore.SessionUpdate(session)
+	err = config.SessionStore.SessionUpdate(r.Context(), session)
 
 	return err
 }

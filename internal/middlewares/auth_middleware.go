@@ -42,7 +42,7 @@ func authHandler(next http.Handler) http.Handler {
 			return
 		}
 
-		session, err := config.SessionStore.SessionFindByKey(sessionKey)
+		session, err := config.SessionStore.SessionFindByKey(r.Context(), sessionKey)
 
 		if err != nil {
 			config.Logger.Error("auth_middleware", "error", err.Error())

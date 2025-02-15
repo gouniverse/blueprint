@@ -31,7 +31,7 @@ func ExtendSession(r *http.Request, seconds int64) error {
 
 	session.SetExpiresAt(carbon.Now(carbon.UTC).AddSeconds(cast.ToInt(seconds)).ToDateTimeString(carbon.UTC))
 
-	err := config.SessionStore.SessionUpdate(session)
+	err := config.SessionStore.SessionUpdate(r.Context(), session)
 
 	return err
 }

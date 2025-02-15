@@ -22,7 +22,7 @@ func SeedSession(r *http.Request, user userstore.UserInterface, expiresSeconds i
 		SetIPAddress(utils.IP(r)).
 		SetExpiresAt(carbon.Now(carbon.UTC).AddSeconds(expiresSeconds).ToDateTimeString(carbon.UTC))
 
-	err := config.SessionStore.SessionCreate(session)
+	err := config.SessionStore.SessionCreate(r.Context(), session)
 
 	if err != nil {
 		return nil, err

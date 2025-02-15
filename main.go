@@ -6,6 +6,7 @@ import (
 
 	"project/config"
 	"project/internal/cmds"
+	"project/internal/middlewares"
 	"project/internal/routes"
 	"project/internal/scheduler"
 	"project/internal/tasks"
@@ -69,18 +70,19 @@ func isCliMode() bool {
 
 func startBackgroundProcesses() {
 	if config.TaskStore != nil {
-		go config.TaskStore.QueueRunGoroutine(10, 2) // 6. Initialize the task queue
+		go config.TaskStore.QueueRunGoroutine(10, 2) // Initialize the task queue
 	}
 
-	scheduler.StartAsync() // 7. Initialize the scheduler
+	scheduler.StartAsync() // Initialize the scheduler
 
-	go config.CacheStore.ExpireCacheGoroutine() // 8. Initialize the cache expiration goroutine
+	go config.CacheStore.ExpireCacheGoroutine() // Initialize the cache expiration goroutine
 
 	if config.SessionStore != nil {
-		go config.SessionStore.SessionExpiryGoroutine() // 9. Initialize the session expiration goroutine
+		go config.SessionStore.SessionExpiryGoroutine() // Initialize the session expiration goroutine
 	}
-	
-	widgets.CmsAddShortcodes()                      // 10. Add CMS shortcodes
+
+	middlewares.CmsAddMiddlewares() // Add CMS middlewares
+	widgets.CmsAddShortcodes()      // Add CMS shortcodes
 }
 
 // executeCommand executes a CLI command

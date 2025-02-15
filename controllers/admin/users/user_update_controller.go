@@ -291,6 +291,10 @@ func (controller userUpdateController) saveUser(r *http.Request, data userUpdate
 }
 
 func (controller userUpdateController) prepareDataAndValidate(r *http.Request) (data userUpdateControllerData, errorMessage string) {
+	if config.UserStore == nil {
+		return data, "User store is not configured"
+	}
+
 	data.action = utils.Req(r, "action", "")
 	data.userID = utils.Req(r, "user_id", "")
 

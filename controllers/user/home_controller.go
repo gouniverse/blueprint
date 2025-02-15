@@ -36,17 +36,16 @@ func (controller *homeController) Handler(w http.ResponseWriter, r *http.Request
 
 	return layouts.NewUserLayout(r, layouts.Options{
 		Request:    r,
-		Title:      "Home",
+		Title:      "Home | Client",
 		Content:    controller.view(data),
 		StyleURLs:  []string{},
 		ScriptURLs: []string{},
 		Scripts:    []string{},
 		Styles:     []string{},
-	}).
-		ToHTML()
+	}).ToHTML()
 }
 
-func (controller *homeController) view(data homeControllerData) *hb.Tag {
+func (controller *homeController) view(data homeControllerData) hb.TagInterface {
 	userName := data.userFirstName + " " + data.userLastName
 
 	if strings.TrimSpace(userName) == "" {
