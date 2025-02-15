@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"project/config"
@@ -13,7 +12,6 @@ import (
 	"project/internal/widgets"
 
 	"github.com/gouniverse/router"
-	"github.com/gouniverse/webserver"
 	"github.com/mingrammer/cfmt"
 )
 
@@ -51,7 +49,7 @@ func main() {
 	}
 
 	startBackgroundProcesses()
-	startWebServer() // 5. Start the web server
+	StartWebServer() // 5. Start the web server
 }
 
 func closeResources() {
@@ -150,18 +148,18 @@ func executeCliCommand(args []string) {
 //
 // Returns:
 // - none
-func startWebServer() {
-	addr := config.WebServerHost + ":" + config.WebServerPort
-	cfmt.Infoln("Starting server on " + config.WebServerHost + ":" + config.WebServerPort + " ...")
-	cfmt.Infoln("APP URL: " + config.AppUrl + " ...")
+// func startWebServer() {
+// 	addr := config.WebServerHost + ":" + config.WebServerPort
+// 	cfmt.Infoln("Starting server on " + config.WebServerHost + ":" + config.WebServerPort + " ...")
+// 	cfmt.Infoln("APP URL: " + config.AppUrl + " ...")
 
-	config.WebServer = webserver.New(addr, routes.Routes().ServeHTTP)
+// 	config.WebServer = webserver.New(addr, routes.Routes().ServeHTTP)
 
-	if err := config.WebServer.ListenAndServe(); err != nil {
-		if config.AppEnvironment == config.APP_ENVIRONMENT_TESTING {
-			cfmt.Errorln(err)
-		} else {
-			log.Fatal(err)
-		}
-	}
-}
+// 	if err := config.WebServer.ListenAndServe(); err != nil {
+// 		if config.AppEnvironment == config.APP_ENVIRONMENT_TESTING {
+// 			cfmt.Errorln(err)
+// 		} else {
+// 			log.Fatal(err)
+// 		}
+// 	}
+// }
