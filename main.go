@@ -2,16 +2,13 @@ package main
 
 import (
 	"os"
-
 	"project/config"
-	"project/internal/cmds"
+	"project/internal/cli"
 	"project/internal/middlewares"
-	"project/internal/routes"
 	"project/internal/scheduler"
 	"project/internal/tasks"
 	"project/internal/widgets"
 
-	"github.com/gouniverse/router"
 	"github.com/mingrammer/cfmt"
 )
 
@@ -44,7 +41,7 @@ func main() {
 		if len(os.Args) < 2 {
 			return
 		}
-		executeCliCommand(os.Args[1:]) // 4. Execute the command
+		cli.ExecuteCliCommand(os.Args[1:]) // 4. Execute the command
 		return
 	}
 
@@ -52,6 +49,13 @@ func main() {
 	StartWebServer() // 5. Start the web server
 }
 
+// closeResources closes the database connection if it exists.
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func closeResources() {
 	if config.Database == nil {
 		return
@@ -62,10 +66,24 @@ func closeResources() {
 	}
 }
 
+// isCliMode checks if the application is running in CLI mode.
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - bool: true if the application is running in CLI mode, false otherwise.
 func isCliMode() bool {
 	return len(os.Args) > 1
 }
 
+// startBackgroundProcesses starts the background processes.
+//
+// Parameters:
+// - none
+//
+// Returns:
+// - none
 func startBackgroundProcesses() {
 	if config.TaskStore != nil {
 		go config.TaskStore.QueueRunGoroutine(10, 2) // Initialize the task queue
@@ -82,84 +100,3 @@ func startBackgroundProcesses() {
 	middlewares.CmsAddMiddlewares() // Add CMS middlewares
 	widgets.CmsAddShortcodes()      // Add CMS shortcodes
 }
-
-// executeCommand executes a CLI command
-//
-// The command can be one of the following:
-// - task <alias> <arguments>
-// - job <arguments>
-// - routes list
-//
-// Business logic:
-//
-// 1. First, it logs the command being executed, so it's obvious what's going on.
-// 2. It checks if there are at least two arguments, and appends "list" to the arguments if not.
-// 3. It gets the first and second arguments.
-// 4. If the first argument is "task", it executes the task with the second argument any additional arguments.
-// 5. If the first argument is "job", it executes the job with any additional arguments.
-// 6. If the first argument is "routes" and the second argument is "list" it lists all the routes.
-// 7. Otherwise, it prints a warning that the command is unrecognized.
-//
-// Parameters:
-// - args []string : The command line arguments.
-//
-// Returns:
-// - none
-func executeCliCommand(args []string) {
-	cfmt.Infoln("Executing command: ", args)
-	if len(args) < 2 {
-		args = append(args, "list")
-	}
-
-	firstArg := args[0]
-	secondArg := args[1]
-
-	// Is it a task?
-	if firstArg == "task" {
-		if config.TaskStore == nil {
-			cfmt.Errorln("TaskStore is nil")
-			return
-		}
-		config.TaskStore.TaskExecuteCli(secondArg, args[2:])
-		return
-	}
-
-	// Is it a job?
-	if firstArg == "job" {
-		cmds.ExecuteJob(args[2:])
-		return
-	}
-
-	// Is it a route list?
-	if firstArg == "routes" && secondArg == "list" {
-		m, r := routes.RoutesList()
-		router.List(m, r)
-		return
-	}
-
-	cfmt.Warning("Unrecognized command: ", firstArg)
-}
-
-// startServer starts the web server at the specified host and port and listens
-// for incoming requests.
-//
-// Parameters:
-// - none
-//
-// Returns:
-// - none
-// func startWebServer() {
-// 	addr := config.WebServerHost + ":" + config.WebServerPort
-// 	cfmt.Infoln("Starting server on " + config.WebServerHost + ":" + config.WebServerPort + " ...")
-// 	cfmt.Infoln("APP URL: " + config.AppUrl + " ...")
-
-// 	config.WebServer = webserver.New(addr, routes.Routes().ServeHTTP)
-
-// 	if err := config.WebServer.ListenAndServe(); err != nil {
-// 		if config.AppEnvironment == config.APP_ENVIRONMENT_TESTING {
-// 			cfmt.Errorln(err)
-// 		} else {
-// 			log.Fatal(err)
-// 		}
-// 	}
-// }
