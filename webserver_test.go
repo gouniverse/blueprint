@@ -10,8 +10,6 @@ import (
 
 	"project/config"
 	"project/internal/testutils"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestStartWebServer(t *testing.T) {
@@ -32,8 +30,12 @@ func TestStartWebServer(t *testing.T) {
 	// Check if the server is running
 	url := fmt.Sprintf("http://%s:%s", config.WebServerHost, config.WebServerPort)
 	resp, err := http.Get(url)
-	assert.NoError(t, err, "Failed to make a request to the server")
-	assert.Equal(t, http.StatusOK, resp.StatusCode, "Server should return status OK")
+	if err != nil {
+		t.Errorf("Failed to make a request to the server: %v", err)
+	}
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("Server should return status OK, got %d", resp.StatusCode)
+	}
 
 	// Send a shutdown signal to the shutdownChan
 	shutdownChan <- syscall.SIGTERM
@@ -43,5 +45,7 @@ func TestStartWebServer(t *testing.T) {
 
 	// Check if the server is shut down
 	_, err = http.Get(url)
-	assert.Error(t, err, "Server should be shut down")
+	if err == nil {
+		t.Errorf("Server should be shut down")
+	}
 }
