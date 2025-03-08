@@ -8,7 +8,7 @@ import (
 	"github.com/mingrammer/cfmt"
 )
 
-// StartAsync starts the scheduler in the backgroun without blocking the main thread
+// StartAsync starts the scheduler in the background without blocking the main thread
 func StartAsync() {
 	scheduler := gocron.NewScheduler(time.UTC)
 

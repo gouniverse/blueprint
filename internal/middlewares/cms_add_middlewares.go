@@ -9,7 +9,7 @@ import (
 )
 
 func CmsAddMiddlewares() {
-	if config.CmsStoreUsed {
+	if !config.CmsStoreUsed {
 		return
 	}
 

@@ -3,7 +3,7 @@ package widgets
 import (
 	"net/http"
 
-	"github.com/gouniverse/base/bbcode"
+	"github.com/dracory/base/bbcode"
 )
 
 // Keep it here for now as there is source control. In the future add versioning to the CMS

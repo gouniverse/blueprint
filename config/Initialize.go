@@ -9,16 +9,17 @@ import (
 	"strings"
 
 	"github.com/faabiosr/cachego/file"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gouniverse/base/database"
+
+	"github.com/dracory/base/database"
 	"github.com/gouniverse/logstore"
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/utils"
 	"github.com/jellydator/ttlcache/v3"
 	"github.com/samber/lo"
 
+	// _ "github.com/go-sql-driver/mysql" // Enable MySQL driver if needed
 	// _ "github.com/lib/pq" // Enable PostgreSQL driver if needed
-	_ "modernc.org/sqlite"
+	_ "modernc.org/sqlite" // Enable SQLite driver if needed
 )
 
 // Initialize initializes the application
@@ -74,12 +75,11 @@ func initializeEnvVariables() error {
 	utils.EnvInitialize(".env")
 
 	AppEnvironment = utils.EnvMust("APP_ENV")
+	AppName = utils.Env("APP_NAME")
+	AppUrl = utils.Env("APP_URL")
 
 	// Enable if you use envenc
 	// intializeEnvEncVariables(AppEnvironment)
-
-	AppName = utils.Env("APP_NAME")
-	AppUrl = utils.Env("APP_URL")
 
 	// Enable if you use CMS template
 	//CmsUserTemplateID = utils.EnvMust("CMS_TEMPLATE_ID")
@@ -174,12 +174,18 @@ func intializeEnvEncVariables(appEnvironment string) {
 
 	vaultContent := resources.Resource(".env." + appEnvironment + ".vault")
 
-	err := utils.EnvEncInitialize(struct {
+	derivedEnvEncKey, err := deriveEnvEncKey(envEncryptionKey)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = utils.EnvEncInitialize(struct {
 		Password      string
 		VaultFilePath string
 		VaultContent  string
 	}{
-		Password:      buildEnvEncKey(envEncryptionKey),
+		Password:      derivedEnvEncKey,
 		VaultFilePath: lo.Ternary(vaultContent == "", vaultFilePath, ""),
 		VaultContent:  lo.Ternary(vaultContent != "", vaultContent, ""),
 	})
@@ -214,6 +220,7 @@ func initializeDatabase() error {
 		SetDatabaseHost(DbHost).
 		SetDatabasePort(DbPort).
 		SetDatabaseName(DbName).
+		SetCharset(`utf8mb4`).
 		SetUserName(DbUser).
 		SetPassword(DbPass))
 

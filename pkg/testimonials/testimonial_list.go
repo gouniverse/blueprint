@@ -7,7 +7,7 @@ import (
 )
 
 func TestimonialList() ([]Testimonial, error) {
-	result, err := config.Cms.EntityStore.EntityList(entitystore.EntityQueryOptions{
+	result, err := config.EntityStore.EntityList(entitystore.EntityQueryOptions{
 		EntityType: "testimonial",
 	})
 

@@ -1,4 +1,4 @@
-package website
+package blog
 
 import (
 	"bytes"

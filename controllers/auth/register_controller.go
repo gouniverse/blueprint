@@ -71,7 +71,7 @@ func (controller *registerController) Handler(w http.ResponseWriter, r *http.Req
 		return helpers.ToFlashError(w, r, `user store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
-	if config.VaultStoreUsed && config.VaultStore == nil {
+	if !config.VaultStoreUsed || config.VaultStore == nil {
 		return helpers.ToFlashError(w, r, `vault store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
@@ -318,20 +318,20 @@ func (controller *registerController) formRegister(data registerControllerData) 
 						Class("mt-3").
 						Child(emailGroup),
 					bs.Column(6).
-						Class("mt-2").
+						Class("mt-3").
 						Child(firstNameGroup),
 					bs.Column(6).
-						Class("mt-2").
+						Class("mt-3").
 						Child(lastNameGroup),
 					// bs.Column(6).
 					// 	Child(businessNameGroup),
 					// bs.Column(6).
 					// 	Child(phoneGroup),
 					bs.Column(6).
-						Class("mt-2").
+						Class("mt-3").
 						Child(countryGroup),
 					bs.Column(6).
-						Class("mt-2").
+						Class("mt-3").
 						Child(timezoneGroup),
 				}),
 		).

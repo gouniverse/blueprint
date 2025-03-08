@@ -7,6 +7,9 @@
 .git
 .cache
 
+# ignore docker folder
+/docker
+
 # ignore all *.class files in all folders, including build root
 **/*.class
 	

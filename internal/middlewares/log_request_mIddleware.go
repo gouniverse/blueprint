@@ -10,6 +10,11 @@ import (
 )
 
 // LogRequestMiddleware logs every request to the database using the LogStore logger
+// ==================================================================
+// This is userful so that we can identify where all the visits
+// come from and keep the application protected - i.e. bots,
+// malicious spiders, DDOS, etc
+// ==================================================================
 // it is useful to detect spamming bots
 func NewLogRequestMiddleware() router.Middleware {
 	m := router.Middleware{

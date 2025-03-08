@@ -2,14 +2,18 @@ package main
 
 import (
 	"os"
+
 	"project/config"
 	"project/internal/cli"
 	"project/internal/middlewares"
+	"project/internal/routes"
 	"project/internal/scheduler"
 	"project/internal/tasks"
 	"project/internal/widgets"
 
 	"github.com/mingrammer/cfmt"
+
+	"github.com/dracory/base/server"
 )
 
 // main starts the application
@@ -46,7 +50,19 @@ func main() {
 	}
 
 	startBackgroundProcesses()
-	StartWebServer() // 5. Start the web server
+
+	// Start the web server
+	_, err := server.Start(server.Options{
+		Host:    config.WebServerHost,
+		Port:    config.WebServerPort,
+		URL:     config.AppUrl,
+		Handler: routes.Routes().ServeHTTP,
+	})
+
+	if err != nil {
+		cfmt.Errorf("Failed to start server: %v", err)
+		return
+	}
 }
 
 // closeResources closes the database connection if it exists.

@@ -14,10 +14,10 @@ import (
 // Adds commnds for the .env.vault file
 // ==================================================================
 // Example:
-// - go run main.go task envenc init .env.vault
-// - go run main.go task envenc key-set .env.vault
-// - go run main.go task envenc key-list .env.vault
-// - go run main.go task envenc key-remove .env.vault
+// - go run main.go task EnvEncTask init .env.vault
+// - go run main.go task EnvEncTask key-set .env.vault
+// - go run main.go task EnvEncTask key-list .env.vault
+// - go run main.go task EnvEncTask key-remove .env.vault
 // ==================================================================
 type envencTask struct {
 	taskstore.TaskHandlerBase
@@ -30,7 +30,7 @@ func NewEnvencTask() *envencTask {
 }
 
 func (handler *envencTask) Alias() string {
-	return "EnvEnc"
+	return "EnvEncTask"
 }
 
 func (handler *envencTask) Title() string {
@@ -43,7 +43,7 @@ func (handler *envencTask) Description() string {
 
 func (handler *envencTask) Handle() bool {
 	if len(os.Args) < 3 {
-		cfmt.Errorln("Usage: go run main.go task envenc <command> .env.vault")
+		cfmt.Errorln("Usage: go run main.go task EnvEncTask <command> .env.vault")
 		return false
 	}
 

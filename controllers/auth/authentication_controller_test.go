@@ -136,6 +136,8 @@ func TestAuthControllerOnceSuccessWithNewUser(t *testing.T) {
 }
 
 func TestAuthControllerOnceSuccessWithExistingUser(t *testing.T) {
+	testutils.Setup()
+
 	if config.UserStore == nil {
 		t.Fatal("UserStore should not be nil")
 	}

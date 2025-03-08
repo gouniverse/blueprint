@@ -1,23 +1,22 @@
 module project
 
-go 1.23.3
+go 1.24.0
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/disintegration/imaging v1.6.2
-	github.com/dromara/carbon/v2 v2.5.2
+	github.com/dracory/base v0.0.1
+	github.com/dromara/carbon/v2 v2.5.4
 	github.com/faabiosr/cachego v0.22.2
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-co-op/gocron v1.37.0
-	github.com/go-sql-driver/mysql v1.8.1
 	github.com/gouniverse/auth v0.22.0
-	github.com/gouniverse/base v0.8.1
 	github.com/gouniverse/blindindexstore v1.1.0
 	github.com/gouniverse/blockeditor v0.21.2
 	github.com/gouniverse/blogstore v0.8.1
 	github.com/gouniverse/bs v0.13.0
 	github.com/gouniverse/cachestore v0.18.1
-	github.com/gouniverse/cdn v1.5.0
+	github.com/gouniverse/cdn v1.6.0
 	github.com/gouniverse/cmsstore v0.24.0
 	github.com/gouniverse/crud/v2 v2.0.0-20250124013508-aa498c4bb928
 	github.com/gouniverse/csrf v0.1.0
@@ -48,11 +47,10 @@ require (
 	github.com/spf13/cast v1.7.1
 	github.com/stretchr/testify v1.10.0
 	github.com/yuin/goldmark v1.7.8
-	modernc.org/sqlite v1.35.0
+	modernc.org/sqlite v1.36.0
 )
 
 require (
-	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.36.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.9 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.59 // indirect
@@ -75,6 +73,7 @@ require (
 	github.com/go-openapi/errors v0.22.0 // indirect
 	github.com/go-openapi/strfmt v0.23.0 // indirect
 	github.com/goravel/framework v1.15.3 // indirect
+	github.com/gouniverse/base v0.9.0 // indirect
 	github.com/gouniverse/crypto v0.2.0 // indirect
 	github.com/gouniverse/settingstore v0.16.0 // indirect
 	github.com/gouniverse/shortcode v0.4.0 // indirect
@@ -96,10 +95,10 @@ require (
 	github.com/teambition/rrule-go v1.8.2 // indirect
 	go.mongodb.org/mongo-driver v1.17.2 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac // indirect
+	golang.org/x/exp v0.0.0-20250228200357-dead58393ab7 // indirect
 	golang.org/x/image v0.24.0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/term v0.29.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
+	golang.org/x/term v0.30.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	modernc.org/libc v1.61.13 // indirect
@@ -109,7 +108,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/darkoatanasovski/htmltags v1.0.0
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/georgysavva/scany v1.2.2 // indirect
+	github.com/georgysavva/scany v1.2.3 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gouniverse/api v1.6.0
 	github.com/gouniverse/cms v1.10.0
@@ -127,10 +126,10 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/samber/lo v1.49.1
-	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.8.2 // indirect
 )

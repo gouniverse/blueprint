@@ -3,7 +3,7 @@ package ext
 import (
 	"net/http"
 
-	"github.com/gouniverse/base/req"
+	"github.com/dracory/base/req"
 )
 
 // IsHtmx checks if the given HTTP request is an HTMX request.
@@ -119,4 +119,24 @@ func HxTarget(r *http.Request) string {
 //   - string: the trigger name
 func HxTriggerName(r *http.Request) string {
 	return req.ValueOr(r, "HX-Trigger-Name", "")
+}
+
+// HxHideIndicatorCSS returns the CSS for hiding the HTMX indicator.
+//
+// Returns the CSS code for hiding the HTMX indicator.
+//
+// Returns:
+//   - string: the CSS code
+func HxHideIndicatorCSS() string {
+	return `.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .htmx-indicator {
+    display: inline-block;
+}
+
+.htmx-request.htmx-indicator {
+    display: inline-block;
+}`
 }
