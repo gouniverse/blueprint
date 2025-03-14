@@ -35,7 +35,7 @@ func GeoStoreInitialize(db *sql.DB) error {
 		return errors.Join(errors.New("geoStoreInstance is nil"))
 	}
 
-	GeoStore = *geoStoreInstance
+	GeoStore = geoStoreInstance
 
 	return nil
 }

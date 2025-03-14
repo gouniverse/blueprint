@@ -55,7 +55,7 @@ func Initialize() {
 
 	initializeCache()
 
-	Logger = *slog.New(logstore.NewSlogHandler(&LogStore))
+	Logger = *slog.New(logstore.NewSlogHandler(LogStore))
 }
 
 // initializeEnvVariables initializes the env variables

@@ -176,9 +176,9 @@ var Cms cms.Cms
 // == STORES =============================================================== //
 
 var BlindIndexStoreUsed = true
-var BlindIndexStoreEmail blindindexstore.Store
-var BlindIndexStoreFirstName blindindexstore.Store
-var BlindIndexStoreLastName blindindexstore.Store
+var BlindIndexStoreEmail blindindexstore.StoreInterface
+var BlindIndexStoreFirstName blindindexstore.StoreInterface
+var BlindIndexStoreLastName blindindexstore.StoreInterface
 
 var BlogStoreUsed = true
 var BlogStore blogstore.StoreInterface
@@ -199,16 +199,16 @@ var CustomStore customstore.StoreInterface
 
 // used by the testimonials package
 var EntityStoreUsed = true
-var EntityStore entitystore.Store
+var EntityStore entitystore.StoreInterface
 
 var GeoStoreUsed = true
-var GeoStore geostore.Store
+var GeoStore geostore.StoreInterface
 
 var LogStoreUsed = true
-var LogStore logstore.Store
+var LogStore logstore.StoreInterface
 
 var MetaStoreUsed = false
-var MetaStore metastore.Store
+var MetaStore metastore.StoreInterface
 
 var SessionStoreUsed = true
 var SessionStore sessionstore.StoreInterface

@@ -33,7 +33,7 @@ func MetaStoreInitialize(db *sql.DB) error {
 		return errors.Join(errors.New("metaStoreInstance is nil"))
 	}
 
-	MetaStore = *metaStoreInstance
+	MetaStore = metaStoreInstance
 
 	return nil
 }

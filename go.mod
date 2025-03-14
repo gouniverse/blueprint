@@ -11,11 +11,11 @@ require (
 	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-co-op/gocron v1.37.0
 	github.com/gouniverse/auth v0.22.0
-	github.com/gouniverse/blindindexstore v1.1.0
+	github.com/gouniverse/blindindexstore v1.2.0
 	github.com/gouniverse/blockeditor v0.21.2
 	github.com/gouniverse/blogstore v0.9.0
 	github.com/gouniverse/bs v0.13.0
-	github.com/gouniverse/cachestore v0.19.0
+	github.com/gouniverse/cachestore v0.19.1
 	github.com/gouniverse/cdn v1.6.0
 	github.com/gouniverse/cmsstore v0.25.0
 	github.com/gouniverse/crud/v2 v2.0.0-20250124013508-aa498c4bb928
@@ -26,8 +26,8 @@ require (
 	github.com/gouniverse/form v0.16.0
 	github.com/gouniverse/hb v1.83.4
 	github.com/gouniverse/icons v1.3.1
-	github.com/gouniverse/logstore v1.5.1
-	github.com/gouniverse/metastore v1.1.0
+	github.com/gouniverse/logstore v1.6.1
+	github.com/gouniverse/metastore v1.2.0
 	github.com/gouniverse/responses v0.6.0
 	github.com/gouniverse/router v1.4.2
 	github.com/gouniverse/sessionstore v0.30.0
@@ -114,8 +114,8 @@ require (
 	github.com/gouniverse/cms v1.10.0
 	github.com/gouniverse/customstore v0.6.0
 	github.com/gouniverse/dataobject v0.3.0
-	github.com/gouniverse/entitystore v0.64.0
-	github.com/gouniverse/geostore v0.12.0
+	github.com/gouniverse/entitystore v0.65.0
+	github.com/gouniverse/geostore v0.13.0
 	github.com/gouniverse/maputils v0.7.0
 	github.com/gouniverse/sb v0.8.0
 	github.com/gouniverse/uid v1.5.0

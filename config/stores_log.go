@@ -33,7 +33,7 @@ func LogStoreInitialize(db *sql.DB) error {
 		return errors.Join(errors.New("logStoreInstance is nil"))
 	}
 
-	LogStore = *logStoreInstance
+	LogStore = logStoreInstance
 
 	return nil
 }

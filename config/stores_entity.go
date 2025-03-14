@@ -36,7 +36,7 @@ func EntityStoreInitialize(db *sql.DB) error {
 		return errors.Join(errors.New("entityStoreInstance is nil"))
 	}
 
-	EntityStore = *entityStoreInstance
+	EntityStore = entityStoreInstance
 
 	return nil
 }

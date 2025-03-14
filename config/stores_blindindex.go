@@ -34,7 +34,7 @@ func BlindIndexStoreInitialize(db *sql.DB) error {
 		return errors.New("blindindexstore.NewStore: blindIndexStoreEmailInstance is nil")
 	}
 
-	BlindIndexStoreEmail = *blindIndexStoreEmailInstance
+	BlindIndexStoreEmail = blindIndexStoreEmailInstance
 
 	blindIndexStoreFirstNameInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
 		DB:          db,
@@ -50,7 +50,7 @@ func BlindIndexStoreInitialize(db *sql.DB) error {
 		return errors.New("blindindexstore.NewStore: blindIndexStoreFirstNameInstance is nil")
 	}
 
-	BlindIndexStoreFirstName = *blindIndexStoreFirstNameInstance
+	BlindIndexStoreFirstName = blindIndexStoreFirstNameInstance
 
 	blindIndexStoreLastNameInstance, err := blindindexstore.NewStore(blindindexstore.NewStoreOptions{
 		DB:          db,
@@ -66,7 +66,7 @@ func BlindIndexStoreInitialize(db *sql.DB) error {
 		return errors.New("blindindexstore.NewStore: blindIndexStoreLastNameInstance is nil")
 	}
 
-	BlindIndexStoreLastName = *blindIndexStoreLastNameInstance
+	BlindIndexStoreLastName = blindIndexStoreLastNameInstance
 
 	return nil
 }
