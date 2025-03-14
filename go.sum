@@ -117,8 +117,8 @@ github.com/gouniverse/blogstore v0.9.0 h1:MC3rdYZT8WYZ5tDfzcXYYTy5nrupc9TVawrAzo
 github.com/gouniverse/blogstore v0.9.0/go.mod h1:x/b1FTgJLJyViuPMgYALS915tVn/jRMGJdiX5GtrIxk=
 github.com/gouniverse/bs v0.13.0 h1:+YEybVDZo4tPs6L+9cabuwAdVblL4+1Y14CNEarYSNA=
 github.com/gouniverse/bs v0.13.0/go.mod h1:pwmAi5bTLhl9zxxQw41C51Q1/LeMnEewFBoJ2qkq9V8=
-github.com/gouniverse/cachestore v0.18.1 h1:9rsosOkngfmHwOItUC8oO/A5YWsmDanbaZHJffb86LA=
-github.com/gouniverse/cachestore v0.18.1/go.mod h1:dQn5/jL0fXVNInL1EqlKFphkBbW2AXaeyf68OXisKj4=
+github.com/gouniverse/cachestore v0.19.0 h1:NYlm+dZ6Za8fZ3AZgYSGJeR8ubs/Vy7ntkvzuYcZLss=
+github.com/gouniverse/cachestore v0.19.0/go.mod h1:6LMbBdqAGwiRHWh9EFn92xSXBT80hLvVm4HM+mVMe20=
 github.com/gouniverse/cdn v1.6.0 h1:vRNVTydAgjln8QpdMdJqgLu+XdybtkDPGbx+K1Barjs=
 github.com/gouniverse/cdn v1.6.0/go.mod h1:sVnmFvpaG04winyiB2zgpfsXU0FUtIu5e2nDoO6kqVM=
 github.com/gouniverse/cms v1.10.0 h1:Lr5aqczftRlIBVU1tNhwwj3D1ARZlkmLx074iSrrSe4=

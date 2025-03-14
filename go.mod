@@ -15,7 +15,7 @@ require (
 	github.com/gouniverse/blockeditor v0.21.2
 	github.com/gouniverse/blogstore v0.9.0
 	github.com/gouniverse/bs v0.13.0
-	github.com/gouniverse/cachestore v0.18.1
+	github.com/gouniverse/cachestore v0.19.0
 	github.com/gouniverse/cdn v1.6.0
 	github.com/gouniverse/cmsstore v0.25.0
 	github.com/gouniverse/crud/v2 v2.0.0-20250124013508-aa498c4bb928

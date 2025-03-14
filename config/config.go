@@ -190,7 +190,7 @@ var CmsStore cmsstore.StoreInterface
 var CmsUserTemplateID string
 
 var CacheStoreUsed = true
-var CacheStore cachestore.Store
+var CacheStore cachestore.StoreInterface
 
 // var CommentStore *commentstore.Store
 

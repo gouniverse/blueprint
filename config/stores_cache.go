@@ -33,7 +33,7 @@ func CacheStoreInitialize(db *sql.DB) error {
 		return errors.New("cachestore.NewStore: cacheStoreInstance is nil")
 	}
 
-	CacheStore = *cacheStoreInstance
+	CacheStore = cacheStoreInstance
 
 	return nil
 }
