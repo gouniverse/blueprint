@@ -112,7 +112,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gouniverse/api v1.6.0
 	github.com/gouniverse/cms v1.10.0
-	github.com/gouniverse/customstore v0.5.0
+	github.com/gouniverse/customstore v0.6.0
 	github.com/gouniverse/dataobject v0.3.0
 	github.com/gouniverse/entitystore v0.64.0
 	github.com/gouniverse/geostore v0.12.0

@@ -33,7 +33,7 @@ func CustomStoreInitialize(db *sql.DB) error {
 		return errors.Join(errors.New("customStoreInstance is nil"))
 	}
 
-	CustomStore = *customStoreInstance
+	CustomStore = customStoreInstance
 
 	return nil
 }

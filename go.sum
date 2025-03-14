@@ -131,8 +131,8 @@ github.com/gouniverse/crypto v0.2.0 h1:7ppqn9FrwrlC6nTfgVBnEop5cKBFNEZyP5yXoUH7M
 github.com/gouniverse/crypto v0.2.0/go.mod h1:uWfzSf1dsYyij6yrVTdxuLFfLZIvSJu24+x3sj+DLXU=
 github.com/gouniverse/csrf v0.1.0 h1:Snlx5iuuSzJnMXRBmTZEFxX88ocQ3de2a2+zsLiDiuM=
 github.com/gouniverse/csrf v0.1.0/go.mod h1:wTfDatvfFO40VJKlX7iXfZs7v6PHTNfnIdRSD3G11RQ=
-github.com/gouniverse/customstore v0.5.0 h1:jiN7CqB+xo/7DGjyf9KjOLKJtiNPnTIiymLKCa9U9CE=
-github.com/gouniverse/customstore v0.5.0/go.mod h1:mZ8YRcGmxFBjSxZ7CV6xIjdPaKwUMxlxYHV0/WJ2K74=
+github.com/gouniverse/customstore v0.6.0 h1:ahzuNhyIuWebcwfhADh/57nYXn1emRQqGQGZeV0f3n4=
+github.com/gouniverse/customstore v0.6.0/go.mod h1:pvrne25CSXYLiKvNw8TC4Rd2yxQlqAY8vNH/oQ0IINI=
 github.com/gouniverse/dashboard v1.6.1 h1:gyOerX+JEytwYZjwsKjv7SgzjePsGQAAvTzhRjqAaSo=
 github.com/gouniverse/dashboard v1.6.1/go.mod h1:7Lger91NF+SqfC7CO+BnlvWVQtlFeA5izoSjoj6RKDw=
 github.com/gouniverse/dataobject v0.3.0 h1:4m6zH8q3/Z159MrkX64gZO884SC2RE35FFzM186ohU8=

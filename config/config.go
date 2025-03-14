@@ -195,7 +195,7 @@ var CacheStore cachestore.StoreInterface
 // var CommentStore *commentstore.Store
 
 var CustomStoreUsed = false
-var CustomStore customstore.Store
+var CustomStore customstore.StoreInterface
 
 // used by the testimonials package
 var EntityStoreUsed = true
