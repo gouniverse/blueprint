@@ -1,8 +1,8 @@
 package routes
 
 import (
+	"project/app/middlewares"
 	"project/config"
-	"project/internal/middlewares"
 
 	"github.com/gouniverse/router"
 )

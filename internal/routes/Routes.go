@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"project/controllers/admin"
-	"project/controllers/auth"
-	"project/controllers/shared"
-	"project/controllers/user"
-	"project/controllers/website"
+	"project/app/controllers/admin"
+	"project/app/controllers/auth"
+	"project/app/controllers/shared"
+	"project/app/controllers/user"
+	"project/app/controllers/website"
 	"project/internal/widgets"
 
 	"github.com/go-chi/chi/v5"

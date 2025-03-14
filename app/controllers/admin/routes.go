@@ -1,16 +1,16 @@
 package admin
 
 import (
-	adminBlog "project/controllers/admin/blog"
-	adminCms "project/controllers/admin/cms"
-	adminFiles "project/controllers/admin/files"
-	adminMedia "project/controllers/admin/media"
-	adminShop "project/controllers/admin/shop"
-	adminStats "project/controllers/admin/stats"
-	adminTasks "project/controllers/admin/tasks"
-	adminUsers "project/controllers/admin/users"
+	adminBlog "project/app/controllers/admin/blog"
+	adminCms "project/app/controllers/admin/cms"
+	adminFiles "project/app/controllers/admin/files"
+	adminMedia "project/app/controllers/admin/media"
+	adminShop "project/app/controllers/admin/shop"
+	adminStats "project/app/controllers/admin/stats"
+	adminTasks "project/app/controllers/admin/tasks"
+	adminUsers "project/app/controllers/admin/users"
+	"project/app/middlewares"
 	"project/internal/links"
-	"project/internal/middlewares"
 
 	"github.com/gouniverse/router"
 )

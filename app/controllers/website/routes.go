@@ -8,11 +8,11 @@ import (
 	"github.com/gouniverse/responses"
 	"github.com/gouniverse/router"
 
-	"project/controllers/shared"
-	blogControllers "project/controllers/website/blog"
+	"project/app/controllers/shared"
+	blogControllers "project/app/controllers/website/blog"
 
-	cms "project/controllers/website/cms"
-	seo "project/controllers/website/seo"
+	cms "project/app/controllers/website/cms"
+	seo "project/app/controllers/website/seo"
 	// paypalControllers "project/controllers/website/paypal"
 )
 

@@ -7,8 +7,8 @@ import (
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"
 
-	shopDiscounts "project/controllers/admin/shop/discounts"
-	shopProducts "project/controllers/admin/shop/products"
+	shopDiscounts "project/app/controllers/admin/shop/discounts"
+	shopProducts "project/app/controllers/admin/shop/products"
 )
 
 func ShopRoutes() []router.RouteInterface {

@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
+	"project/app/middlewares"
 	"project/config"
 	"project/internal/cli"
-	"project/internal/middlewares"
 	"project/internal/routes"
 	"project/internal/scheduler"
 	"project/internal/tasks"

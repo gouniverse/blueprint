@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"project/app/controllers/admin/shop/shared"
 	"project/config"
-	"project/controllers/admin/shop/shared"
 
 	"project/internal/helpers"
 	"project/internal/layouts"

@@ -2,8 +2,8 @@ package admin
 
 import (
 	"net/http"
+	"project/app/controllers/admin/shop/shared"
 	"project/config"
-	"project/controllers/admin/shop/shared"
 	"project/internal/layouts"
 	"project/internal/links"
 

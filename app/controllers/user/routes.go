@@ -1,11 +1,11 @@
 package user
 
 import (
-	userAccount "project/controllers/user/account"
-	userHome "project/controllers/user/home"
-	
+	userAccount "project/app/controllers/user/account"
+	userHome "project/app/controllers/user/home"
+
+	"project/app/middlewares"
 	"project/internal/links"
-	"project/internal/middlewares"
 
 	"github.com/gouniverse/router"
 )
