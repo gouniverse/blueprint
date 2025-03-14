@@ -42,28 +42,6 @@ const APP_ENVIRONMENT_PRODUCTION = "production"
 const APP_ENVIRONMENT_STAGING = "staging"
 const APP_ENVIRONMENT_TESTING = "testing"
 
-/**
- * ENVENC_KEY_PUBLIC: Public Key for Envenc Vault Encryption
- *
- * This constant stores the public key used to encrypt your envenc vault file.
- * * **Important Security Information:**
- * - This public key, combined with a corresponding private key, is used
- *   as input to a secure **one-way** hashing function to derive the final
- *   encryption key.
- * - Both the private and public keys must be at least 32-character strings,
- *   composed of randomly generated characters, numbers, and symbols.
- * - **DO NOT store the actual final key anywhere.** It should be generated dynamically when needed.
- * - **DO NOT directly commit the actual PRIVATE key to version control.** Use environment variables or secure configuration management.
- * - Replace "YOUR_PUBLIC_KEY" with your actual 32-character public key.
- * - The associated private key must be kept extremely secure.
- * - Ensure that the random number generator used to create the keys is cryptographically secure (CSPRNG).
- * - **Ideally, the public key should be obfuscated. See envenc for more details.**
- *
- * Example:
- * const ENVENC_KEY_PUBLIC = "aBcD123$456!eFgH789%iJkL0mNoPqRsTuVwXyZ"; // Replace with your actual key
- */
-const ENVENC_KEY_PUBLIC = "YOUR_PUBLIC_KEY"
-
 // == VARIABLES ============================================================= //
 
 // AppEnvironment is the environment the application is running in
@@ -203,7 +181,7 @@ var BlindIndexStoreFirstName blindindexstore.Store
 var BlindIndexStoreLastName blindindexstore.Store
 
 var BlogStoreUsed = true
-var BlogStore blogstore.Store
+var BlogStore blogstore.StoreInterface
 
 var CmsStoreUsed = false
 var CmsStore cmsstore.StoreInterface

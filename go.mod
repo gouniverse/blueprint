@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/disintegration/imaging v1.6.2
-	github.com/dracory/base v0.0.1
+	github.com/dracory/base v0.2.0
 	github.com/dromara/carbon/v2 v2.5.4
 	github.com/faabiosr/cachego v0.22.2
 	github.com/go-chi/chi/v5 v5.2.1
@@ -13,11 +13,11 @@ require (
 	github.com/gouniverse/auth v0.22.0
 	github.com/gouniverse/blindindexstore v1.1.0
 	github.com/gouniverse/blockeditor v0.21.2
-	github.com/gouniverse/blogstore v0.8.1
+	github.com/gouniverse/blogstore v0.9.0
 	github.com/gouniverse/bs v0.13.0
 	github.com/gouniverse/cachestore v0.18.1
 	github.com/gouniverse/cdn v1.6.0
-	github.com/gouniverse/cmsstore v0.24.0
+	github.com/gouniverse/cmsstore v0.25.0
 	github.com/gouniverse/crud/v2 v2.0.0-20250124013508-aa498c4bb928
 	github.com/gouniverse/csrf v0.1.0
 	github.com/gouniverse/dashboard v1.6.1
@@ -33,11 +33,11 @@ require (
 	github.com/gouniverse/sessionstore v0.30.0
 	github.com/gouniverse/shopstore v0.16.0
 	github.com/gouniverse/statsstore v0.3.1
-	github.com/gouniverse/taskstore v1.3.1
+	github.com/gouniverse/taskstore v1.4.1
 	github.com/gouniverse/ui v0.14.0
-	github.com/gouniverse/userstore v0.9.0
+	github.com/gouniverse/userstore v0.10.1
 	github.com/gouniverse/utils v1.45.4
-	github.com/gouniverse/vaultstore v0.24.0
+	github.com/gouniverse/vaultstore v0.25.0
 	github.com/gouniverse/webserver v0.1.0
 	github.com/jellydator/ttlcache/v3 v3.3.0
 	github.com/mileusna/useragent v1.3.5
@@ -51,18 +51,18 @@ require (
 )
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.36.1 // indirect
-	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.9 // indirect
-	github.com/aws/aws-sdk-go-v2/credentials v1.17.59 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.32 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.32 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.32 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.6.0 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.13 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.18.13 // indirect
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.77.0 // indirect
-	github.com/aws/smithy-go v1.22.2 // indirect
+	github.com/aws/aws-sdk-go-v2 v1.36.3 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.10 // indirect
+	github.com/aws/aws-sdk-go-v2/credentials v1.17.62 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.34 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.34 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.34 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.7.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.15 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.18.15 // indirect
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.78.2 // indirect
+	github.com/aws/smithy-go v1.22.3 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/doug-martin/goqu/v9 v9.19.0 // indirect
@@ -72,10 +72,10 @@ require (
 	github.com/go-chi/httprate v0.14.1 // indirect
 	github.com/go-openapi/errors v0.22.0 // indirect
 	github.com/go-openapi/strfmt v0.23.0 // indirect
-	github.com/goravel/framework v1.15.3 // indirect
+	github.com/goravel/framework v1.15.4 // indirect
 	github.com/gouniverse/base v0.9.0 // indirect
 	github.com/gouniverse/crypto v0.2.0 // indirect
-	github.com/gouniverse/settingstore v0.16.0 // indirect
+	github.com/gouniverse/settingstore v0.16.1 // indirect
 	github.com/gouniverse/shortcode v0.4.0 // indirect
 	github.com/gouniverse/sqlfilestore v0.2.0 // indirect
 	github.com/gouniverse/strutils v0.7.0 // indirect
@@ -88,15 +88,15 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
-	github.com/pkg/sftp v1.13.7 // indirect
+	github.com/pkg/sftp v1.13.8 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/teambition/rrule-go v1.8.2 // indirect
-	go.mongodb.org/mongo-driver v1.17.2 // indirect
+	go.mongodb.org/mongo-driver v1.17.3 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
-	golang.org/x/exp v0.0.0-20250228200357-dead58393ab7 // indirect
-	golang.org/x/image v0.24.0 // indirect
+	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
+	golang.org/x/image v0.25.0 // indirect
 	golang.org/x/sync v0.12.0 // indirect
 	golang.org/x/term v0.30.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
@@ -127,7 +127,7 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/samber/lo v1.49.1
 	golang.org/x/crypto v0.36.0 // indirect
-	golang.org/x/net v0.35.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect

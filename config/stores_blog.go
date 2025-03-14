@@ -33,7 +33,7 @@ func BlogStoreInitialize(db *sql.DB) error {
 		return errors.New("blogstore.NewStore: blogStoreInstance is nil")
 	}
 
-	BlogStore = *blogStoreInstance
+	BlogStore = blogStoreInstance
 
 	return nil
 }
