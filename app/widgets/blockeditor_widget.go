@@ -2,7 +2,7 @@ package widgets
 
 import (
 	"net/http"
-	"project/internal/links"
+	"project/app/links"
 
 	"github.com/gouniverse/blockeditor"
 	"github.com/gouniverse/cdn"

@@ -2,8 +2,8 @@ package website
 
 import (
 	"net/http"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 
 	"github.com/gouniverse/responses"
 	"github.com/gouniverse/router"

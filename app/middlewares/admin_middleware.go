@@ -2,8 +2,8 @@ package middlewares
 
 import (
 	"net/http"
+	"project/app/links"
 	"project/internal/helpers"
-	"project/internal/links"
 
 	"github.com/gouniverse/router"
 )

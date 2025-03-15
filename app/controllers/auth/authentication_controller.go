@@ -8,9 +8,9 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"project/app/links"
 	"project/config"
 	"project/internal/helpers"
-	"project/internal/links"
 	"project/internal/testutils"
 	"strings"
 

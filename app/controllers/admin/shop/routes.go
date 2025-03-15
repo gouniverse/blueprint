@@ -2,7 +2,7 @@ package admin
 
 import (
 	"net/http"
-	"project/internal/links"
+	"project/app/links"
 
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"

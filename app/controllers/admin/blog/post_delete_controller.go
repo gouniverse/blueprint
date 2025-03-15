@@ -2,9 +2,9 @@ package admin
 
 import (
 	"net/http"
+	"project/app/links"
 	"project/config"
 	"project/internal/helpers"
-	"project/internal/links"
 
 	"github.com/gouniverse/blogstore"
 	"github.com/gouniverse/bs"

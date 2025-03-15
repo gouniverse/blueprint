@@ -2,7 +2,7 @@ package shared
 
 import (
 	"net/http"
-	"project/internal/links"
+	"project/app/links"
 
 	"github.com/gouniverse/dashboard"
 	"github.com/gouniverse/responses"

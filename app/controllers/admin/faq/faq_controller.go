@@ -5,7 +5,7 @@ package admin
 // 	"net/http"
 // 	"project/config"
 // 	"project/controllers/admin/partials"
-// 	"project/internal/links"
+// 	"project/app/links"
 // 	"project/models"
 
 // 	"github.com/gouniverse/api"

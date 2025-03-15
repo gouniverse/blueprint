@@ -3,9 +3,9 @@ package admin
 import (
 	"net/http"
 	"project/app/layouts"
+	"project/app/links"
 	"project/config"
 	"project/internal/helpers"
-	"project/internal/links"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/gouniverse/cdn"

@@ -4,8 +4,8 @@ import (
 	userAccount "project/app/controllers/user/account"
 	userHome "project/app/controllers/user/home"
 
+	"project/app/links"
 	"project/app/middlewares"
-	"project/internal/links"
 
 	"github.com/gouniverse/router"
 )

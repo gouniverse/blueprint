@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"project/app/controllers/admin/shop/shared"
 	"project/app/layouts"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 
 	"github.com/dromara/carbon/v2"
 	"github.com/gouniverse/cdn"

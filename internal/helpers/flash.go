@@ -2,8 +2,8 @@ package helpers
 
 import (
 	"net/http"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 	"strings"
 
 	"github.com/gouniverse/uid"

@@ -1,8 +1,8 @@
 package emails
 
 import (
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 
 	"github.com/gouniverse/hb"
 )

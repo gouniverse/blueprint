@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 	"project/app/layouts"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 	"strings"
 	"time"
 

@@ -8,8 +8,8 @@ import (
 	"project/config"
 
 	"project/app/layouts"
+	"project/app/links"
 	"project/internal/helpers"
-	"project/internal/links"
 	"strings"
 
 	"github.com/gouniverse/bs"

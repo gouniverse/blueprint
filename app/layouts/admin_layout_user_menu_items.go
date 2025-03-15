@@ -1,7 +1,7 @@
 package layouts
 
 import (
-	"project/internal/links"
+	"project/app/links"
 
 	"github.com/gouniverse/dashboard"
 	"github.com/gouniverse/userstore"

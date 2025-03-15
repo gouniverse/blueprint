@@ -3,8 +3,8 @@ package auth
 import (
 	"net/http"
 	"net/url"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 	"project/internal/testutils"
 	"strings"
 	"testing"

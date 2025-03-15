@@ -3,8 +3,8 @@ package emails
 import (
 	"context"
 	"errors"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 
 	"github.com/gouniverse/hb"
 )

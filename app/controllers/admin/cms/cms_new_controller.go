@@ -3,8 +3,8 @@ package admin
 import (
 	"net/http"
 	"project/app/layouts"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 	"project/pkg/webtheme"
 
 	adminCmsStore "github.com/gouniverse/cmsstore/admin"

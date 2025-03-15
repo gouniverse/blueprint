@@ -1,8 +1,8 @@
 package website
 
 import (
+	"project/app/links"
 	"project/app/middlewares"
-	"project/internal/links"
 
 	"github.com/gouniverse/router"
 )

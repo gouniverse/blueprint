@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	// "project/internal/authentication"
+	"project/app/links"
 	"project/internal/helpers"
-	"project/internal/links"
 
 	"github.com/gouniverse/router"
 	"github.com/gouniverse/utils"

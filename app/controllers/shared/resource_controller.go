@@ -2,7 +2,7 @@ package shared
 
 import (
 	"net/http"
-	"project/internal/resources"
+	"project/resources"
 	"strings"
 
 	"github.com/gouniverse/router"

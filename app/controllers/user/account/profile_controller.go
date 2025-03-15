@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"project/app/controllers/user/partials"
 	"project/app/layouts"
+	"project/app/links"
 	"project/config"
 	"project/internal/helpers"
-	"project/internal/links"
 	"strings"
 
 	"github.com/gouniverse/bs"

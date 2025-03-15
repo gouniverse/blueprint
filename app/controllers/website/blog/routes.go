@@ -1,7 +1,7 @@
 package blog
 
 import (
-	"project/internal/links"
+	"project/app/links"
 
 	"github.com/gouniverse/router"
 )

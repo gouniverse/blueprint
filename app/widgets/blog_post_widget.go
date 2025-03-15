@@ -6,7 +6,7 @@ import (
 	"project/internal/helpers"
 
 	// "project/app/layouts"
-	"project/internal/links"
+	"project/app/links"
 	"strings"
 
 	"github.com/gouniverse/blogstore"

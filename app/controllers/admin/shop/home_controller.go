@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"project/app/controllers/admin/shop/shared"
 	"project/app/layouts"
+	"project/app/links"
 	"project/config"
-	"project/internal/links"
 
 	"github.com/gouniverse/bs"
 	"github.com/gouniverse/hb"

@@ -5,11 +5,11 @@ import (
 
 	"project/app/middlewares"
 	"project/app/routes"
+	"project/app/schedules"
+	"project/app/tasks"
 	"project/app/widgets"
 	"project/config"
 	"project/internal/cli"
-	"project/internal/scheduler"
-	"project/internal/tasks"
 
 	"github.com/mingrammer/cfmt"
 
@@ -105,7 +105,7 @@ func startBackgroundProcesses() {
 		go config.TaskStore.QueueRunGoroutine(10, 2) // Initialize the task queue
 	}
 
-	scheduler.StartAsync() // Initialize the scheduler
+	schedules.StartAsync() // Initialize the scheduler
 
 	go config.CacheStore.ExpireCacheGoroutine() // Initialize the cache expiration goroutine
 

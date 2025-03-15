@@ -5,8 +5,8 @@ import (
 	"project/config"
 
 	"project/app/layouts"
+	"project/app/links"
 	"project/internal/helpers"
-	"project/internal/links"
 	"strings"
 
 	"github.com/dromara/carbon/v2"

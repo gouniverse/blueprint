@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"project/internal/links"
+	"project/app/links"
 
 	"github.com/gouniverse/router"
 )

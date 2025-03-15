@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"project/app/layouts"
+	"project/app/links"
 	"project/internal/helpers"
-	"project/internal/links"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/gouniverse/cdn"
