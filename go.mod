@@ -47,7 +47,7 @@ require (
 	github.com/spf13/cast v1.7.1
 	github.com/stretchr/testify v1.10.0
 	github.com/yuin/goldmark v1.7.8
-	modernc.org/sqlite v1.36.0
+	modernc.org/sqlite v1.36.1
 )
 
 require (
@@ -111,10 +111,10 @@ require (
 	github.com/georgysavva/scany v1.2.3 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gouniverse/api v1.6.0
-	github.com/gouniverse/cms v1.10.0
+	github.com/gouniverse/cms v1.11.0
 	github.com/gouniverse/customstore v0.6.0
 	github.com/gouniverse/dataobject v0.3.0
-	github.com/gouniverse/entitystore v0.65.0
+	github.com/gouniverse/entitystore v0.65.1
 	github.com/gouniverse/geostore v0.13.0
 	github.com/gouniverse/maputils v0.7.0
 	github.com/gouniverse/sb v0.8.0

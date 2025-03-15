@@ -4,9 +4,9 @@ import (
 	"os"
 
 	"project/app/middlewares"
+	"project/app/routes"
 	"project/config"
 	"project/internal/cli"
-	"project/internal/routes"
 	"project/internal/scheduler"
 	"project/internal/tasks"
 	"project/internal/widgets"

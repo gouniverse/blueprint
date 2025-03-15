@@ -3,7 +3,7 @@ package middlewares
 import (
 	"net/http"
 	"net/http/httptest"
-	"project/internal/layouts"
+	"project/app/layouts"
 
 	"github.com/gouniverse/cmsstore"
 	"github.com/gouniverse/hb"

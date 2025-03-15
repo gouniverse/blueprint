@@ -2,8 +2,8 @@ package admin
 
 import (
 	"net/http"
+	"project/app/layouts"
 	"project/config"
-	"project/internal/layouts"
 
 	"github.com/gouniverse/hb"
 	"github.com/gouniverse/router"

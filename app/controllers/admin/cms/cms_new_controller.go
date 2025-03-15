@@ -2,8 +2,8 @@ package admin
 
 import (
 	"net/http"
+	"project/app/layouts"
 	"project/config"
-	"project/internal/layouts"
 	"project/internal/links"
 	"project/internal/webtheme"
 

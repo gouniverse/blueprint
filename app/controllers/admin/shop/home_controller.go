@@ -3,8 +3,8 @@ package admin
 import (
 	"net/http"
 	"project/app/controllers/admin/shop/shared"
+	"project/app/layouts"
 	"project/config"
-	"project/internal/layouts"
 	"project/internal/links"
 
 	"github.com/gouniverse/bs"

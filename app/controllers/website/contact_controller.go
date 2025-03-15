@@ -3,9 +3,9 @@ package website
 import (
 	"context"
 	"net/http"
+	"project/app/layouts"
 	"project/config"
 	"project/internal/helpers"
-	"project/internal/layouts"
 	"project/internal/links"
 	"project/internal/tasks"
 	"strings"

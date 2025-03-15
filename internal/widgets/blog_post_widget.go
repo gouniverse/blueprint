@@ -5,7 +5,7 @@ import (
 	"project/config"
 	"project/internal/helpers"
 
-	// "project/internal/layouts"
+	// "project/app/layouts"
 	"project/internal/links"
 	"strings"
 

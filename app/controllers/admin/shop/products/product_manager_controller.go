@@ -7,8 +7,8 @@ import (
 	"project/app/controllers/admin/shop/shared"
 	"project/config"
 
+	"project/app/layouts"
 	"project/internal/helpers"
-	"project/internal/layouts"
 	"project/internal/links"
 	"strings"
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"project/app/layouts"
 	"project/config"
-	"project/internal/layouts"
 	"project/internal/links"
 
 	"github.com/dromara/carbon/v2"

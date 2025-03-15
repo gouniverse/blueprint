@@ -2,9 +2,9 @@ package cli
 
 import (
 	"errors"
+	"project/app/routes"
 	"project/config"
 	"project/internal/cmds"
-	"project/internal/routes"
 
 	"github.com/gouniverse/router"
 	"github.com/mingrammer/cfmt"
