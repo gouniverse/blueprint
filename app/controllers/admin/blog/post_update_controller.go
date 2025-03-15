@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"project/app/layouts"
 	"project/config"
-	"project/internal/blogblocks"
 	"project/internal/helpers"
 	"project/internal/links"
+	"project/pkg/blogblocks"
 	"strings"
 
 	"github.com/dromara/carbon/v2"

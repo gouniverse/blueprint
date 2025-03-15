@@ -5,7 +5,7 @@ import (
 	"project/app/layouts"
 	"project/config"
 	"project/internal/links"
-	"project/internal/webtheme"
+	"project/pkg/webtheme"
 
 	adminCmsStore "github.com/gouniverse/cmsstore/admin"
 	"github.com/gouniverse/hb"

@@ -1,4 +1,4 @@
-package authentication
+package admin
 
 import (
 	"net/http"

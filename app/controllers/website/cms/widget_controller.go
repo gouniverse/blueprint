@@ -2,7 +2,7 @@ package website
 
 import (
 	"net/http"
-	"project/internal/widgets"
+	"project/app/widgets"
 
 	"github.com/gouniverse/utils"
 )

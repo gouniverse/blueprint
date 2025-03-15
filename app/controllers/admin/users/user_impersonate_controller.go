@@ -3,7 +3,7 @@ package admin
 import (
 	"net/http"
 
-	"project/internal/authentication"
+	// "project/internal/authentication"
 	"project/internal/helpers"
 	"project/internal/links"
 
@@ -43,7 +43,7 @@ func (c *userImpersonateController) Handler(w http.ResponseWriter, r *http.Reque
 		return helpers.ToFlashError(w, r, "User ID not found", links.NewAdminLinks().Users(map[string]string{}), 15)
 	}
 
-	err := authentication.Impersonate(w, r, userID)
+	err := Impersonate(w, r, userID)
 
 	if err != nil {
 		return helpers.ToFlashError(w, r, err.Error(), links.NewAdminLinks().Users(map[string]string{}), 15)

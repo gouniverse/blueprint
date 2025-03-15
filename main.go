@@ -5,11 +5,11 @@ import (
 
 	"project/app/middlewares"
 	"project/app/routes"
+	"project/app/widgets"
 	"project/config"
 	"project/internal/cli"
 	"project/internal/scheduler"
 	"project/internal/tasks"
-	"project/internal/widgets"
 
 	"github.com/mingrammer/cfmt"
 

@@ -6,7 +6,7 @@ import (
 	"project/app/controllers/shared"
 	"project/app/controllers/user"
 	"project/app/controllers/website"
-	"project/internal/widgets"
+	"project/app/widgets"
 
 	"github.com/go-chi/chi/v5"
 

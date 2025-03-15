@@ -2,9 +2,9 @@ package website
 
 import (
 	"net/http"
+	"project/app/widgets"
 	"project/config"
-	"project/internal/webtheme"
-	"project/internal/widgets"
+	"project/pkg/webtheme"
 	"sync"
 
 	"github.com/gouniverse/cmsstore"

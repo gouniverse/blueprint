@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"project/internal/webtheme"
+	"project/pkg/webtheme"
 
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/cmsstore"
