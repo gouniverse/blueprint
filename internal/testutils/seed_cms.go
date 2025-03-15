@@ -2,12 +2,17 @@ package testutils
 
 import (
 	"context"
+	"errors"
 	"project/config"
 
 	"github.com/gouniverse/cmsstore"
 )
 
 func SeedTemplate(siteID, templateID string) (err error) {
+	if config.CmsStore == nil {
+		return errors.New("cmsstore.seed template: cmsstore is nil")
+	}
+
 	templateContent := `
 	<html>
 	    <head>

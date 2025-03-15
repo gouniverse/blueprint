@@ -14,10 +14,12 @@ import (
 
 func TestFlash(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	body, response, err := testutils.CallHtmlEndpoint(http.MethodPost, NewFlashController().Handler, testutils.NewRequestOptions{
@@ -49,10 +51,12 @@ func TestFlash(t *testing.T) {
 
 func TestFlashMessage_Info(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	infoUrl := helpers.ToFlashInfoURL("This is an info message", "/testbackendpoint", 5)
@@ -88,10 +92,12 @@ func TestFlashMessage_Info(t *testing.T) {
 
 func TestFlashMessage_Error(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	errorUrl := helpers.ToFlashErrorURL("This is an error message", "/testbackendpoint", 5)
@@ -127,10 +133,12 @@ func TestFlashMessage_Error(t *testing.T) {
 
 func TestFlashMessage_Success(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	successUrl := helpers.ToFlashSuccessURL("This is a success message", "/testbackendpoint", 5)
@@ -166,10 +174,12 @@ func TestFlashMessage_Success(t *testing.T) {
 
 func TestFlashMessage_Warning(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	warningUrl := helpers.ToFlashWarningURL("This is a warning message", "/testbackendpoint", 5)
@@ -205,10 +215,12 @@ func TestFlashMessage_Warning(t *testing.T) {
 
 func TestFlashMessage_Get(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	infoUrl := helpers.ToFlashInfoURL("This is an info message", "/testbackendpoint", 5)
@@ -244,10 +256,12 @@ func TestFlashMessage_Get(t *testing.T) {
 
 func TestFlashMessage_Delete(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	infoUrl := helpers.ToFlashInfoURL("This is an info message", "/testbackendpoint", 5)
@@ -283,10 +297,12 @@ func TestFlashMessage_Delete(t *testing.T) {
 
 func TestFlashMessage_Post(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	infoUrl := helpers.ToFlashInfoURL("This is an info message", "/testbackendpoint", 5)
@@ -322,10 +338,12 @@ func TestFlashMessage_Post(t *testing.T) {
 
 func TestFlashMessage_Put(t *testing.T) {
 	testutils.Setup()
-	err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
+	if config.CmsStore != nil {
+		err := testutils.SeedTemplate(testutils.CMS_SITE_01, config.CmsUserTemplateID)
 
-	if err != nil {
-		t.Fatal(err)
+		if err != nil {
+			t.Fatal(err)
+		}
 	}
 
 	infoUrl := helpers.ToFlashInfoURL("This is an info message", "/testbackendpoint", 5)

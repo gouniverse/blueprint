@@ -71,7 +71,7 @@ func (controller *registerController) Handler(w http.ResponseWriter, r *http.Req
 		return helpers.ToFlashError(w, r, `user store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 
-	if !config.VaultStoreUsed || config.VaultStore == nil {
+	if config.VaultStoreUsed && config.VaultStore == nil {
 		return helpers.ToFlashError(w, r, `vault store is required`, links.NewWebsiteLinks().Home(), 5)
 	}
 

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"project/config"
+	"project/internal/testutils"
 	"testing"
 )
 
@@ -27,6 +28,7 @@ func TestIsCliMode(t *testing.T) {
 }
 
 func TestStartBackgroundProcesses(t *testing.T) {
+	testutils.Setup()
 	startBackgroundProcesses()
 	// Assuming we can verify background processes by checking if certain goroutines are running
 	// This is a placeholder assertion; actual verification would depend on the implementation

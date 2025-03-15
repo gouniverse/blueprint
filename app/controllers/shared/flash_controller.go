@@ -41,7 +41,7 @@ func (controller flashController) Handler(w http.ResponseWriter, r *http.Request
 		}).ToHTML()
 	}
 
-	if config.CmsStoreUsed {
+	if config.CmsStoreUsed && config.CmsStore != nil {
 		return layouts.NewWebsiteLayout(layouts.Options{
 			Request:    r,
 			Title:      "System Message",
