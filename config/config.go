@@ -126,8 +126,14 @@ var MediaSecret string
 // MediaUrl is the media URL.
 var MediaUrl string = "/files"
 
+// OpenAiUsed is a boolean indicating whether the OpenAI service is used.
+var OpenAiUsed = false
+
 // OpenAiApiKey is the OpenAI API key.
 var OpenAiApiKey string
+
+// StripeUsed is a boolean indicating whether the Stripe service is used.
+var StripeUsed = false
 
 // StripeKeyPrivate is the Stripe private key.
 var StripeKeyPrivate string
@@ -143,6 +149,9 @@ var TranslationLanguageList map[string]string = map[string]string{"en": "English
 
 // VaultKey is the Vault key.
 var VaultKey string
+
+// VertexUsed is a boolean indicating whether the Vertex service is used.
+var VertexUsed = false
 
 // VertexModelID is the Vertex model ID.
 var VertexModelID string

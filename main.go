@@ -37,7 +37,11 @@ import (
 // Returns:
 // - none
 func main() {
-	config.Initialize()    // 1. Initialize the environment
+	err := config.Initialize() // 1. Initialize the environment
+	if err != nil {
+		cfmt.Errorf("Failed to initialize: %v", err)
+		return
+	}
 	defer closeResources() // 2. Defer Closing the database
 	tasks.RegisterTasks()  // 3. Register the task handlers
 
@@ -52,7 +56,7 @@ func main() {
 	startBackgroundProcesses()
 
 	// Start the web server
-	_, err := server.Start(server.Options{
+	_, err = server.Start(server.Options{
 		Host:    config.WebServerHost,
 		Port:    config.WebServerPort,
 		URL:     config.AppUrl,

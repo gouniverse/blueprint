@@ -11,6 +11,7 @@ import (
 	"github.com/faabiosr/cachego/file"
 
 	"github.com/dracory/base/database"
+	"github.com/dracory/base/env"
 	"github.com/gouniverse/logstore"
 	"github.com/gouniverse/sb"
 	"github.com/gouniverse/utils"
@@ -36,26 +37,32 @@ import (
 //
 // Returns:
 // - none
-func Initialize() {
-	initializeEnvVariables()
+func Initialize() error {
+	err := initializeEnvVariables()
+
+	if err != nil {
+		return err
+	}
 
 	os.Setenv("TZ", "UTC")
 
-	err := initializeDatabase()
+	err = initializeDatabase()
 
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
 
 	err = migrateDatabase()
 
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
 
 	initializeCache()
 
 	Logger = *slog.New(logstore.NewSlogHandler(LogStore))
+
+	return nil
 }
 
 // initializeEnvVariables initializes the env variables
@@ -72,40 +79,24 @@ func Initialize() {
 // Returns:
 // - none
 func initializeEnvVariables() error {
-	utils.EnvInitialize(".env")
+	env.Initialize(".env")
 
-	AppEnvironment = utils.EnvMust("APP_ENV")
+	AppEnvironment = utils.Env("APP_ENV")
 	AppName = utils.Env("APP_NAME")
 	AppUrl = utils.Env("APP_URL")
 
 	// Enable if you use envenc
-	// intializeEnvEncVariables(AppEnvironment)
+	// if err := intializeEnvEncVariables(AppEnvironment); err != nil {
+	// 	return err
+	// }
 
-	// Enable if you use CMS template
-	//CmsUserTemplateID = utils.EnvMust("CMS_TEMPLATE_ID")
-
-	DbDriver = utils.EnvMust("DB_DRIVER")
-	DbHost = lo.TernaryF(DbDriver == "sqlite", func() string {
-		return utils.Env("DB_HOST")
-	}, func() string {
-		return utils.EnvMust("DB_HOST")
-	})
-	DbPort = lo.TernaryF(DbDriver == "sqlite", func() string {
-		return utils.Env("DB_PORT")
-	}, func() string {
-		return utils.EnvMust("DB_PORT")
-	})
+	CmsUserTemplateID = utils.Env("CMS_TEMPLATE_ID")
+	DbDriver = utils.Env("DB_DRIVER")
+	DbHost = utils.Env("DB_HOST")
+	DbPort = utils.Env("DB_PORT")
 	DbName = utils.EnvMust("DB_DATABASE")
-	DbUser = lo.TernaryF(DbDriver == "sqlite", func() string {
-		return utils.Env("DB_USERNAME")
-	}, func() string {
-		return utils.EnvMust("DB_USERNAME")
-	})
-	DbPass = lo.TernaryF(DbDriver == "sqlite", func() string {
-		return utils.Env("DB_PASSWORD")
-	}, func() string {
-		return utils.EnvMust("DB_PASSWORD")
-	})
+	DbUser = utils.Env("DB_USERNAME")
+	DbPass = utils.Env("DB_PASSWORD")
 	Debug = utils.Env("DEBUG") == "yes"
 	MailDriver = utils.Env("MAIL_DRIVER")
 	MailFromEmailAddress = utils.Env("EMAIL_FROM_ADDRESS")
@@ -122,27 +113,85 @@ func initializeEnvVariables() error {
 	MediaSecret = utils.Env("MEDIA_SECRET")
 	MediaRegion = utils.Env("MEDIA_REGION")
 	MediaUrl = utils.Env("MEDIA_URL")
+	OpenAiApiKey = utils.Env("OPENAI_API_KEY")
+	StripeKeyPrivate = utils.Env("STRIPE_KEY_PRIVATE")
+	StripeKeyPublic = utils.Env("STRIPE_KEY_PUBLIC")
+	VaultKey = utils.Env("VAULT_KEY")
+	VertexModelID = utils.Env("VERTEX_MODEL_ID")
+	VertexProjectID = utils.Env("VERTEX_PROJECT_ID")
+	VertexRegionID = utils.Env("VERTEX_REGION_ID")
+	WebServerHost = utils.Env("SERVER_HOST")
+	WebServerPort = utils.Env("SERVER_PORT")
 
-	// Enable if you use OpenAI
-	// OpenAiApiKey = utils.EnvMust("OPENAI_API_KEY")
+	// Check required variables
 
-	// Enable if you use Stripe
-	// StripeKeyPrivate = utils.EnvMust("STRIPE_KEY_PRIVATE")
-	// StripeKeyPublic = utils.EnvMust("STRIPE_KEY_PUBLIC")
+	if AppEnvironment == "" {
+		return errors.New("APP_ENV is required")
+	}
 
-	VaultKey = lo.TernaryF(VaultStoreUsed, func() string {
-		return utils.EnvMust("VAULT_KEY")
-	}, func() string {
-		return utils.Env("VAULT_KEY")
-	})
+	// Enable if you use CMS template
+	// if CmsUserTemplateID == "" {
+	// 	return errors.New("CMS_TEMPLATE_ID is required")
+	// }
 
-	// Enable if you use Vertex
-	// VertexModelID = utils.EnvMust("VERTEX_MODEL_ID")
-	// VertexProjectID = utils.EnvMust("VERTEX_PROJECT_ID")
-	// VertexRegionID = utils.EnvMust("VERTEX_REGION_ID")
+	if DbDriver == "" {
+		return errors.New("DB_DRIVER is required")
+	}
 
-	WebServerHost = utils.EnvMust("SERVER_HOST")
-	WebServerPort = utils.EnvMust("SERVER_PORT")
+	if DbDriver != "sqlite" && DbHost == "" {
+		return errors.New("DB_HOST is required")
+	}
+
+	if DbDriver != "sqlite" && DbPort == "" {
+		return errors.New("DB_PORT is required")
+	}
+
+	if DbName == "" {
+		return errors.New("DB_DATABASE is required")
+	}
+
+	if DbDriver != "sqlite" && DbUser == "" {
+		return errors.New("DB_USERNAME is required")
+	}
+
+	if DbDriver != "sqlite" && DbPass == "" {
+		return errors.New("DB_PASSWORD is required")
+	}
+
+	if OpenAiUsed && OpenAiApiKey == "" {
+		return errors.New("OPENAI_API_KEY is required")
+	}
+
+	if StripeUsed && StripeKeyPrivate == "" {
+		return errors.New("STRIPE_KEY_PRIVATE is required")
+	}
+
+	if StripeUsed && StripeKeyPublic == "" {
+		return errors.New("STRIPE_KEY_PUBLIC is required")
+	}
+
+	if VaultStoreUsed && VaultKey == "" {
+		return errors.New("VAULT_KEY is required")
+	}
+
+	if VertexUsed && VertexModelID == "" {
+		return errors.New("VERTEX_MODEL_ID is required")
+	}
+	if VertexUsed && VertexProjectID == "" {
+		return errors.New("VERTEX_PROJECT_ID is required")
+	}
+	if VertexUsed && VertexRegionID == "" {
+		return errors.New("VERTEX_REGION_ID is required")
+	}
+
+	if WebServerHost == "" {
+		return errors.New("SERVER_HOST is required")
+	}
+
+	if WebServerPort == "" {
+		return errors.New("SERVER_PORT is required")
+	}
+
 	return nil
 }
 
@@ -162,9 +211,9 @@ func initializeEnvVariables() error {
 //
 // Returns:
 // - none
-func intializeEnvEncVariables(appEnvironment string) {
+func intializeEnvEncVariables(appEnvironment string) error {
 	if appEnvironment == APP_ENVIRONMENT_TESTING {
-		return
+		return nil
 	}
 
 	appEnvironment = strings.ToLower(appEnvironment)
@@ -177,7 +226,7 @@ func intializeEnvEncVariables(appEnvironment string) {
 	derivedEnvEncKey, err := deriveEnvEncKey(envEncryptionKey)
 
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
 
 	err = utils.EnvEncInitialize(struct {
@@ -191,8 +240,10 @@ func intializeEnvEncVariables(appEnvironment string) {
 	})
 
 	if err != nil {
-		panic(err.Error())
+		return err
 	}
+
+	return nil
 }
 
 // initializeCache initializes the cache

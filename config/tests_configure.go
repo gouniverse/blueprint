@@ -3,6 +3,7 @@ package config
 import (
 	"os"
 
+	"github.com/dracory/base/cfmt"
 	_ "modernc.org/sqlite"
 )
 
@@ -18,7 +19,7 @@ import (
 //
 // Returns:
 // - none
-func TestsConfigureAndInitialize() {
+func TestsConfigureAndInitialize() error {
 	os.Setenv("APP_NAME", "TEST APP NAME")
 	os.Setenv("APP_URL", "http://localhost:8080")
 	os.Setenv("APP_ENV", APP_ENVIRONMENT_TESTING)
@@ -58,5 +59,12 @@ func TestsConfigureAndInitialize() {
 	os.Setenv("VERTEX_REGION_ID", "vertex_region_id")
 	os.Setenv("VERTEX_MODEL_ID", "vertex_model_id")
 
-	Initialize()
+	err := Initialize()
+
+	if err != nil {
+		cfmt.Errorf("Failed to initialize: %v", err)
+		return err
+	}
+
+	return nil
 }
