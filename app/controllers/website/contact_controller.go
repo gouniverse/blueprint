@@ -116,18 +116,16 @@ func (controller *contactController) PostSubmit(w http.ResponseWriter, r *http.R
 		return controller.contactForm(r, data).ToHTML()
 	}
 
-	record := (customstore.Record{
-		Type: "contact",
-	})
+	record := customstore.NewRecord("contact")
 
-	record.SetMap(map[string]interface{}{
+	record.SetPayloadMap(map[string]interface{}{
 		"first_name": data.firstName,
 		"last_name":  data.lastName,
 		"email":      data.email,
 		"text":       data.text,
 	})
 
-	err := config.CustomStore.RecordCreate(&record)
+	err := config.CustomStore.RecordCreate(record)
 
 	if err != nil {
 		config.Logger.Error("At contactController.PostSubmit", "error", err.Error())

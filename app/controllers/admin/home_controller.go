@@ -264,7 +264,7 @@ func (*homeController) tiles() []hb.TagInterface {
 	return cards
 }
 
-func (c *homeController) datesInRange(timeStart, timeEnd carbon.Carbon) []string {
+func (c *homeController) datesInRange(timeStart, timeEnd *carbon.Carbon) []string {
 	rangeDates := []string{}
 
 	if timeStart.Lte(timeEnd) {
