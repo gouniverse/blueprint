@@ -223,6 +223,10 @@ func intializeEnvEncVariables(appEnvironment string) error {
 
 	vaultContent := resources.Resource(".env." + appEnvironment + ".vault")
 
+	if vaultContent == "" {
+		return errors.New(".env." + appEnvironment + ".vault not found")
+	}
+
 	derivedEnvEncKey, err := deriveEnvEncKey(envEncryptionKey)
 
 	if err != nil {
