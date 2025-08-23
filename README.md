@@ -1,3 +1,5 @@
+Moved to: https://github.com/dracory/blueprint
+
 # Blueprint 
 
 ![tests](https://github.com/gouniverse/blueprint/workflows/tests/badge.svg)
