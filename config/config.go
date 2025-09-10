@@ -3,10 +3,10 @@ package config
 import (
 	"log/slog"
 
+	"github.com/dracory/cachestore"
 	"github.com/faabiosr/cachego"
 	"github.com/gouniverse/blindindexstore"
 	"github.com/gouniverse/blogstore"
-	"github.com/gouniverse/cachestore"
 	"github.com/gouniverse/cms"
 	"github.com/gouniverse/cmsstore"
 	"github.com/gouniverse/customstore"

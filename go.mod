@@ -6,6 +6,7 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/disintegration/imaging v1.6.2
 	github.com/dracory/base v0.13.0
+	github.com/dracory/cachestore v0.20.0
 	github.com/dromara/carbon/v2 v2.6.2
 	github.com/faabiosr/cachego v0.26.0
 	github.com/go-chi/chi/v5 v5.2.1
@@ -16,7 +17,6 @@ require (
 	github.com/gouniverse/blockeditor v0.21.2
 	github.com/gouniverse/blogstore v1.0.0
 	github.com/gouniverse/bs v0.13.0
-	github.com/gouniverse/cachestore v0.19.1
 	github.com/gouniverse/cdn v1.6.0
 	github.com/gouniverse/cmsstore v0.28.0
 	github.com/gouniverse/crud/v2 v2.0.0-20250124013508-aa498c4bb928
@@ -67,6 +67,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/doug-martin/goqu/v9 v9.19.0 // indirect
+	github.com/dracory/uid v1.7.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/go-chi/cors v1.2.1 // indirect
@@ -74,6 +75,7 @@ require (
 	github.com/go-openapi/errors v0.22.1 // indirect
 	github.com/go-openapi/strfmt v0.23.0 // indirect
 	github.com/goravel/framework v1.15.6 // indirect
+	github.com/gouniverse/cachestore v0.19.1 // indirect
 	github.com/gouniverse/crypto v0.2.0 // indirect
 	github.com/gouniverse/settingstore v1.0.0 // indirect
 	github.com/gouniverse/shortcode v0.4.0 // indirect

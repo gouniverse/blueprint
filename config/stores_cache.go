@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/gouniverse/cachestore"
+	"github.com/dracory/cachestore"
 )
 
 func init() {
