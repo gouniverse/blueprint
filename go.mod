@@ -100,7 +100,7 @@ require (
 	go.mongodb.org/mongo-driver v1.17.3 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
-	golang.org/x/image v0.26.0 // indirect
+	golang.org/x/image v0.41.0 // indirect
 	golang.org/x/sync v0.20.0 // indirect
 	golang.org/x/term v0.43.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
