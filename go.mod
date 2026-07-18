@@ -9,7 +9,7 @@ require (
 	github.com/dracory/cachestore v0.20.0
 	github.com/dromara/carbon/v2 v2.6.2
 	github.com/faabiosr/cachego v0.26.0
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.4
 	github.com/go-co-op/gocron v1.37.0
 	github.com/gouniverse/auth v0.22.0
 	github.com/gouniverse/base v0.9.0
